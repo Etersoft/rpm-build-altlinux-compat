@@ -1,0 +1,32 @@
+# ALT compatibility on other platforms
+
+%post_ldconfig /sbin/ldconfig
+%unpost_ldconfig /sbin/ldconfig
+%__subst sed -i -e
+
+%make make
+%make_build make
+%make_install make
+
+%_initdir /etc/rc.d/init.d
+%_iconsdir %_datadir/icons
+%_liconsdir %_iconsdir/mini
+%_miconsdir %_iconsdir/large
+
+%_man1dir %_mandir/man1
+%_man2dir %_mandir/man2
+%_man3dir %_mandir/man3
+%_man4dir %_mandir/man4
+%_man5dir %_mandir/man5
+%_man6dir %_mandir/man6
+
+# in %%post section.
+%install_info   /usr/sbin/install_info
+
+# in %%preun section.
+%uninstall_info /usr/sbin/uninstall_info
+
+%_menudir %_prefix/lib/menu
+
+%post_service chkconfig -add %1
+%preun_service chkconfig -del %1
