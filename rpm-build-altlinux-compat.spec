@@ -45,6 +45,10 @@ DESTFILE=macros.%name
 DESTFILE=macros
 %endif
 
+%if %{_vendor} == "asplinux"
+DESTFILE=macros
+%endif
+
 %if %{_vendor} == "RPM"
 DESTFILE=macros
 %endif
