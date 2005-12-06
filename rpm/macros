@@ -19,6 +19,10 @@
 %_man4dir %_mandir/man4
 %_man5dir %_mandir/man5
 %_man6dir %_mandir/man6
+%_man7dir %_mandir/man7
+%_man8dir %_mandir/man8
+%_man9dir %_mandir/man9
+%_manndir %_mandir/mann
 
 # in %%post section.
 %install_info   /usr/sbin/install_info
@@ -30,3 +34,55 @@
 
 %post_service chkconfig -add %1
 %preun_service chkconfig -del %1
+
+%optflags_default	-O2
+%optflags_shared	-fPIC -DPIC
+
+# Set with/without default value.
+%def_with() %{expand:%%{!?_with_%{1}: %%{!?_without_%{1}: %%global _with_%{1} --with-%{1}}}}
+%def_without() %{expand:%%{!?_with_%{1}: %%{!?_without_%{1}: %%global _without_%{1} --without-%{1}}}}
+
+# Set enable/disable default value.
+%def_enable() %{expand:%%{!?_enable_%{1}: %%{!?_disable_%{1}: %%global _enable_%{1} --enable-%{1}}}}
+%def_disable() %{expand:%%{!?_enable_%{1}: %%{!?_disable_%{1}: %%global _disable_%{1} --disable-%{1}}}}
+
+# Set with/without value.
+%force_with() %{expand:%%global _with_%{1} --with-%{1}}
+%force_without() %{expand:%%global _without_%{1} --without-%{1}}
+
+# Set enable/disable value.
+%force_enable() %{expand:%%global _enable_%{1} --enable-%{1}}
+%force_disable() %{expand:%%global _disable_%{1} --disable-%{1}}
+
+# Check whether both _with_%{1} and _without_%{1} are defined.
+%check_def() %{expand:%%{?_with_%{1}: %%{?_without_%{1}: %%{error: both _with_%{1} and _without_%{1} are defined}}}} \
+	%{expand:%%{?_enable_%{1}: %%{?_disable_%{1}: %%{error: both _enable_%{1} and _disable_%{1} are defined}}}}
+
+# Check for defined/undefined.
+%defined() %{expand:%%{?%{1}:1}%%{!?%{1}:0}}
+%undefined() %{expand:%%{?%{1}:0}%%{!?%{1}:1}}
+
+# ifdef/ifndef.
+%ifdef() %if %{expand:%%{?%{1}:1}%%{!?%{1}:0}}
+%ifndef() %if %{expand:%%{?%{1}:0}%%{!?%{1}:1}}
+
+# Check for with/without.
+%with() %{expand:%%{?_with_%{1}:1}%%{!?_with_%{1}:0}}
+%without() %{expand:%%{?_without_%{1}:1}%%{!?_without_%{1}:0}}
+
+# if_with/if_without.
+%if_with() %if %{expand:%%{?_with_%{1}:1}%%{!?_with_%{1}:0}}
+%if_without() %if %{expand:%%{?_without_%{1}:1}%%{!?_without_%{1}:0}}
+
+# Check for enabled/disabled.
+%enabled() %{expand:%%{?_enable_%{1}:1}%%{!?_enable_%{1}:0}}
+%disabled() %{expand:%%{?_disable_%{1}:1}%%{!?_disable_%{1}:0}}
+
+# if_enabled/if_disabled.
+%if_enabled() %if %{expand:%%{?_enable_%{1}:1}%%{!?_enable_%{1}:0}}
+%if_disabled() %if %{expand:%%{?_disable_%{1}:1}%%{!?_disable_%{1}:0}}
+
+# substitute with/without/enable/disable macros.
+%subst_with() %{expand:%%{?_with_%{1}:%%{_with_%{1}}}} %{expand:%%{?_without_%{1}:%%{_without_%{1}}}}
+%subst_enable() %{expand:%%{?_enable_%{1}:%%{_enable_%{1}}}} %{expand:%%{?_disable_%{1}:%%{_disable_%{1}}}}
+
