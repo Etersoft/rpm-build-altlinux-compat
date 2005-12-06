@@ -1,0 +1,12 @@
+#!/bin/bash
+set +e
+SCRIPT=$1; shift
+
+T=`mktemp`
+for s in "$@"; do
+	if cat $s | sed "$SCRIPT" > $T; then
+	   cat $T > $s
+	fi
+done
+rm -f $T
+
