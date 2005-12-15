@@ -60,6 +60,9 @@ DESTFILE=macros
 %files
 %doc AUTHORS TODO NEWS
 %_bindir/*
+%if %{_vendor} == "suse"
+%exclude %_bindir/subst
+%endif
 %_sysconfdir/rpm/*
 
 %changelog
