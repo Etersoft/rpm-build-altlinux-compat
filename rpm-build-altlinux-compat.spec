@@ -1,12 +1,11 @@
 #TODO: port rpm-utils?
 %if %{_vendor} != "alt"
-# 
 # ALT has it in RPM
 BuildRoot: %{_tmppath}/%{name}-%{version}
 %endif
 
 Name: rpm-build-altlinux-compat
-Version: 0.2
+Version: 0.3
 Release: %{_vendor}1
 
 Summary: ALT Linux compatibility in rpm build on other platforms
@@ -37,31 +36,27 @@ on other rpm-based platforms.
 #rm -rf $RPM_BUILD_ROOT
 #%endif
 
+DESTFILE=macros
 # ALT: /etc/rpm/macros.d
 # RHEL: /etc/rpm/macros.name
+%if %{_vendor} == "redhat"
 DESTFILE=macros.%name
-
-%if %{_vendor} == "suse"
-DESTFILE=macros
 %endif
 
-%if %{_vendor} == "asplinux"
-DESTFILE=macros
-%endif
+# suse asplinux RPM: macros
 
-%if %{_vendor} == "RPM"
-DESTFILE=macros
-%endif
-
-%__install -D -m644 rpm/macros %buildroot%_sysconfdir/rpm/$DESTFILE
+%__install -D -m644 rpm/macros %buildroot/etc/rpm/$DESTFILE
 %__mkdir -p %buildroot%_bindir
 %__install -m755 bin/* %buildroot%_bindir
 
 %files
 %doc AUTHORS TODO NEWS
 %_bindir/*
-%_sysconfdir/rpm/*
+/etc/rpm/*
 
 %changelog
+* Fri Dec 30 2005 Vitaly Lipatov <lav@altlinux.ru> 0.3-alt1
+- new release, macros updated by Denis Smirnov
+
 * Sat Oct 29 2005 Vitaly Lipatov <lav@altlinux.ru> 0.1-redhat1
 - test pre release
