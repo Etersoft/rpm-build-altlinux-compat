@@ -30,7 +30,7 @@ on other rpm-based platforms.
 
 %prep
 %setup
-
+find -type d -name CVS | xargs rm -rf
 %install
 #%if %{_vendor} == "RPM"
 #rm -rf $RPM_BUILD_ROOT
