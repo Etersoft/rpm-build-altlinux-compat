@@ -2,7 +2,12 @@
 
 %post_ldconfig /sbin/ldconfig
 %unpost_ldconfig /sbin/ldconfig
-%__subst sed -i -e
+
+# See also perl -pi -e
+#%__subst sed -i -e
+# FIXME: use sed -i if possible
+# Use own subst macros. Works everywhere
+%__subst %_bindir/subst
 
 %__make make
 %make make

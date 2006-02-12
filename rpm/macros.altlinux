@@ -18,23 +18,3 @@
 _x11x11dir %{_x11dir}/lib/X11
 %_pkgconfigdir %{_libdir}/pkgconfig
 
-# for duscussion:
-%_kdedocdir %_docdir/HTML
-%_gtkdocdir %_datadir/gtk-doc/html
-%_javadir %_datadir/java
-%_javadocdir %_datadir/javadoc
-
-%_rpmmacrosdir %_sysconfdir/rpm/macros.d
-%_fontsdir %_datadir/fonts
-
-%rpmcflags $RPM_OPT_FLAGS
-#%rpmldflags 
-
-%_aclocaldir %_datadir/aclocal
-%_libexecdir %_prefix/libexec
-
-# PLD compatibility
-%define groupadd /usr/sbin/groupadd
-%define useradd /usr/sbin/useradd
-#%define userremove userdel
-#%define groupremove groupdel

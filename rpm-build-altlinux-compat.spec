@@ -74,9 +74,9 @@ DESTFILE=macros.%name
 
 %if %_vendor =="alt"
 DESTFILE=compat
-cat rpm/macros.altlinux >rpm/macros.out
+cat rpm/macros.{altlinux,intro} >rpm/macros.out
 %else
-cat rpm/macros rpm/macros.altlinux >rpm/macros.out
+cat rpm/macros{,.altlinux,.intro} >rpm/macros.out
 mkdir -p %buildroot%_bindir
 install -m755 bin/* %buildroot%_bindir
 %endif

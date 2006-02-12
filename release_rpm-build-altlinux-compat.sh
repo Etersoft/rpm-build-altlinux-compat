@@ -22,7 +22,7 @@ check_key
 if [ $STEP -le 1 ]; then
 	echo "Step 1"
 	if [ -d CVS ] ; then
-		cvs -z3 update -dPR || fatal_error "Can't update from CVS..."
+		cvs -z3 update -dPR || fatal "Can't update from CVS..."
 	fi
 fi
 
@@ -30,7 +30,7 @@ fi
 if [ $STEP -le 2 ]; then
 	cd ..
 	ln -s $NAME $NAME-$VERSION
-	tar cfj $TARNAME $NAME-$VERSION/* || fatal_error "Can't create tarball"
+	tar cfj $TARNAME $NAME-$VERSION/* || fatal "Can't create tarball"
 	rm -f $NAME-$VERSION
 	cd -
 fi
@@ -50,7 +50,7 @@ fi
 
 if [ $STEP -le 4 ]; then
 	echo "Step 4"
-	rpmbb $SPECNAME 
+	rpmbb $SPECNAME || exit 1
 fi
 
 if [ $STEP -le 5 ]; then
@@ -62,7 +62,7 @@ fi
 
 if [ $STEP -le 6 ]; then
 	echo "Step 6"
-	rsync --progress ../$TARNAME $PUBLICSERVER:$PUBLICPATH/$TARNAME || fatal_error "Can't rsync"
+	rsync --progress ../$TARNAME $PUBLICSERVER:$PUBLICPATH/$TARNAME || fatal "Can't rsync"
 	ssh $PUBLICSERVER ln -sf $TARNAME $PUBLICPATH/$NAME-current.tar.bz2
 	#UDIR=$UPLOADDIR/../upload_alt_ftp/natspec
 	#rsync --progress $TARNAME $UDIR || exit 1
