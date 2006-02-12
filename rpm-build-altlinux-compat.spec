@@ -63,21 +63,22 @@ find -type d -name CVS | xargs rm -rf
 
 # ALT: /etc/rpm/macros.d
 # RHEL: /etc/rpm/macros.name
+# suse asplinux RPM: macros
 DESTFILE=macros
 %if %{_vendor} == "redhat"
 DESTFILE=macros.%name
 %endif
 
-# suse asplinux RPM: macros
 
 %if %_vendor =="alt"
 DESTFILE=compat
-install -D -m644 rpm/macros.altlinux %buildroot/%_rpmmacrosdir/$DESTFILE
+cat rpm/macros.altlinux >rpm/macros.out
 %else
-install -D -m644 rpm/macros %buildroot/%_rpmmacrosdir/$DESTFILE
+cat rpm/macros rpm/macros.altlinux >rpm/macros.out
 mkdir -p %buildroot%_bindir
 install -m755 bin/* %buildroot%_bindir
 %endif
+install -D -m644 rpm/macros.out %buildroot/%_rpmmacrosdir/$DESTFILE
 
 %if %_vendor =="alt"
 %files -n rpm-build-compat

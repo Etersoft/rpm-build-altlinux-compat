@@ -45,6 +45,8 @@
 %optflags_default	-O2
 %optflags_shared	-fPIC -DPIC
 
+##########################################
+
 # Set with/without default value.
 %def_with() %{expand:%%{!?_with_%{1}: %%{!?_without_%{1}: %%global _with_%{1} --with-%{1}}}}
 %def_without() %{expand:%%{!?_with_%{1}: %%{!?_without_%{1}: %%global _without_%{1} --without-%{1}}}}
