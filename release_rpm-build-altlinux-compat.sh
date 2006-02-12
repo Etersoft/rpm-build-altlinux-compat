@@ -3,6 +3,7 @@
 # Use etersoft-build-utils as helper
 . /etc/rpm/etersoft-build-functions
 
+BUILDHOME=/srv/builder/lav
 
 NAME=$(basename `pwd`)
 SPECNAME=$NAME.spec
@@ -15,9 +16,11 @@ PUBLICSERVER=etersoft
 PUBLICPATH=~/download/$NAME
 
 STEP=2
+check_key
 
 # Update from CVS
 if [ $STEP -le 1 ]; then
+	echo "Step 1"
 	if [ -d CVS ] ; then
 		cvs -z3 update -dPR || fatal_error "Can't update from CVS..."
 	fi
@@ -32,12 +35,11 @@ if [ $STEP -le 2 ]; then
 	cd -
 fi
 
-check_key
 
 
 if [ $STEP -le 3 ]; then
 	echo "Step 3"
-	cp -f ../$TARNAME $RPMDIR/SOURCES/
+	cp -f ../$TARNAME $RPMSOURCEDIR/
 fi
 
 #if [ $STEP -le 3 ]; then
