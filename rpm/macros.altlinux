@@ -1,0 +1,38 @@
+# ALT Linux compatibility macros for backports.
+# TODO: split by distros' version (check by package's version?)
+# TODO: can we use ifdef here?
+# 05.02.2006
+
+# introduced in rpm 4.0.4-alt55
+#  + Add macros: %_desktopdir, %_pixmapsdir (#8767)
+%_desktopdir %_datadir/applications
+%_pixmapsdir %_datadir/pixmaps
+
+# introduced in rpm 4.0.4-alt54
+#  + Added %__autoreconf macro (#8307)
+%__autoreconf autoreconf -fisv
+
+# introduced in rpm 4.0.4-alt42
+_x11x11dir %{_x11dir}/lib/X11
+%_pkgconfigdir %{_libdir}/pkgconfig
+
+# for duscussion:
+%_kdedocdir %_docdir/HTML
+%_gtkdocdir %_datadir/gtk-doc/html
+%_javadir %_datadir/java
+%_javadocdir %_datadir/javadoc
+
+%_rpmmacrosdir %_sysconfdir/rpm/macros.d
+%_fontsdir %_datadir/fonts
+
+%rpmcflags $RPM_OPT_FLAGS
+#%rpmldflags 
+
+%_aclocaldir %_datadir/aclocal
+%_libexecdir %_prefix/libexec
+
+# PLD compatibility
+%define groupadd /usr/sbin/groupadd
+%define useradd /usr/sbin/useradd
+#%define userremove userdel
+#%define groupremove groupdel
