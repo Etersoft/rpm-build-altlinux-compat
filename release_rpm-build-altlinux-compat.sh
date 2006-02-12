@@ -26,21 +26,8 @@ if [ $STEP -le 1 ]; then
 	fi
 fi
 
-# Make tarball
-if [ $STEP -le 2 ]; then
-	cd ..
-	ln -s $NAME $NAME-$VERSION
-	tar cfj $TARNAME $NAME-$VERSION/* || fatal "Can't create tarball"
-	rm -f $NAME-$VERSION
-	cd -
-fi
+prepare_tarball
 
-
-
-if [ $STEP -le 3 ]; then
-	echo "Step 3"
-	cp -f ../$TARNAME $RPMSOURCEDIR/
-fi
 
 #if [ $STEP -le 3 ]; then
 #	echo "Step 3"
