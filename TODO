@@ -1,0 +1,14 @@
+Файл с макросами должен собираться из различных кусков в зависимости
+от системы, на которой собираемся.
+
+Нужно объединить в один пакет с compat
+Новые макросы:
+xorg-x11-proto-devel - X proto header files
+* Fri Jan 27 2006 Valery Inozemtsev <shrek@altlinux> 7.0.0-alt4
+        %_x11x11libdir  %{_libdir}/X11
+        %_x11modulesdir %{_libdir}/X11/modules
+        %_x11drvddir    %{_prefix}/libexec/X11/drv.d
+        %_x11sysconfdir %{_sysconfdir}/X11
+        %_x11appconfdir %{_sysconfdir}/X11/app-defaults
+
+# TODO: port rpm-utils?

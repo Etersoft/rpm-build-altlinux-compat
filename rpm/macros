@@ -4,13 +4,15 @@
 %unpost_ldconfig /sbin/ldconfig
 %__subst sed -i -e
 
+%__make make
 %make make
 %make_build make
 %make_install make
-# due buggy sysconfdir in some systems
+
+# due buggy sysconfdir on some systems
 %_sysconfdir /etc
 
-%_initdir /etc/rc.d/init.d
+%_initdir %_sysconfdir/rc.d/init.d
 %_iconsdir %_datadir/icons
 %_liconsdir %_iconsdir/mini
 %_miconsdir %_iconsdir/large
@@ -26,13 +28,16 @@
 %_man9dir %_mandir/man9
 %_manndir %_mandir/mann
 
+%_menudir %_prefix/lib/menu
+
+
+##########################################
+
 # in %%post section.
 %install_info   /usr/sbin/install_info
 
 # in %%preun section.
 %uninstall_info /usr/sbin/uninstall_info
-
-%_menudir %_prefix/lib/menu
 
 %post_service chkconfig -add %1
 %preun_service chkconfig -del %1
