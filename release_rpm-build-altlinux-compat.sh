@@ -3,15 +3,16 @@
 # Use etersoft-build-utils as helper
 . /etc/rpm/etersoft-build-functions
 
-# Usual path to public sources
-PUBLICSERVER=etersoft
-# FIXME: ~ is local home
-PUBLICPATH=~/download/$NAME
 
 NAME=$(basename `pwd`)
 SPECNAME=$NAME.spec
 build_rpms_name $SPECNAME
 TARNAME=$NAME-$VERSION.tar.bz2
+
+# Usual path to public sources
+PUBLICSERVER=etersoft
+# FIXME: ~ is local home
+PUBLICPATH=~/download/$NAME
 
 STEP=2
 
@@ -50,10 +51,10 @@ if [ $STEP -le 4 ]; then
 	rpmbb $SPECNAME 
 fi
 
-#if [ $STEP -le 5 ]; then
-#	echo "Step 5"
-#	rpmbs -s $SPECNAME
-#fi
+if [ $STEP -le 5 ]; then
+	echo "Step 5"
+	rpmbs $SPECNAME
+fi
 
 if [ $STEP -le 6 ]; then
 	echo "Step 6"

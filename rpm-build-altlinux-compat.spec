@@ -52,6 +52,8 @@ It is useful for backporting packages to previous ALT Linux distros.
 Add it to buildrequires when backporting packages.
 Command rpmbph from etersoft-build-utils adds it automatically.
 
+# This build prepared for ALT %backport_distro 
+
 %prep
 %setup -q
 find -type d -name CVS | xargs rm -rf
