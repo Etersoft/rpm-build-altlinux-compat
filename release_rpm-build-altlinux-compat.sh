@@ -54,12 +54,14 @@ fi
 if [ $STEP -le 5 ]; then
 	echo "Step 5"
 	rpmbs $SPECNAME
+	cp $RPMDIR/SRPMS/$NAMESRPMIN $BUILDHOME/tmp
+	exit 1
 fi
 
 if [ $STEP -le 6 ]; then
 	echo "Step 6"
 	rsync --progress ../$TARNAME $PUBLICSERVER:$PUBLICPATH/$TARNAME || fatal_error "Can't rsync"
-	ssh $PUBLICSERVER ln -s $TARNAME $PUBLICPATH/$NAME-current.tar.bz2
+	ssh $PUBLICSERVER ln -sf $TARNAME $PUBLICPATH/$NAME-current.tar.bz2
 	#UDIR=$UPLOADDIR/../upload_alt_ftp/natspec
 	#rsync --progress $TARNAME $UDIR || exit 1
 	#rsync --progress $BUILDSERVER:$BUILDSERVERPATH/${NAME}-*${VER}-${REL}* $UDIR/ \
@@ -67,4 +69,9 @@ if [ $STEP -le 6 ]; then
 	#ftp.alt:/ftp/pub/people/lav/natspec
 	
 	#rsync --progress $BUILDSERVER:$BUILDSERVERPATH/${NAME}-*${VER}-${REL}* ~/tmp/
+fi
+
+if [ $STEP -le 7 ]; then
+	echo "Step 7"
+	scp $RPMDIR/SRPMS/$NAMESRPMIN office:~/tmp/
 fi
