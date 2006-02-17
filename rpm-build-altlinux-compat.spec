@@ -1,7 +1,7 @@
 # NOTE: do not use clean_spec or rpmcs for this spec
 
 Name: rpm-build-altlinux-compat
-Version: 0.4
+Version: 0.5
 Release: %{_vendor}1
 
 Summary: ALT Linux compatibility and extensions in rpm build
@@ -30,9 +30,9 @@ Requires: rpm-build
 
 # TODO: add version for other distros
 # FIXME: do not work :(
-%if_with build_M30
-Requires: rpm-build >= 4.0.4-alt47
-%endif
+#%if_with build_M30
+#Requires: rpm-build >= 4.0.4-alt47
+#%endif
 
 %description
 This package contains ALT Linux compatibility layer
@@ -97,6 +97,9 @@ install -D -m644 rpm/macros.out %buildroot/%_rpmmacrosdir/$DESTFILE
 %endif
 
 %changelog
+* Sat Feb 18 2006 Vitaly Lipatov <lav@altlinux.ru> 0.5-alt1
+- some fixes
+
 * Sun Feb 12 2006 Vitaly Lipatov <lav@altlinux.ru> 0.4-alt1
 - merge rpm-build-altlinux-compat and rpm-build-compat projects
 
