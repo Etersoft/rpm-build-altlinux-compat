@@ -3,12 +3,15 @@
 # Use etersoft-build-utils as helper
 . /etc/rpm/etersoft-build-functions
 
-BUILDHOME=/srv/builder/lav
+WORKDIR=/var/ftp/pvt/Etersoft/
+
+test -f $WORKDIR/config.in && . $WORKDIR/config.in
+BUILDHOME=$WINEPUB_PATH/sources
 
 NAME=$(basename `pwd`)
 SPECNAME=$NAME.spec
 build_rpms_name $SPECNAME
-TARNAME=$NAME-$VERSION.tar.bz2
+#TARNAME=$NAME-$VERSION.tar.bz2
 
 # Usual path to public sources
 PUBLICSERVER=etersoft
@@ -43,9 +46,10 @@ fi
 if [ $STEP -le 5 ]; then
 	echo "Step 5"
 	rpmbs $SPECNAME
-	cp $RPMDIR/SRPMS/$NAMESRPMIN $BUILDHOME/tmp
-	exit 1
+	test "$BUILDHOME" && cp -f $RPMDIR/SRPMS/$NAMESRPMIN $BUILDHOME/
 fi
+
+	exit 1
 
 if [ $STEP -le 6 ]; then
 	echo "Step 6"

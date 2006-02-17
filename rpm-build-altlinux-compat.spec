@@ -52,7 +52,7 @@ It is useful for backporting packages to previous ALT Linux distros.
 Add it to buildrequires when backporting packages.
 Command rpmbph from etersoft-build-utils adds it automatically.
 
-# This build prepared for ALT %backport_distro 
+# This build prepared for ALT backport_distro 
 
 %prep
 %setup -q
@@ -80,17 +80,20 @@ cat rpm/macros{,.altlinux,.intro} >rpm/macros.out
 mkdir -p %buildroot%_bindir
 install -m755 bin/* %buildroot%_bindir
 %endif
+
 install -D -m644 rpm/macros.out %buildroot/%_rpmmacrosdir/$DESTFILE
 
-%if %_vendor =="alt"
+# Note: rpm does not like doc macros in other sections?
+%if %_vendor == "alt"
 %files -n rpm-build-compat
 %doc AUTHORS TODO NEWS
 %_rpmmacrosdir/*
+
 %else
 %files
 %doc AUTHORS TODO NEWS
-%_bindir/*
 %_rpmmacrosdir/*
+%_bindir/*
 %endif
 
 %changelog
