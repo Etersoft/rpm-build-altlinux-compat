@@ -1,70 +1,31 @@
 #!/bin/sh
+# Author: Vitaly Lipatov <lav@etersoft.ru>
+# 2006, Public domain
 # Release script for small projects packaged in RPM
 # Use etersoft-build-utils as helper
 . /etc/rpm/etersoft-build-functions
 
 WORKDIR=/var/ftp/pvt/Etersoft/
-
 test -f $WORKDIR/config.in && . $WORKDIR/config.in
-BUILDHOME=$WINEPUB_PATH/sources
 
-NAME=$(basename `pwd`)
-SPECNAME=$NAME.spec
-build_rpms_name $SPECNAME
-#TARNAME=$NAME-$VERSION.tar.bz2
-
-# Usual path to public sources
-PUBLICSERVER=etersoft
-# FIXME: ~ is local home
-PUBLICPATH=~/download/$NAME
-
-STEP=2
 check_key
 
-# Update from CVS
-if [ $STEP -le 1 ]; then
-	echo "Step 1"
-	if [ -d CVS ] ; then
-		cvs -z3 update -dPR || fatal "Can't update from CVS..."
-	fi
-fi
+update_from_cvs
 
 prepare_tarball
 
+rpmbb $SPECNAME || fatal "Can't build"
 
-#if [ $STEP -le 3 ]; then
-#	echo "Step 3"
-#	scp $TARNAME cf.sf:~
-#fi
-#exit 1
-
-if [ $STEP -le 4 ]; then
-	echo "Step 4"
-	rpmbb $SPECNAME || exit 1
+if [ "$WINEPUB_PATH" ] ; then
+	# Path to local publishing
+	ETERDESTSRPM=$WINEPUB_PATH/sources
+	publish_srpm
 fi
 
-if [ $STEP -le 5 ]; then
-	echo "Step 5"
-	rpmbs $SPECNAME
-	test "$BUILDHOME" && cp -f $RPMDIR/SRPMS/$NAMESRPMIN $BUILDHOME/
-fi
+# Usual path to public sources
+# scp $TARNAME cf.sf:~   (use below params for it)
+PUBLICSERVER=etersoft
+PUBLICPATH=/home/lav/download/$NAME
 
-	exit 1
+publish_tarball
 
-if [ $STEP -le 6 ]; then
-	echo "Step 6"
-	rsync --progress ../$TARNAME $PUBLICSERVER:$PUBLICPATH/$TARNAME || fatal "Can't rsync"
-	ssh $PUBLICSERVER ln -sf $TARNAME $PUBLICPATH/$NAME-current.tar.bz2
-	#UDIR=$UPLOADDIR/../upload_alt_ftp/natspec
-	#rsync --progress $TARNAME $UDIR || exit 1
-	#rsync --progress $BUILDSERVER:$BUILDSERVERPATH/${NAME}-*${VER}-${REL}* $UDIR/ \
-	#	&& cd $UPLOADDIR/.. && ./upload-to-alt-ftp
-	#ftp.alt:/ftp/pub/people/lav/natspec
-	
-	#rsync --progress $BUILDSERVER:$BUILDSERVERPATH/${NAME}-*${VER}-${REL}* ~/tmp/
-fi
-
-if [ $STEP -le 7 ]; then
-	echo "Step 7"
-	scp $RPMDIR/SRPMS/$NAMESRPMIN office:~/tmp/
-fi
