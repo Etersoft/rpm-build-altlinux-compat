@@ -14,8 +14,9 @@
 %make_build make
 %make_install make
 
-# due buggy sysconfdir on some systems
+# due buggy on some systems (Debian)
 %_sysconfdir /etc
+%_localstatedir /var
 
 %_initdir %_sysconfdir/rc.d/init.d
 %_iconsdir %_datadir/icons
