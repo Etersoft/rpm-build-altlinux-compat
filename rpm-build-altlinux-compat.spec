@@ -64,12 +64,14 @@ find -type d -name CVS | xargs rm -rf
 #%endif
 
 # ALT: /etc/rpm/macros.d
-# RHEL: /etc/rpm/macros.name
+# Scientific: /etc/rpm/macros.name (who else?)
 # suse asplinux RPM: macros
 DESTFILE=macros
-%if %{_vendor} == "redhat"
-DESTFILE=macros.%name
-%endif
+# WARNING: we will override any /etc/rpm/macroses
+# I do not know what the platfrom needs it.
+#%if %{_vendor} == "redhat"
+#DESTFILE=macros.%name
+#%endif
 
 
 %if %_vendor =="alt"
