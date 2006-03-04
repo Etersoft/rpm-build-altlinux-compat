@@ -1,7 +1,7 @@
 # ALT compatibility on other platforms
 
 %post_ldconfig /sbin/ldconfig
-%unpost_ldconfig /sbin/ldconfig
+%postun_ldconfig /sbin/ldconfig
 
 # See also perl -pi -e
 #%__subst sed -i -e
