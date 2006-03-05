@@ -1,7 +1,8 @@
 # NOTE: do not use clean_spec or rpmcs for this spec
+#TODO: - improve for Mandriva's /etc/rpm/macros.d
 
 Name: rpm-build-altlinux-compat
-Version: 0.5
+Version: 0.6
 Release: %{_vendor}1
 
 Summary: ALT Linux compatibility and extensions in rpm build
@@ -16,7 +17,8 @@ Source: http://etersoft.ru/download/%name/%name-%version.tar.bz2
 
 BuildArchitectures: noarch
 
-%if %_vendor == "alt"
+%if %_vendor == "alt" 
+#|| %_vendor == "Mandriva"
 %define _rpmmacrosdir %_sysconfdir/rpm/macros.d
 %else
 %define _rpmmacrosdir /etc/rpm
@@ -99,6 +101,9 @@ install -D -m644 rpm/macros.out %buildroot/%_rpmmacrosdir/$DESTFILE
 %endif
 
 %changelog
+* Sat Mar 04 2006 Vitaly Lipatov <lav@altlinux.ru> 0.6-alt1
+- fix stupid bug with postun script name
+
 * Sat Feb 18 2006 Vitaly Lipatov <lav@altlinux.ru> 0.5-alt1
 - some fixes
 
