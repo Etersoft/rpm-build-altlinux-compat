@@ -103,6 +103,7 @@ install -D -m644 rpm/macros.out %buildroot/%_rpmmacrosdir/$DESTFILE
 %changelog
 * Sat Mar 04 2006 Vitaly Lipatov <lav@altlinux.ru> 0.6-alt1
 - fix stupid bug with postun script name
+- fix mktemp in old systems
 
 * Sat Feb 18 2006 Vitaly Lipatov <lav@altlinux.ru> 0.5-alt1
 - some fixes
