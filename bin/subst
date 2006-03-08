@@ -2,11 +2,18 @@
 set +e
 SCRIPT=$1; shift
 
-T=`mktemp`
+# Check for broken mktemp
+if mktemp -V &>/dev/null ; then
+	T=`mktemp || exit 1`
+else
+	T=`mktemp /tmp/$NAME.XXXXXX || exit 1`
+fi
+
 for s in "$@"; do
 	if cat $s | sed "$SCRIPT" > $T; then
 	   cat $T > $s
 	fi
 done
+
 rm -f $T
 
