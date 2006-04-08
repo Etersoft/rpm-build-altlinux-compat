@@ -2,7 +2,7 @@
 #TODO: - improve for Mandriva's /etc/rpm/macros.d
 
 Name: rpm-build-altlinux-compat
-Version: 0.6
+Version: 0.7
 Release: %{_vendor}1
 
 Summary: ALT Linux compatibility and extensions in rpm build
@@ -94,6 +94,7 @@ install -D -m644 rpm/macros.out %buildroot/%_rpmmacrosdir/$DESTFILE
 %_rpmmacrosdir/*
 
 %else
+
 %files
 %doc AUTHORS TODO NEWS
 %_rpmmacrosdir/*
@@ -101,6 +102,10 @@ install -D -m644 rpm/macros.out %buildroot/%_rpmmacrosdir/$DESTFILE
 %endif
 
 %changelog
+* Sun Apr 09 2006 Vitaly Lipatov <lav@altlinux.ru> 0.7-alt1
+- define ALT macroses only if not defined yet
+- add __niconsdir
+
 * Sat Mar 04 2006 Vitaly Lipatov <lav@altlinux.ru> 0.6-alt1
 - fix stupid bug with postun script name
 - fix mktemp in old systems
