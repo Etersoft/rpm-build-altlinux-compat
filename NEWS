@@ -1,3 +1,8 @@
+09.04.2006
+- add comment about ?iconsdir
+- add niconsdir, fix bug with x11* define
+- define macroses only if not defined yet (for backports)
+
 18.02.2006
 - tested with all Linuxes (ALT Linux 2.3-3.0 too)
 
