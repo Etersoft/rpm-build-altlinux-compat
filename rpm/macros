@@ -5,12 +5,14 @@
 
 # See also perl -pi -e
 #%__subst sed -i -e
+
 # FIXME: use sed -i if possible
 # Use own subst macros. Works everywhere
 %__subst %_bindir/subst
 
 %__make make
 %make make
+# FIXME: enable multiproc build
 %make_build make
 %make_install make
 
@@ -19,6 +21,8 @@
 %_localstatedir /var
 
 %_initdir %_sysconfdir/rc.d/init.d
+# Mdk compatibility
+%_initrddir %_initdir
 %_iconsdir %_datadir/icons
 %_liconsdir %_iconsdir/mini
 %_miconsdir %_iconsdir/large
