@@ -5,18 +5,18 @@
 #
 
 # for backports
-%{?!_niconsdir:%define _niconsdir %_iconsdir}
+%{?!_niconsdir:%_niconsdir %_iconsdir}
 
 # introduced in rpm 4.0.4-alt55
 #  + Add macros: %_desktopdir, %_pixmapsdir (#8767)
-%{?!_desktopdir: %define _desktopdir %_datadir/applications}
-%{?!_pixmapsdir: %define _pixmapsdir %_datadir/pixmaps}
+%{?!_desktopdir: %_desktopdir %_datadir/applications}
+%{?!_pixmapsdir: % _pixmapsdir %_datadir/pixmaps}
 
 # introduced in rpm 4.0.4-alt54
 #  + Added %__autoreconf macro (#8307)
-%{?!__autoreconf: %define __autoreconf autoreconf -fisv}
+%{?!__autoreconf: %__autoreconf autoreconf -fisv}
 
 # introduced in rpm 4.0.4-alt42
-%{?!_x11x11dir: %define _x11x11dir %{_x11dir}/lib/X11}
-%{?!_pkgconfigdir: %define _pkgconfigdir %{_libdir}/pkgconfig}
+%{?!_x11x11dir: %_x11x11dir %{_x11dir}/lib/X11}
+%{?!_pkgconfigdir: %_pkgconfigdir %{_libdir}/pkgconfig}
 

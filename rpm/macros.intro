@@ -29,8 +29,8 @@
 %_libexecdir %_prefix/libexec
 
 # PLD compatibility
-%define groupadd /usr/sbin/groupadd
-%define useradd /usr/sbin/useradd
-#%define userremove userdel
-#%define groupremove groupdel
+%groupadd /usr/sbin/groupadd
+%useradd /usr/sbin/useradd
+#%userremove userdel
+#%groupremove groupdel
 
