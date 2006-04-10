@@ -3,7 +3,7 @@
 
 Name: rpm-build-altlinux-compat
 Version: 0.7
-Release: %{_vendor}1
+Release: %{_vendor}2
 
 Summary: ALT Linux compatibility and extensions in rpm build
 
@@ -102,6 +102,9 @@ install -D -m644 rpm/macros.out %buildroot/%_rpmmacrosdir/$DESTFILE
 %endif
 
 %changelog
+* Mon Apr 10 2006 Vitaly Lipatov <lav@altlinux.ru> 0.7-alt2
+- fix chkconfig params
+
 * Sun Apr 09 2006 Vitaly Lipatov <lav@altlinux.ru> 0.7-alt1
 - define ALT macroses only if not defined yet
 - add __niconsdir

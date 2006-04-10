@@ -25,7 +25,7 @@ fi
 # Usual path to public sources
 # scp $TARNAME cf.sf:~   (use below params for it)
 PUBLICSERVER=etersoft
-PUBLICPATH=/home/lav/download/$NAME
+PUBLICPATH=/home/lav/download/$BASENAME
 
 publish_tarball
 
