@@ -55,8 +55,8 @@
 # in %%preun section.
 %uninstall_info /usr/sbin/uninstall_info
 
-%post_service chkconfig -add %1
-%preun_service chkconfig -del %1
+%post_service chkconfig --add %1
+%preun_service chkconfig --del %1
 
 %optflags_default	-O2
 %optflags_shared	-fPIC -DPIC
