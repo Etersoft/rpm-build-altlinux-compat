@@ -20,7 +20,7 @@
 %_sysconfdir /etc
 %_localstatedir /var
 
-%_initdir %_sysconfdir/rc.d/init.d
+%_initdir %_sysconfdir/init.d
 # Mdk compatibility
 %_initrddir %_initdir
 %_iconsdir %_datadir/icons
