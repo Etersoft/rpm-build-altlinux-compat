@@ -55,8 +55,18 @@
 # in %%preun section.
 %uninstall_info /usr/sbin/uninstall_info
 
-%post_service chkconfig --add %1
-%preun_service chkconfig --del %1
+%post_service() \
+if [ "$RPM_INSTALL_ARG1" -eq 1 ] ; then \
+chkconfig --add %1 || : \
+else \
+%_initdir/%1 condrestart || : \
+fi \
+
+%preun_service() \
+if [ "$RPM_INSTALL_ARG1" -eq 0 ]; then \
+chkconfig --del %1 || : \
+%_initdir %1 stop ||: \
+fi \
 
 %optflags_default	-O2
 %optflags_shared	-fPIC -DPIC
