@@ -65,7 +65,7 @@ fi \
 %preun_service() \
 if [ "$RPM_INSTALL_ARG1" -eq 0 ]; then \
 chkconfig --del %1 || : \
-%_initdir %1 stop ||: \
+%_initdir %1 condstop ||: \
 fi \
 
 %optflags_default	-O2
