@@ -1,9 +1,9 @@
-#!/bin/bash
+#!/bin/sh
 set +e
 SCRIPT=$1; shift
 
 # Check for broken mktemp
-if mktemp -V &>/dev/null ; then
+if mktemp -V 2>/dev/null >/dev/null ; then
 	T=`mktemp || exit 1`
 else
 	T=`mktemp /tmp/$NAME.XXXXXX || exit 1`
