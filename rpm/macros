@@ -70,11 +70,12 @@
 
 %post_service() \
 chkconfig --add %1 || : \
-%_initdir/%1 condrestart || :
+%_initdir/%1 condrestart || : \
+
 
 %preun_service() \
 chkconfig --del %1 || : \
-%_initdir/%1 condstop ||:
+%_initdir/%1 condstop ||: \
 
 
 %optflags_default	-O2

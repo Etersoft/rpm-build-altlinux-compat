@@ -105,6 +105,8 @@ install -D -m644 rpm/macros.out %buildroot/%_rpmmacrosdir/$DESTFILE
 * Tue Apr 11 2006 Vitaly Lipatov <lav@altlinux.ru> 0.7-alt3
 - fix chkconfig params
 - change initdir to /etc/init.d (for non ALT)
+- rewrite preun/post scripts
+- add distr_vendor script for distro version detecting
 
 * Sun Apr 09 2006 Vitaly Lipatov <lav@altlinux.ru> 0.7-alt1
 - define ALT macroses only if not defined yet
