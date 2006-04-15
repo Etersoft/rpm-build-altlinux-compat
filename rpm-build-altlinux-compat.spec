@@ -2,8 +2,8 @@
 #TODO: - improve for Mandriva's /etc/rpm/macros.d
 
 Name: rpm-build-altlinux-compat
-Version: 0.7
-Release: %{_vendor}3
+Version: 0.8
+Release: %{_vendor}1
 
 Summary: ALT Linux compatibility and extensions in rpm build
 
@@ -102,11 +102,14 @@ install -D -m644 rpm/macros.out %buildroot/%_rpmmacrosdir/$DESTFILE
 %endif
 
 %changelog
+* Sat Apr 15 2006 Vitaly Lipatov <lav@altlinux.ru> 0.8-alt1
+- add dummy macroses for menu/desktopdb update
+- add distr_vendor script for distro version detecting
+
 * Tue Apr 11 2006 Vitaly Lipatov <lav@altlinux.ru> 0.7-alt3
 - fix chkconfig params
 - change initdir to /etc/init.d (for non ALT)
 - rewrite preun/post scripts
-- add distr_vendor script for distro version detecting
 
 * Sun Apr 09 2006 Vitaly Lipatov <lav@altlinux.ru> 0.7-alt1
 - define ALT macroses only if not defined yet
