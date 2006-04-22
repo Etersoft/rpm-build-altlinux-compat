@@ -105,6 +105,7 @@ install -D -m644 rpm/macros.out %buildroot/%_rpmmacrosdir/$DESTFILE
 * Sat Apr 15 2006 Vitaly Lipatov <lav@altlinux.ru> 0.8-alt1
 - add dummy macroses for menu/desktopdb update
 - add distr_vendor script for distro version detecting
+- use : in stub macroses
 
 * Tue Apr 11 2006 Vitaly Lipatov <lav@altlinux.ru> 0.7-alt3
 - fix chkconfig params
