@@ -1,9 +1,9 @@
 # ALT compatibility on other platforms
 
-%update_menus /usr/bin/true
-%update_desktopdb /usr/bin/true
-%clean_menus /usr/bin/true
-%clean_desktopdb /usr/bin/true
+%update_menus :
+%update_desktopdb :
+%clean_menus :
+%clean_desktopdb :
 
 %post_ldconfig /sbin/ldconfig
 %postun_ldconfig /sbin/ldconfig
