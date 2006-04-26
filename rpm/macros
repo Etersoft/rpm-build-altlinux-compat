@@ -25,6 +25,9 @@
 %_sysconfdir /etc
 %_localstatedir /var
 
+# due mismatch between configure (datadir/doc) and spec docdir in some systems (SuSE)
+%_docdir %datadir/doc
+
 %_initdir %_sysconfdir/init.d
 # Mdk compatibility
 %_initrddir %_initdir

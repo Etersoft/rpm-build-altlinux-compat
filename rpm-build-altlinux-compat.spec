@@ -106,6 +106,7 @@ install -D -m644 rpm/macros.out %buildroot/%_rpmmacrosdir/$DESTFILE
 - add dummy macroses for menu/desktopdb update
 - add distr_vendor script for distro version detecting
 - use : in stub macroses
+! - add _docdir
 
 * Tue Apr 11 2006 Vitaly Lipatov <lav@altlinux.ru> 0.7-alt3
 - fix chkconfig params
