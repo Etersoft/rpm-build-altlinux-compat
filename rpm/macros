@@ -83,7 +83,7 @@ chkconfig --add %1 || : \
 
 %preun_service() \
 chkconfig --del %1 || : \
-%_initdir/%1 condstop ||:
+%_initdir/%1 condstop || :
 
 
 %optflags_default	-O2
