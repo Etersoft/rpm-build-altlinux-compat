@@ -77,13 +77,13 @@
 #fi
 
 %post_service() \
-chkconfig --add %1 || : \
-%_initdir/%1 condrestart || :
+	chkconfig --add %1 || : \
+	%_initdir/%1 condrestart || : 
 
 
 %preun_service() \
-chkconfig --del %1 || : \
-%_initdir/%1 condstop || :
+	chkconfig --del %1 || : \
+	%_initdir/%1 condstop || : 
 
 
 %optflags_default	-O2
