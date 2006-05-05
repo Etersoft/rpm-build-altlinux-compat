@@ -78,12 +78,13 @@
 
 %post_service() \
 	chkconfig --add %1 || : \
-	%_initdir/%1 condrestart || : 
-
+	%_initdir/%1 condrestart || : \
+%nil
 
 %preun_service() \
 	chkconfig --del %1 || : \
-	%_initdir/%1 condstop || : 
+	%_initdir/%1 condstop || : \
+%nil
 
 
 %optflags_default	-O2
