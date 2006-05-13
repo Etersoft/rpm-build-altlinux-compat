@@ -3,7 +3,7 @@
 
 Name: rpm-build-altlinux-compat
 Version: 0.8
-Release: %{_vendor}1
+Release: %{_vendor}2
 
 Summary: ALT Linux compatibility and extensions in rpm build
 
@@ -102,11 +102,15 @@ install -D -m644 rpm/macros.out %buildroot/%_rpmmacrosdir/$DESTFILE
 %endif
 
 %changelog
+* Sat May 13 2006 Vitaly Lipatov <lav@altlinux.ru> 0.8-alt2
+- add _docdir
+- use nil for correct macro functions
+- fix subst script
+
 * Sat Apr 15 2006 Vitaly Lipatov <lav@altlinux.ru> 0.8-alt1
 - add dummy macroses for menu/desktopdb update
 - add distr_vendor script for distro version detecting
 - use : in stub macroses
-! - add _docdir
 
 * Tue Apr 11 2006 Vitaly Lipatov <lav@altlinux.ru> 0.7-alt3
 - fix chkconfig params
