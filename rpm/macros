@@ -1,5 +1,7 @@
 # ALT compatibility on other platforms
 
+%prefix %_prefix
+
 %update_menus :
 %update_desktopdb :
 %clean_menus :
