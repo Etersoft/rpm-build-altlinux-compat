@@ -29,8 +29,9 @@
 
 # due mismatch between configure (datadir/doc) and spec docdir in some systems (SuSE)
 %_docdir %_datadir/doc
-
+# FIXME: on Debian!
 %_initdir %_sysconfdir/init.d
+
 # Mdk compatibility
 %_initrddir %_initdir
 %_iconsdir %_datadir/icons
