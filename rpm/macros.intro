@@ -26,7 +26,8 @@
 #%rpmldflags 
 
 %_aclocaldir %_datadir/aclocal
-%_libexecdir %_prefix/lib
+#%_libexecdir %_prefix/lib
+%_libexecdir %_libdir
 
 # PLD compatibility
 %groupadd /usr/sbin/groupadd
