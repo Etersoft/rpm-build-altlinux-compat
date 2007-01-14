@@ -3,7 +3,7 @@
 
 Name: rpm-build-altlinux-compat
 Version: 0.8
-Release: %{_vendor}2
+Release: %{_vendor}4
 
 Summary: ALT Linux compatibility and extensions in rpm build
 
@@ -102,6 +102,12 @@ install -D -m644 rpm/macros.out %buildroot/%_rpmmacrosdir/$DESTFILE
 %endif
 
 %changelog
+* Sun Jan 14 2007 Vitaly Lipatov <lav@altlinux.ru> 0.8-alt4
+- remove _libexecdir
+
+* Thu Nov 02 2006 Vitaly Lipatov <lav@altlinux.ru> 0.8-alt3
+- fix _libexecdir
+
 * Sat May 13 2006 Vitaly Lipatov <lav@altlinux.ru> 0.8-alt2
 - add _docdir
 - use nil for correct macro functions
@@ -116,6 +122,9 @@ install -D -m644 rpm/macros.out %buildroot/%_rpmmacrosdir/$DESTFILE
 - fix chkconfig params
 - change initdir to /etc/init.d (for non ALT)
 - rewrite preun/post scripts
+
+* Sun Apr 09 2006 Vitaly Lipatov <lav@altlinux.ru> 0.7-alt2
+- revert prev. changes, fix some macroses
 
 * Sun Apr 09 2006 Vitaly Lipatov <lav@altlinux.ru> 0.7-alt1
 - define ALT macroses only if not defined yet
