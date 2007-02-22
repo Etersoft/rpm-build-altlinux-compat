@@ -79,7 +79,7 @@ DESTFILE=macros
 DESTFILE=compat
 cat rpm/macros.{altlinux,intro} >rpm/macros.out
 %else
-cat rpm/macros.altlinux rpm/macros.intro >rpm/macros.out
+cat rpm/macros rpm/macros.intro >rpm/macros.out
 mkdir -p %buildroot%_bindir
 install -m755 bin/* %buildroot%_bindir
 %endif
