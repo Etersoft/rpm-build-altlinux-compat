@@ -3,7 +3,7 @@
 
 Name: rpm-build-altlinux-compat
 Version: 0.8
-Release: %{_vendor}4
+Release: %{_vendor}5
 
 Summary: ALT Linux compatibility and extensions in rpm build
 
@@ -18,7 +18,6 @@ Source: http://etersoft.ru/download/%name/%name-%version.tar.bz2
 BuildArchitectures: noarch
 
 %if %_vendor == "alt" 
-#|| %_vendor == "Mandriva"
 %define _rpmmacrosdir %_sysconfdir/rpm/macros.d
 %else
 %define _rpmmacrosdir /etc/rpm
@@ -80,7 +79,7 @@ DESTFILE=macros
 DESTFILE=compat
 cat rpm/macros.{altlinux,intro} >rpm/macros.out
 %else
-cat rpm/macros{,.altlinux,.intro} >rpm/macros.out
+cat rpm/macros.altlinux rpm/macros.intro >rpm/macros.out
 mkdir -p %buildroot%_bindir
 install -m755 bin/* %buildroot%_bindir
 %endif
@@ -102,6 +101,9 @@ install -D -m644 rpm/macros.out %buildroot/%_rpmmacrosdir/$DESTFILE
 %endif
 
 %changelog
+* Thu Feb 22 2007 Vitaly Lipatov <lav@altlinux.ru> 0.8-alt5
+- fix distro_vendor script, fixes for dash using
+
 * Sun Jan 14 2007 Vitaly Lipatov <lav@altlinux.ru> 0.8-alt4
 - remove _libexecdir
 
