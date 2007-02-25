@@ -78,6 +78,7 @@ DESTFILE=macros
 %if %_vendor =="alt"
 DESTFILE=compat
 cat rpm/macros.{altlinux,intro} >rpm/macros.out
+install -m755 bin/distr_vendor %buildroot%_bindir
 %else
 cat rpm/macros rpm/macros.altlinux rpm/macros.intro >rpm/macros.out
 mkdir -p %buildroot%_bindir
@@ -91,6 +92,7 @@ install -D -m644 rpm/macros.out %buildroot/%_rpmmacrosdir/$DESTFILE
 %files -n rpm-build-compat
 %doc AUTHORS TODO NEWS
 %_rpmmacrosdir/*
+%_bindir/distr_vendor
 
 %else
 
@@ -102,7 +104,8 @@ install -D -m644 rpm/macros.out %buildroot/%_rpmmacrosdir/$DESTFILE
 
 %changelog
 * Thu Feb 22 2007 Vitaly Lipatov <lav@altlinux.ru> 0.8-alt5
-- fix distro_vendor script, fixes for dash using
+- fix distr_vendor script, fixes for dash using
+- pack distr_vendor for ALT Linux
 
 * Sun Jan 14 2007 Vitaly Lipatov <lav@altlinux.ru> 0.8-alt4
 - remove _libexecdir
