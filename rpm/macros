@@ -80,12 +80,12 @@
 #fi
 
 %post_service() \
-	chkconfig --add %1 || : \
+	test -x /sbin/chkconfig && chkconfig --add %1 || : \
 	%_initdir/%1 condrestart || : \
 %nil
 
 %preun_service() \
-	chkconfig --del %1 || : \
+	test -x /sbin/chkconfig && chkconfig --del %1 || : \
 	%_initdir/%1 condstop || : \
 %nil
 
