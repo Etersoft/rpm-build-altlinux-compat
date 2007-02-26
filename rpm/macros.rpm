@@ -1,0 +1,25 @@
+# ALT compatibility on other platforms (rpm based)
+
+#%post_service() \
+#if [ "$RPM_INSTALL_ARG1" = "1" ] ; then \
+#chkconfig --add %1 || : \
+#else \
+#%_initdir/%1 condrestart || : \
+#fi
+
+#%preun_service() \
+#if [ "$RPM_INSTALL_ARG1" != "0" ]; then \
+#%_initdir/%1 condstop ||: \
+#chkconfig --del %1 || : \
+#fi
+
+%post_service() \
+	test -x /sbin/chkconfig && chkconfig --add %1 || : \
+	%_initdir/%1 condrestart || : \
+%nil
+
+%preun_service() \
+	test -x /sbin/chkconfig && chkconfig --del %1 || : \
+	%_initdir/%1 condstop || : \
+%nil
+

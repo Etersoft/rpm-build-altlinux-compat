@@ -1,0 +1,13 @@
+# ALT compatibility on other platforms (Debian based)
+
+%post_service() \
+	test -x /usr/sbin/update-rc.d && update-rc.d %1 defaults || : \
+	%_initdir/%1 condrestart || : \
+%nil
+
+%preun_service() \
+	%_initdir/%1 condstop || : \
+	test -x /usr/sbin/update-rc.d && update-rc.d %1 purge || : \
+%nil
+
+
