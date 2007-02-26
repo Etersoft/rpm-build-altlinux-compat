@@ -2,8 +2,8 @@
 #TODO: - improve for Mandriva's /etc/rpm/macros.d
 
 Name: rpm-build-altlinux-compat
-Version: 0.8
-Release: %{_vendor}5
+Version: 0.9
+Release: %{_vendor}1
 
 Summary: ALT Linux compatibility and extensions in rpm build
 
@@ -75,14 +75,21 @@ DESTFILE=macros
 #%endif
 
 
+%define pkgtype $(bin/distr_vendor -p)
+
 mkdir -p %buildroot%_bindir
-%if %_vendor =="alt"
+%if %_vendor == "alt"
 DESTFILE=compat
 cat rpm/macros.{altlinux,intro} >rpm/macros.out
 install -m755 bin/distr_vendor %buildroot%_bindir
 %else
 cat rpm/macros rpm/macros.altlinux rpm/macros.intro >rpm/macros.out
 install -m755 bin/* %buildroot%_bindir
+%if %pkgtype == "deb"
+cat rpm/macros.deb >>rpm.macros.out
+%else
+cat rpm/macros.rpm >>rpm.macros.out
+%endif
 %endif
 
 install -D -m644 rpm/macros.out %buildroot/%_rpmmacrosdir/$DESTFILE
@@ -103,6 +110,9 @@ install -D -m644 rpm/macros.out %buildroot/%_rpmmacrosdir/$DESTFILE
 %endif
 
 %changelog
+* Mon Feb 26 2007 Vitaly Lipatov <lav@altlinux.ru> 0.9-alt1
+- define post_service macroses separately for rpm and deb
+
 * Thu Feb 22 2007 Vitaly Lipatov <lav@altlinux.ru> 0.8-alt5
 - fix distr_vendor script, fixes for dash using
 - pack distr_vendor for ALT Linux
