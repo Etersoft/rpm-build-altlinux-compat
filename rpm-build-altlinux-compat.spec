@@ -60,39 +60,12 @@ Command rpmbph from etersoft-build-utils adds it automatically.
 find -type d -name CVS | xargs rm -rf
 
 %install
+
 #%if %{_vendor} == "RPM"
 #rm -rf $RPM_BUILD_ROOT
 #%endif
 
-# ALT: /etc/rpm/macros.d
-# Scientific: /etc/rpm/macros.name (who else?)
-# suse asplinux RPM: macros
-DESTFILE=macros
-# WARNING: we will override any /etc/rpm/macroses
-# I do not know what the platfrom needs it.
-#%if %{_vendor} == "redhat"
-#DESTFILE=macros.%name
-#%endif
-
-
-%define pkgtype $(bin/distr_vendor -p)
-
-mkdir -p %buildroot%_bindir
-%if %_vendor == "alt"
-DESTFILE=compat
-cat rpm/macros.{altlinux,intro} >rpm/macros.out
-install -m755 bin/distr_vendor %buildroot%_bindir
-%else
-cat rpm/macros rpm/macros.altlinux rpm/macros.intro >rpm/macros.out
-install -m755 bin/* %buildroot%_bindir
-%if %pkgtype == "deb"
-cat rpm/macros.deb >>rpm.macros.out
-%else
-cat rpm/macros.rpm >>rpm.macros.out
-%endif
-%endif
-
-install -D -m644 rpm/macros.out %buildroot/%_rpmmacrosdir/$DESTFILE
+./install.sh %buildroot %_rpmmacrosdir
 
 # Note: rpm does not like doc macros in other sections?
 %if %_vendor == "alt"
