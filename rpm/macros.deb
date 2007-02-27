@@ -7,7 +7,7 @@
 
 %preun_service() \
 	%_initdir/%1 condstop || : \
-	test -x /usr/sbin/update-rc.d && update-rc.d %1 purge || : \
+	test -x /usr/sbin/update-rc.d && update-rc.d -f %1 remove || : \
 %nil
 
 
