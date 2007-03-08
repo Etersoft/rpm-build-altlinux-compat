@@ -17,11 +17,18 @@
 # Use own subst macros. Works everywhere
 %__subst %_bindir/subst
 
-%__make make
-%make make
-# FIXME: enable multiproc build
-%make_build make
-%make_install make
+# Make
+%_make_bin make
+
+%__nprocs	%(N=`egrep -cs ^cpu[0-9]+ /proc/stat`; [ "$N" -gt 0 ] 2>/dev/null && echo "$N" || echo 1)
+
+%make_build	[ -n "$NPROCS" ] || NPROCS=%__nprocs; %_make_bin -j$NPROCS
+
+%make_install	%_make_bin INSTALL="install -p"
+
+%__make %_make_bin
+%make %_make_bin
+
 
 # due buggy on some systems (Debian)
 %_sysconfdir /etc
