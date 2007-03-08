@@ -15,7 +15,7 @@ rpmmacrosdir=$2
 bindir=$buildroot/usr/bin
 
 pkgtype=$(bin/distr_vendor -p)
-distr=$(bin/distr_vendor)
+distr=$(bin/distr_vendor -s)
 echo "Distro: $distr, Pkg: $pkgtype"
 mkdir -p $bindir $buildroot/$rpmmacrosdir
 

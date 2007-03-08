@@ -1,8 +1,7 @@
 # NOTE: do not use clean_spec or rpmcs for this spec
-#TODO: - improve for Mandriva's /etc/rpm/macros.d
 
 Name: rpm-build-altlinux-compat
-Version: 0.9
+Version: 0.91
 Release: %{_vendor}1
 
 Summary: ALT Linux compatibility and extensions in rpm build
@@ -60,11 +59,6 @@ Command rpmbph from etersoft-build-utils adds it automatically.
 find -type d -name CVS | xargs rm -rf
 
 %install
-
-#%if %{_vendor} == "RPM"
-#rm -rf $RPM_BUILD_ROOT
-#%endif
-
 ./install.sh %buildroot %_rpmmacrosdir
 
 # Note: rpm does not like doc macros in other sections?
@@ -83,6 +77,10 @@ find -type d -name CVS | xargs rm -rf
 %endif
 
 %changelog
+* Thu Mar 08 2007 Vitaly Lipatov <lav@altlinux.ru> 0.91-alt1
+- rewrite distr_vendor (add detect for all supported system)
+- enable make_build to multiprocess build
+
 * Mon Feb 26 2007 Vitaly Lipatov <lav@altlinux.ru> 0.9-alt1
 - define post_service macroses separately for rpm and deb
 
