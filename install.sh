@@ -16,7 +16,8 @@ bindir=$buildroot/usr/bin
 
 pkgtype=$(bin/distr_vendor -p)
 distr=$(bin/distr_vendor -s)
-echo "Distro: $distr, Pkg: $pkgtype"
+version=$(bin/distr_vendor -v)
+echo "Distro: $distr Version: $version, Pkg: $pkgtype"
 mkdir -p $bindir $buildroot/$rpmmacrosdir
 
 DESTFILE=$buildroot/$rpmmacrosdir/macros
@@ -24,6 +25,10 @@ DESTFILE=$buildroot/$rpmmacrosdir/macros
 if [ $distr = "alt" ] ; then
 	DESTFILE=$buildroot/$rpmmacrosdir/compat
 	cat rpm/macros.altlinux rpm/macros.intro >$DESTFILE
+	# Hack: only for old distros
+	if [ "$version" = "2.3" ] || [ "$version" = "2.4" ] ; then
+		cat rpm/macros.altlinux.backport >>$DESTFILE
+	fi
 	install -m755 bin/distr_vendor $bindir
 else
 	cat rpm/macros rpm/macros.altlinux rpm/macros.intro >$DESTFILE
