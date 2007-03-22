@@ -1,0 +1,4 @@
+
+# for backports compatibility (before M30)
+%_niconsdir %_iconsdir
+
