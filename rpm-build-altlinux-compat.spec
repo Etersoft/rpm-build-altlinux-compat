@@ -1,7 +1,7 @@
 # NOTE: do not use clean_spec or rpmcs for this spec
 
 Name: rpm-build-altlinux-compat
-Version: 0.92
+Version: 0.93
 Release: %{_vendor}1
 
 Summary: ALT Linux compatibility and extensions in rpm build
@@ -77,6 +77,9 @@ find -type d -name CVS | xargs rm -rf
 %endif
 
 %changelog
+* Mon Jul 02 2007 Vitaly Lipatov <lav@altlinux.ru> 0.93-alt1
+- upgrade dist_vendor script to newest systems
+
 * Fri Mar 23 2007 Vitaly Lipatov <lav@altlinux.ru> 0.92-alt1
 - do not add old ALT distro compatibility macroses for all (fix bug #11183)
 
