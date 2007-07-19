@@ -26,3 +26,9 @@ xorg-x11-proto-devel - X proto header files
 šššššššš%_x11appconfdir %{_sysconfdir}/X11/app-defaults
 
 # TODO: port rpm-utils?
+
+%define sles9	%(if [ -e %_sysconfdir/SuSE-release ] && grep -q "SUSE LINUX Enterprise Server 9" %_sysconfdir/SuSE-release; then echo 1; else echo 0; fi; )
+%define suse10	%(if [ -e %_sysconfdir/SuSE-release ] && grep -q "LINUX 10" %_sysconfdir/SuSE-release; then echo 1; else echo 0; fi; )
+%define rhel4	%(if [ -e %_sysconfdir/redhat-release ] && grep -q "release 4" %_sysconfdir/redhat-release; then echo 1; else echo 0; fi; )
+%define rhel3	%(if [ -e %_sysconfdir/redhat-release ] && grep -q "release 3" %_sysconfdir/redhat-release; then echo 1; else echo 0; fi; )
+%define fc5	%(if [ -e %_sysconfdir/fedora-release ] && grep -q "release 5" %_sysconfdir/fedora-release; then echo 1; else echo 0; fi; )
