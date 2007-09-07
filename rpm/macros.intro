@@ -35,3 +35,4 @@
 #%userremove userdel
 #%groupremove groupdel
 
+%start_service() [ -z "$DURING_INSTALL" ] && tty -s && [ "$1" = "1" ] && %_initdir/%{1} start || :
