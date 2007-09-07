@@ -35,4 +35,5 @@
 #%userremove userdel
 #%groupremove groupdel
 
-%start_service() [ -z "$DURING_INSTALL" ] && tty -s && [ "$1" = "1" ] && %_initdir/%{1} start || :
+# Start service only after manual install
+%start_service() tty -s && [ "$1" = "1" ] && %_initdir/%{1} start || :
