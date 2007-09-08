@@ -1,4 +1,6 @@
 #!/bin/sh
+# portable subst (for systems without sed -i)
+# TODO: use sed -i if possible
 set +e
 SCRIPT=$1; shift
 
