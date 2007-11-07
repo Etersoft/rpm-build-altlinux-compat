@@ -5,7 +5,8 @@
 # Use etersoft-build-utils as helper
 . /etc/rpm/etersoft-build-functions
 
-WORKDIR=/var/ftp/pvt/Etersoft/
+WORKDIR=/home/builder/Projects/eterbuild/functions
+
 test -f $WORKDIR/config.in && . $WORKDIR/config.in
 
 check_key
