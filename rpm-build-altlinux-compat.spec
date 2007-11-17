@@ -19,6 +19,7 @@ BuildArchitectures: noarch
 %if %_vendor == "alt" 
 %define _rpmmacrosdir %_sysconfdir/rpm/macros.d
 %else
+Requires: ed
 %define _rpmmacrosdir /etc/rpm
 # ALT has it in RPM
 BuildRoot: %{_tmppath}/%{name}-%{version}
