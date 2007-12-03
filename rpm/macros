@@ -34,7 +34,7 @@
 %_sysconfdir /etc
 %_localstatedir /var
 
-# due mismatch between configure (datadir/doc) and spec docdir in some systems (SUSE)
+# due mismatch between configure (datadir/doc) and spec docdir in some systems (SUSE, Slackware)
 %_defaultdocdir %_datadir/doc
 %_docdir %_datadir/doc
 # FIXME: on Debian!
