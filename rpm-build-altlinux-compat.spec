@@ -82,6 +82,7 @@ find -type d -name CVS | xargs rm -rf
 * Wed Nov 07 2007 Vitaly Lipatov <lav@altlinux.ru> 0.95-alt1
 - upgrade dist_vendor script to newest systems
 - add check for too old mktemp
+- add defaultdocdir definition
 
 * Fri Sep 07 2007 Vitaly Lipatov <lav@altlinux.ru> 0.94-alt1
 - update distr_vendor
