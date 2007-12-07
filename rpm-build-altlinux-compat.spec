@@ -73,7 +73,7 @@ find -type d -name CVS | xargs rm -rf
 
 %files
 %defattr(-,root,root)
-%doc AUTHORS TODO NEWS
+%doc AUTHORS TODO NEWS ChangeLog
 %_rpmmacrosdir/*
 %_bindir/*
 %endif
@@ -81,8 +81,12 @@ find -type d -name CVS | xargs rm -rf
 %changelog
 * Wed Nov 07 2007 Vitaly Lipatov <lav@altlinux.ru> 0.95-alt1
 - upgrade dist_vendor script to newest systems
-- add check for too old mktemp
+- add check for too old mktemp to add_changelog
 - add defaultdocdir definition
+- add ChangeLog file
+- fix start_service macros
+- add initial ArchLinux support
+- use lxp suffix for LinuxXP and mdv for Mandriva
 
 * Fri Sep 07 2007 Vitaly Lipatov <lav@altlinux.ru> 0.94-alt1
 - update distr_vendor

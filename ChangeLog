@@ -1,0 +1,496 @@
+2007-12-04 18:50  lav
+
+	* bin/distr_vendor: set tar.gz for ArchLinux
+
+2007-12-04 17:42  lav
+
+	* bin/distr_vendor: set tgz for arch linux
+
+2007-12-04 17:41  lav
+
+	* bin/distr_vendor: add ArchLinux support
+
+2007-12-04 16:52  lav
+
+	* rpm/macros.intro: fix start_service script
+
+2007-12-03 16:13  lav
+
+	* rpm/macros: add defaultdocdir
+
+2007-12-03 16:13  lav
+
+	* rpm-build-altlinux-compat.spec: add changelog
+
+2007-12-03 16:07  lav
+
+	* rpm/macros: add defaultdocdir
+
+2007-12-02 22:08  lav
+
+	* bin/distr_vendor: add special case for Mandriva - use mdv package
+	  suffix
+
+2007-11-17 14:47  lav
+
+	* rpm-build-altlinux-compat.spec: some systems missed ed
+
+2007-11-10 14:57  lav
+
+	* bin/distr_vendor: use lxp suffix for LinuxXP
+
+2007-11-08 12:34  lav
+
+	* rpm-build-altlinux-compat.spec: add mktemp entry in changelog
+
+2007-11-08 12:33  lav
+
+	* bin/add_changelog: check for too old mktemp
+
+2007-11-07 13:11  lav
+
+	* bin/distr_vendor: теперь FC это Fedora
+
+2007-11-07 13:10  lav
+
+	* bin/distr_vendor: добавлена FC 8
+
+2007-11-07 11:53  lav
+
+	* release_rpm-build-altlinux-compat.sh: исправлен путь к конфигу
+
+2007-11-07 11:37  boris
+
+	* bin/distr_vendor: fix lsb-release
+
+2007-10-08 19:15  lav
+
+	* bin/add_changelog: use rpm instead /bin/rpm
+
+2007-09-08 15:01  lav
+
+	* bin/distr_vendor: add Ladoga to 11.2
+
+2007-09-08 15:00  lav
+
+	* TODO, rpm-build-altlinux-compat.spec, bin/distr_vendor,
+	  bin/subst, tools/check_distr_vendor.sh: add new distros, add
+	  comments, release 0.94
+
+2007-09-08 00:26  lav
+
+	* rpm/macros.intro: do not check DURING_INSTALL
+
+2007-09-07 23:37  lav
+
+	* rpm/macros.intro: add start_service
+
+2007-08-02 12:36  lav
+
+	* rpm/macros.deb: вернул обратно defaults
+
+2007-08-02 11:43  lav
+
+	* rpm/macros.deb: use start instead defaults
+
+2007-07-19 11:14  lav
+
+	* TODO: пример определения системы
+
+2007-07-02 00:46  lav
+
+	* rpm-build-altlinux-compat.spec: new version
+
+2007-07-01 13:47  lav
+
+	* bin/distr_vendor: fix some errors and add new systems
+
+2007-06-21 21:31  lav
+
+	* bin/distr_vendor: обновлён детект систем
+
+2007-05-03 21:55  lav
+
+	* bin/distr_vendor: some comments
+
+2007-03-23 00:56  lav
+
+	* rpm-build-altlinux-compat.spec, rpm/macros.altlinux,
+	  rpm/macros.altlinux.backport: fix nicondir macros overwrites
+
+2007-03-23 00:55  lav
+
+	* install.sh: add hack for backports
+
+2007-03-18 15:16  lav
+
+	* bin/distr_vendor: добавлены некоторые системы
+
+2007-03-14 12:29  lav
+
+	* bin/distr_vendor: исправлено определение версии FreeBSD
+
+2007-03-09 19:07  lav
+
+	* bin/distr_vendor: возмость указания системы при определении типа
+	  пакетов
+
+2007-03-08 17:16  lav
+
+	* TODO, install.sh, rpm-build-altlinux-compat.spec,
+	  bin/distr_vendor, tools/check_distr_vendor.sh: new version
+
+2007-03-08 17:11  lav
+
+	* TODO, bin/distr_vendor, tools/check_distr_vendor.sh: доделан
+	  детект всех систем
+
+2007-03-08 15:38  lav
+
+	* rpm/macros: добавлено распознавание количества процессоров (из
+	  ALT)
+
+2007-03-07 22:30  lav
+
+	* bin/distr_vendor: расширение для Gentoo
+
+2007-03-06 22:15  lav
+
+	* bin/distr_vendor: добавлена поддержка Gentoo
+
+2007-02-27 13:54  lav
+
+	* rpm/macros.deb: исправлено удаление
+
+2007-02-26 22:41  lav
+
+	* install.sh: добавлен скрипт установки
+
+2007-02-26 22:39  lav
+
+	* rpm-build-altlinux-compat.spec, bin/distr_vendor: установка
+	  перенесена в отдельный скрипт
+
+2007-02-26 22:22  lav
+
+	* rpm-build-altlinux-compat.spec: новая версия, поддержка rpm/deb
+
+2007-02-26 22:18  lav
+
+	* rpm/: macros, macros.deb, macros.rpm: выделены отдельно
+	  post_scripts
+
+2007-02-25 18:47  lav
+
+	* rpm-build-altlinux-compat.spec: создание каталога build
+
+2007-02-25 16:43  lav
+
+	* rpm/macros: добавлена проверка на существование chkconfig
+
+2007-02-25 16:41  lav
+
+	* rpm-build-altlinux-compat.spec: упаковка distr_vendor
+
+2007-02-24 00:00  lav
+
+	* rpm-build-altlinux-compat.spec: исправил ошибку в формировании
+	  макросов
+
+2007-02-22 22:38  lav
+
+	* bin/distr_vendor: исправлено для mandriva
+
+2007-02-22 22:31  lav
+
+	* bin/distr_vendor: add exclude for ASPLinux/10
+
+2007-02-22 21:58  lav
+
+	* rpm-build-altlinux-compat.spec: ошибка в спеке
+
+2007-02-22 19:35  lav
+
+	* TODO, rpm-build-altlinux-compat.spec: исправления для dash
+
+2007-02-22 18:09  lav
+
+	* bin/distr_vendor: уточнение по SuSE
+
+2007-02-22 18:07  lav
+
+	* bin/distr_vendor: добавлено уточнение для SuSE
+
+2007-02-22 17:45  lav
+
+	* bin/distr_vendor: исправлен порядок для правильного приоритета
+
+2007-01-14 04:02  lav
+
+	* rpm-build-altlinux-compat.spec: new release
+
+2007-01-14 04:01  lav
+
+	* rpm/macros.intro: remove _libexecdir
+
+2006-11-02 00:46  lav
+
+	* rpm/macros.intro: fix libexecdir
+
+2006-10-30 10:42  lav
+
+	* rpm/: macros, macros.intro: устранён конфликт с init.d
+
+2006-10-13 10:06  lav
+
+	* rpm/macros: add prefix define
+
+2006-05-13 04:15  lav
+
+	* TODO, rpm-build-altlinux-compat.spec: update spec
+
+2006-05-13 04:13  lav
+
+	* bin/subst: return error if file is not exist
+
+2006-05-05 23:14  lav
+
+	* rpm/macros: fix spaces in rpm scripts
+
+2006-05-02 21:39  lav
+
+	* rpm/macros: fix spaces
+
+2006-04-30 00:39  lav
+
+	* rpm/macros: add space
+
+2006-04-27 21:29  lav
+
+	* rpm/macros: fix macroses
+
+2006-04-27 20:33  lav
+
+	* rpm/macros: fix datadir in docdir
+
+2006-04-26 16:07  lav
+
+	* rpm-build-altlinux-compat.spec, rpm/macros: fix docdir
+
+2006-04-22 14:59  lav
+
+	* bin/distr_vendor: update script
+
+2006-04-22 14:59  lav
+
+	* rpm-build-altlinux-compat.spec: update spec
+
+2006-04-22 14:58  lav
+
+	* rpm/macros: replace true with :
+
+2006-04-15 15:44  lav
+
+	* bin/distr_vendor: add suse
+
+2006-04-15 15:44  lav
+
+	* rpm-build-altlinux-compat.spec: update spec
+
+2006-04-15 15:40  lav
+
+	* rpm/macros: dummy entries for menu
+
+2006-04-13 13:11  lav
+
+	* TODO, rpm-build-altlinux-compat.spec, rpm/macros: update macroses
+
+2006-04-11 19:50  lav
+
+	* bin/subst: replace bash with sh
+
+2006-04-11 19:50  lav
+
+	* rpm/macros: temp. remove any cases
+
+2006-04-11 19:31  lav
+
+	* bin/distr_vendor: first commit
+
+2006-04-11 17:25  lav
+
+	* rpm/macros: change stop with condstop
+
+2006-04-11 15:44  lav
+
+	* rpm/macros: rewrite pre/post macroses
+
+2006-04-11 14:54  lav
+
+	* rpm-build-altlinux-compat.spec: update release
+
+2006-04-11 14:53  lav
+
+	* rpm/macros: use /etc/init.d for services
+
+2006-04-10 22:09  lav
+
+	* release_rpm-build-altlinux-compat.sh,
+	  rpm-build-altlinux-compat.spec: update release
+
+2006-04-10 21:33  lav
+
+	* rpm/macros: fix chkconfig param
+
+2006-04-09 15:22  lav
+
+	* rpm/: macros, macros.altlinux: fix macroses disable %{? (I don't
+	  know how it works)
+
+2006-04-09 15:06  lav
+
+	* rpm/: macros.altlinux, macros.intro: fix define using (remove)
+
+2006-04-09 00:19  lav
+
+	* rpm-build-altlinux-compat.spec: release 0.7
+
+2006-04-09 00:17  lav
+
+	* NEWS, TODO, rpm/macros, rpm/macros.altlinux: prepare to new
+	  release
+
+2006-03-08 17:46  lav
+
+	* rpm-build-altlinux-compat.spec: add comment to spec
+
+2006-03-08 17:45  lav
+
+	* bin/subst: fix for too old mktemp
+
+2006-03-05 12:12  lav
+
+	* rpm-build-altlinux-compat.spec: problems with mandriva
+
+2006-03-04 16:18  lav
+
+	* rpm/macros: fix postun typo
+
+2006-02-23 21:19  lav
+
+	* rpm-build-altlinux-compat.spec: fixes for RHEL3
+
+2006-02-20 18:47  lav
+
+	* rpm/macros: add localstatedir
+
+2006-02-19 11:22  lav
+
+	* release_rpm-build-altlinux-compat.sh: new release script
+
+2006-02-18 02:10  lav
+
+	* NEWS, TODO, rpm-build-altlinux-compat.spec: release
+
+2006-02-18 02:07  lav
+
+	* TODO, release_rpm-build-altlinux-compat.sh,
+	  rpm-build-altlinux-compat.spec: last changes for 0.5
+
+2006-02-13 00:17  lav
+
+	* release_rpm-build-altlinux-compat.sh: use prepare_tarball
+
+2006-02-13 00:00  lav
+
+	* release_rpm-build-altlinux-compat.sh,
+	  rpm-build-altlinux-compat.spec, rpm/macros, rpm/macros.altlinux:
+	  release 0.4
+
+2006-02-12 23:05  lav
+
+	* rpm/macros.intro: new macroses split
+
+2006-02-12 21:21  lav
+
+	* release_rpm-build-altlinux-compat.sh: fix SOURCES dir
+
+2006-02-12 20:51  lav
+
+	* release_rpm-build-altlinux-compat.sh: add copy to buildhome
+
+2006-02-12 20:43  lav
+
+	* release_rpm-build-altlinux-compat.sh,
+	  rpm-build-altlinux-compat.spec: last fixes
+
+2006-02-12 20:37  lav
+
+	* AUTHORS, NEWS, release_rpm-build-altlinux-compat.sh,
+	  rpm-build-altlinux-compat.spec, rpm/macros, rpm/macros.altlinux:
+	  add some descriptions
+
+2006-02-12 20:06  lav
+
+	* release_rpm-build-altlinux-compat.sh: update release script
+
+2006-02-12 19:51  lav
+
+	* release_rpm-build-altlinux-compat.sh: add release script
+
+2006-02-12 19:43  lav
+
+	* AUTHORS, TODO, rpm-build-altlinux-compat.spec, rpm/macros: merged
+	  projects
+
+2006-02-12 19:26  lav
+
+	* rpm/macros.altlinux: macroses for ALT Linux
+
+2005-12-30 16:47  lav
+
+	* rpm-build-altlinux-compat.spec: remove CVS dirs in spec
+
+2005-12-30 16:35  lav
+
+	* rpm/macros: add macros for sysconfdir
+
+2005-12-30 16:35  lav
+
+	* rpm-build-altlinux-compat.spec: updated, fix sysconfdir using
+
+2005-12-15 21:18  lav
+
+	* rpm-build-altlinux-compat.spec: do not exclude subst
+
+2005-12-15 21:15  lav
+
+	* rpm-build-altlinux-compat.spec: do not pack subst for suse
+
+2005-12-06 15:58  in_mithraen
+
+	* rpm-build-altlinux-compat.spec: ASP needs macros in /etc/macros
+
+2005-12-06 13:34  in_mithraen
+
+	* bin/subst: %_subst often used in alt specs, but not exists in
+	  e.g. ASP
+
+2005-12-06 13:33  in_mithraen
+
+	* rpm/macros: with/without, optflags, man9dir
+
+2005-12-06 13:08  lav
+
+	* rpm-build-altlinux-compat.spec: add spec
+
+2005-12-04 22:22  lav
+
+	* AUTHORS, NEWS, TODO, bin/add_changelog, bin/stamp_spec,
+	  rpm/macros: Initial revision
+
+2005-12-04 22:22  lav
+
+	* AUTHORS, NEWS, TODO, bin/add_changelog, bin/stamp_spec,
+	  rpm/macros: initial import
+
