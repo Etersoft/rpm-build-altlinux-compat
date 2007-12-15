@@ -2,7 +2,7 @@
 
 Name: rpm-build-altlinux-compat
 Version: 0.95
-Release: %{_vendor}1
+Release: %{_vendor}2
 
 Summary: ALT Linux compatibility and extensions in rpm build
 
@@ -79,6 +79,9 @@ find -type d -name CVS | xargs rm -rf
 %endif
 
 %changelog
+* Sat Dec 15 2007 Vitaly Lipatov <lav@altlinux.ru> 0.95-alt2
+- add set_verify_elf_method stub for non ALT systems
+
 * Wed Nov 07 2007 Vitaly Lipatov <lav@altlinux.ru> 0.95-alt1
 - upgrade dist_vendor script to newest systems
 - add check for too old mktemp to add_changelog
