@@ -1,6 +1,6 @@
 #!/bin/sh
 # Check detection code in OS root tree
-OS=/net/os/unstable
+OS=/net/os/stable
 cd $OS
 export DISTR_LIST=`find -L -maxdepth 2 -mindepth 2 -type d | sed -e "s|^./||" | sort | grep -v Windows`
 cd -
@@ -14,4 +14,5 @@ for i in $DISTR_LIST ; do
 	#echo -n "$i detected as $DISTR  "
 	#[ "$i" = "$DISTR" ] && echo "$i detected as $DISTR"
 	[ "$i" = "$DISTR" ] || echo "$i NOT detected, get $DISTR"
+	#../bin/distr_vendor -p
 done
