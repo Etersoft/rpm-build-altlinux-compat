@@ -7,6 +7,12 @@
 # These macros are not defined yet in Sisyphus (12.02.2006)
 
 # for discussion:
+%kde_docdir %_docdir/HTML
+%gtk_docdir %_datadir/gtk-doc/html
+%java_dir %_datadir/java
+%java_docdir %_datadir/javadoc
+
+# obsoletes:
 %_kdedocdir %_docdir/HTML
 %_gtkdocdir %_datadir/gtk-doc/html
 %_javadir %_datadir/java
@@ -15,19 +21,18 @@
 %_rpmmacrosdir %_sysconfdir/rpm/macros.d
 # various for prev. distro...
 
-%_fontsdir %_datadir/fonts
-%_bitmapfontsdir %_fontsdir/bitmap
-%_type1fontsdir %_fontsdir/type1
-%_ttffontsdir %_fontsdir/ttf
-%_otffontsdir %_fontsdir/otf
+# install rpm-build-fonts instead
+#%_fontsdir %_datadir/fonts
+#%_bitmapfontsdir %_fontsdir/bitmap
+#%_type1fontsdir %_fontsdir/type1
+#%_ttffontsdir %_fontsdir/ttf
+#%_otffontsdir %_fontsdir/otf
 
 
 %rpmcflags $RPM_OPT_FLAGS
 #%rpmldflags 
 
 %_aclocaldir %_datadir/aclocal
-#%_libexecdir %_prefix/lib
-#%_libexecdir %_libdir
 
 # PLD compatibility
 %groupadd /usr/sbin/groupadd
