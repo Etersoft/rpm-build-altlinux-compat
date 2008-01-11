@@ -7,12 +7,16 @@
 # These macros are not defined yet in Sisyphus (12.02.2006)
 
 # for discussion:
+%make_install_std %makeinstall_std
+
+# If macros is component related (like kde, java, perl), use %name_somedir
+# If macros for some dir, %_omfdir
+
 %kde_docdir %_docdir/HTML
 %gtk_docdir %_datadir/gtk-doc/html
 %java_dir %_datadir/java
 %java_docdir %_datadir/javadoc
 
-# obsoletes:
 %_kdedocdir %_docdir/HTML
 %_gtkdocdir %_datadir/gtk-doc/html
 %_javadir %_datadir/java
