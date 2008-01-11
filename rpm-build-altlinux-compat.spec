@@ -1,8 +1,8 @@
 # NOTE: do not use clean_spec or rpmcs for this spec
 
 Name: rpm-build-altlinux-compat
-Version: 0.95
-Release: %{_vendor}2
+Version: 0.96
+Release: alt1
 
 Summary: ALT Linux compatibility and extensions in rpm build
 
@@ -25,20 +25,14 @@ Requires: ed
 BuildRoot: %{_tmppath}/%{name}-%{version}
 %endif
 
-%if %_vendor != "suse"
 Requires: rpm-build
-%endif
-
-# TODO: add version for other distros
-# FIXME: do not work :(
-#%if_with build_M30
-#Requires: rpm-build >= 4.0.4-alt47
-#%endif
 
 %description
 This package contains ALT Linux compatibility layer
 and some extensions for rpm build
 on various rpm-based platforms.
+Add it to buildrequires when backporting packages.
+Command rpmbph from etersoft-build-utils adds it automatically.
 
 %package -n rpm-build-compat
 Summary: ALT Linux compatibility and extensions in rpm build
@@ -53,8 +47,6 @@ It is useful for backporting packages to previous ALT Linux distros.
 Add it to buildrequires when backporting packages.
 Command rpmbph from etersoft-build-utils adds it automatically.
 
-# This build prepared for ALT backport_distro 
-
 %prep
 %setup -q
 find -type d -name CVS | xargs rm -rf
@@ -62,23 +54,24 @@ find -type d -name CVS | xargs rm -rf
 %install
 ./install.sh %buildroot %_rpmmacrosdir
 
-# Note: rpm does not like doc macros in other sections?
 %if %_vendor == "alt"
 %files -n rpm-build-compat
 %doc AUTHORS TODO NEWS
 %_rpmmacrosdir/*
 %_bindir/distr_vendor
-
 %else
 
 %files
-%defattr(-,root,root)
 %doc AUTHORS TODO NEWS ChangeLog
 %_rpmmacrosdir/*
 %_bindir/*
 %endif
 
 %changelog
+* Fri Jan 11 2008 Vitaly Lipatov <lav@altlinux.ru> 0.96-alt1
+- add make_install_std, makeinstall_std, omfdir
+- cleanup spec according to etersoft-build-utils 1.3.6
+
 * Sat Dec 15 2007 Vitaly Lipatov <lav@altlinux.ru> 0.95-alt2
 - add set_verify_elf_method stub for non ALT systems
 
