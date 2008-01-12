@@ -17,5 +17,8 @@
 %_x11x11dir %{_x11dir}/lib/X11
 %_pkgconfigdir %{_libdir}/pkgconfig
 
+# from mdk
+%makeinstall_std %make_install DESTDIR=%buildroot install
+
 # 
 %_omfdir %_datadir/omf
