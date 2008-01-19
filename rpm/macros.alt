@@ -1,0 +1,6 @@
+# Start service only after manual install
+# this case is never run due no tty under rpm process install
+# 1 - 1st install, 2 - update package
+%start_service() \
+	tty -s && [ "$1" = "1" ] && %_initdir/%{1} start || : \
+%nil

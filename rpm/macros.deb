@@ -10,3 +10,8 @@
 	test -x /usr/sbin/update-rc.d && update-rc.d -f %1 remove || : \
 %nil
 
+# Start service only after manual install
+# 1 - 1st install, 2 - update package
+%start_service() \
+	[ "$1" = "1" ] && %_initdir/%{1} start || : \
+%nil

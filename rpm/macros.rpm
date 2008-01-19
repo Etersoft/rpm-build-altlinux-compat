@@ -23,3 +23,8 @@
 	%_initdir/%1 condstop || : \
 %nil
 
+# Start service only after manual install
+# 1 - 1st install, 2 - update package
+%start_service() \
+	[ "$1" = "1" ] && %_initdir/%{1} start || : \
+%nil
