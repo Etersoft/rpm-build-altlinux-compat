@@ -1,7 +1,7 @@
 # NOTE: do not use clean_spec or rpmcs for this spec
 
 Name: rpm-build-altlinux-compat
-Version: 0.96
+Version: 0.97
 Release: alt1
 
 Summary: ALT Linux compatibility and extensions in rpm build
@@ -68,6 +68,9 @@ find -type d -name CVS | xargs rm -rf
 %endif
 
 %changelog
+* Sat Jan 19 2008 Vitaly Lipatov <lav@altlinux.ru> 0.97-alt1
+- do not check tty -s in start_service for other platforms
+
 * Fri Jan 11 2008 Vitaly Lipatov <lav@altlinux.ru> 0.96-alt1
 - add make_install_std, makeinstall_std, omfdir
 - cleanup spec according to etersoft-build-utils 1.3.6

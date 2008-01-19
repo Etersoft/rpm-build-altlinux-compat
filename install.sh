@@ -29,6 +29,7 @@ if [ $distr = "alt" ] ; then
 	if [ "$version" = "2.3" ] || [ "$version" = "2.4" ] ; then
 		cat rpm/macros.altlinux.backport >>$DESTFILE
 	fi
+	cat rpm/macros.alt >>$DESTFILE
 	install -m755 bin/distr_vendor $bindir
 else
 	cat rpm/macros rpm/macros.altlinux rpm/macros.intro >$DESTFILE

@@ -1,3 +1,55 @@
+2008-01-19 16:22  lav
+
+	* rpm/: macros.alt, macros.deb, macros.intro, macros.rpm: separate
+	  start_service for ALT and other
+
+2008-01-12 22:15  lav
+
+	* rpm/: macros, macros.altlinux: move makeinstall_std to
+	  macros.altlinux (for backport)
+
+2008-01-11 11:49  lav
+
+	* bin/distr_vendor: additional checking for ALD 4.0
+
+2008-01-11 10:49  lav
+
+	* rpm-build-altlinux-compat.spec: cleanup spec
+
+2008-01-11 10:34  lav
+
+	* rpm/: macros, macros.altlinux, macros.intro: add
+	  makeinstall,make_install _std, omfdir
+
+2008-01-11 10:29  lav
+
+	* TODO: update TODO
+
+2008-01-10 23:29  lav
+
+	* bin/add_changelog: fix typo
+
+2008-01-10 00:59  lav
+
+	* rpm/: macros, macros.intro: add new macroses for discussion
+	  remove fonts macroses (install rpm-build-fonts instead)
+
+2007-12-15 22:34  lav
+
+	* rpm-build-altlinux-compat.spec: новая сборка
+
+2007-12-15 22:34  lav
+
+	* tools/check_distr_vendor.sh: уточнён путь
+
+2007-12-15 22:33  lav
+
+	* rpm/macros: добавлена заглушка для set_verify_elf_method
+
+2007-12-07 10:38  lav
+
+	* ChangeLog, rpm-build-altlinux-compat.spec: release 0.95
+
 2007-12-04 18:50  lav
 
 	* bin/distr_vendor: set tar.gz for ArchLinux
