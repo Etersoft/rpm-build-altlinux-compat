@@ -70,6 +70,7 @@ find -type d -name CVS | xargs rm -rf
 %changelog
 * Sat Jan 19 2008 Vitaly Lipatov <lav@altlinux.ru> 0.97-alt1
 - do not check tty -s in start_service for other platforms
+- check DURING_INSTALL in start_service
 
 * Fri Jan 11 2008 Vitaly Lipatov <lav@altlinux.ru> 0.96-alt1
 - add make_install_std, makeinstall_std, omfdir
