@@ -141,3 +141,6 @@
 %subst_enable() %{expand:%%{?_enable_%{1}:%%{_enable_%{1}}}} %{expand:%%{?_disable_%{1}:%%{_disable_%{1}}}}
 
 %set_verify_elf_method #
+
+# FIXME in some way?
+%add_findprov_lib_path #
