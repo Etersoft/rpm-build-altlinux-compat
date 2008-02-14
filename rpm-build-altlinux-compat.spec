@@ -1,8 +1,8 @@
 # NOTE: do not use clean_spec or rpmcs for this spec
 
 Name: rpm-build-altlinux-compat
-Version: 0.97
-Release: alt1
+Version: 0.98
+Release: alt
 
 Summary: ALT Linux compatibility and extensions in rpm build
 
@@ -68,6 +68,9 @@ find -type d -name CVS | xargs rm -rf
 %endif
 
 %changelog
+* Thu Feb 14 2008 Vitaly Lipatov <lav@altlinux.ru> 0.98-alt
+- add add_findprov_lib_path skipping
+
 * Sat Jan 19 2008 Vitaly Lipatov <lav@altlinux.ru> 0.97-alt1
 - do not check tty -s in start_service for other platforms
 - check DURING_INSTALL in start_service
