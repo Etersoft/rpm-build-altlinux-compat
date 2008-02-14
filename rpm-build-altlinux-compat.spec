@@ -68,7 +68,7 @@ find -type d -name CVS | xargs rm -rf
 %endif
 
 %changelog
-* Thu Feb 14 2008 Vitaly Lipatov <lav@altlinux.ru> 0.98-alt
+* Thu Feb 14 2008 Vitaly Lipatov <lav@altlinux.ru> 0.98-alt1
 - add add_findprov_lib_path skipping
 
 * Sat Jan 19 2008 Vitaly Lipatov <lav@altlinux.ru> 0.97-alt1
