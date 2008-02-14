@@ -2,7 +2,7 @@
 
 Name: rpm-build-altlinux-compat
 Version: 0.98
-Release: alt
+Release: alt1
 
 Summary: ALT Linux compatibility and extensions in rpm build
 
