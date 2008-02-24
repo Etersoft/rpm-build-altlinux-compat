@@ -1,3 +1,37 @@
+2008-02-22 11:01  lav
+
+	* rpm/macros.altlinux: add autoreconf macros
+
+2008-02-14 21:53  lav
+
+	* rpm-build-altlinux-compat.spec: fix spec
+
+2008-02-14 21:53  lav
+
+	* rpm-build-altlinux-compat.spec: fix release
+
+2008-02-14 21:50  lav
+
+	* rpm-build-altlinux-compat.spec: update spec
+
+2008-02-14 21:49  lav
+
+	* rpm/macros: add add_findprov_lib_path
+
+2008-01-22 16:09  lav
+
+	* rpm-build-altlinux-compat.spec: update for DURING_INSTALL
+
+2008-01-22 16:08  lav
+
+	* rpm/: macros.alt, macros.deb, macros.rpm: check DURING_INSTALL
+	  for start_service
+
+2008-01-19 16:23  lav
+
+	* ChangeLog, install.sh, rpm-build-altlinux-compat.spec: new
+	  release
+
 2008-01-19 16:22  lav
 
 	* rpm/: macros.alt, macros.deb, macros.intro, macros.rpm: separate

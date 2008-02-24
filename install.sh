@@ -38,4 +38,10 @@ else
 	cat rpm/macros.$pkgtype >>$DESTFILE
 fi
 
+# Hack due using ALT's rpm on ArchLinux
+if [ "$(bin/distr_vendor -d)" = "ArchLinux" ] ; then
+	bin/subst "s|%set_verify_elf_method||g" $DESTFILE
+	bin/subst "s|%add_findprov_lib_path||g" $DESTFILE
+fi
+
 exit 0
