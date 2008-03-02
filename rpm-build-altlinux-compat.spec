@@ -1,7 +1,7 @@
 # NOTE: do not use clean_spec or rpmcs for this spec
 
 Name: rpm-build-altlinux-compat
-Version: 0.98
+Version: 0.99
 Release: alt1
 
 Summary: ALT Linux compatibility and extensions in rpm build
@@ -21,7 +21,7 @@ BuildArchitectures: noarch
 %else
 Requires: ed
 %define _rpmmacrosdir /etc/rpm
-# ALT has it in RPM
+# ALT has it in rpm, but regular rpm requires define it
 BuildRoot: %{_tmppath}/%{name}-%{version}
 %endif
 
@@ -68,6 +68,9 @@ find -type d -name CVS | xargs rm -rf
 %endif
 
 %changelog
+* Sun Mar 02 2008 Vitaly Lipatov <lav@altlinux.ru> 0.99-alt1
+- fix useradd/groupadd realization for various distros
+
 * Sun Feb 24 2008 Vitaly Lipatov <lav@altlinux.ru> 0.98-alt1
 - add autoreconf macros
 - add add_findprov_lib_path skipping

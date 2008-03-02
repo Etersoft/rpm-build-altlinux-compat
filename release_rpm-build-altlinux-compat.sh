@@ -19,7 +19,7 @@ rpmbb $SPECNAME || fatal "Can't build"
 
 if [ "$WINEPUB_PATH" ] ; then
 	# Path to local publishing
-	ETERDESTSRPM=$WINEPUB_PATH/sources
+	ETERDESTSRPM=$WINEPUB_PATH/current/sources
 	publish_srpm
 fi
 

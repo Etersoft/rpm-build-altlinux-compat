@@ -1,3 +1,17 @@
+2008-03-02 20:32  lav
+
+	* rpm/: macros.alt, macros.deb, macros.intro, macros.rpm: update
+	  useradd/groupadd realization for various distros
+
+2008-02-24 22:16  lav
+
+	* ChangeLog, install.sh, rpm-build-altlinux-compat.spec: update
+	  version
+
+2008-02-24 22:11  lav
+
+	* rpm-build-altlinux-compat.spec: add autoreconf
+
 2008-02-22 11:01  lav
 
 	* rpm/macros.altlinux: add autoreconf macros
