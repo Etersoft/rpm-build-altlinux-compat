@@ -38,9 +38,3 @@
 
 %_aclocaldir %_datadir/aclocal
 
-# PLD compatibility
-%groupadd /usr/sbin/groupadd
-%useradd /usr/sbin/useradd
-#%userremove userdel
-#%groupremove groupdel
-

@@ -15,3 +15,10 @@
 %start_service() \
 	[ -z "$DURING_INSTALL" ] && [ "$1" = "1" ] && %_initdir/%{1} start || : \
 %nil
+
+# PLD compatibility
+%groupadd /usr/sbin/groupadd -f 2>/dev/null
+%useradd /usr/sbin/useradd -f 2>/dev/null
+#%userremove userdel
+#%groupremove groupdel
+
