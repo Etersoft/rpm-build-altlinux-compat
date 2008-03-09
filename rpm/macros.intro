@@ -33,8 +33,9 @@
 #%_otffontsdir %_fontsdir/otf
 
 
-%rpmcflags $RPM_OPT_FLAGS
-#%rpmldflags 
+%rpmcflags %optflags
+%rpmldflags 
+%rpmcxxflags %optflags
 
 %_aclocaldir %_datadir/aclocal
 
