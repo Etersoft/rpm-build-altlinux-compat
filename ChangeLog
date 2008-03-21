@@ -1,3 +1,17 @@
+2008-03-20 18:54  lav
+
+	* rpm/: macros.alt, macros.deb, macros.rpm: fix groupadd/useradd
+	  macroses
+
+2008-03-09 19:01  lav
+
+	* rpm/macros.intro: update rpm??flags
+
+2008-03-02 20:36  lav
+
+	* ChangeLog, release_rpm-build-altlinux-compat.sh,
+	  rpm-build-altlinux-compat.spec: update version
+
 2008-03-02 20:32  lav
 
 	* rpm/: macros.alt, macros.deb, macros.intro, macros.rpm: update

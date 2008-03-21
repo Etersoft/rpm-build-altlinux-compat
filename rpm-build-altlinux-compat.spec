@@ -1,7 +1,7 @@
 # NOTE: do not use clean_spec or rpmcs for this spec
 
 Name: rpm-build-altlinux-compat
-Version: 0.99
+Version: 1.00
 Release: alt1
 
 Summary: ALT Linux compatibility and extensions in rpm build
@@ -68,6 +68,10 @@ find -type d -name CVS | xargs rm -rf
 %endif
 
 %changelog
+* Thu Mar 20 2008 Vitaly Lipatov <lav@altlinux.ru> 1.00-alt1
+- fix useradd/groupadd realization again
+- update rpm opt* flags
+
 * Sun Mar 02 2008 Vitaly Lipatov <lav@altlinux.ru> 0.99-alt1
 - fix useradd/groupadd realization for various distros
 
