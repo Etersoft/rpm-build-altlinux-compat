@@ -2,7 +2,7 @@
 
 Name: rpm-build-altlinux-compat
 Version: 1.00
-Release: alt1
+Release: alt2
 
 Summary: ALT Linux compatibility and extensions in rpm build
 
@@ -68,6 +68,9 @@ find -type d -name CVS | xargs rm -rf
 %endif
 
 %changelog
+* Mon Mar 24 2008 Vitaly Lipatov <lav@altlinux.ru> 1.00-alt2
+- disable empty rpmldflags
+
 * Thu Mar 20 2008 Vitaly Lipatov <lav@altlinux.ru> 1.00-alt1
 - fix useradd/groupadd realization again
 - update rpm opt* flags
