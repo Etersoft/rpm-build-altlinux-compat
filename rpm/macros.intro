@@ -34,7 +34,8 @@
 
 
 %rpmcflags %optflags
-%rpmldflags 
+# due error on SUSE
+#%rpmldflags %nil
 %rpmcxxflags %optflags
 
 %_aclocaldir %_datadir/aclocal
