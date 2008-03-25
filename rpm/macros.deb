@@ -17,8 +17,8 @@
 %nil
 
 # PLD compatibility
-%groupadd /usr/sbin/groupadd -f 2>/dev/null
-%useradd /usr/sbin/useradd 2>/dev/null
+%groupadd /usr/sbin/groupadd -f 2>/dev/null || :
+%useradd /usr/sbin/useradd 2>/dev/null || :
 #%userremove userdel
 #%groupremove groupdel
 
