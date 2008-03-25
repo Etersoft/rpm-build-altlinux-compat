@@ -70,6 +70,7 @@ find -type d -name CVS | xargs rm -rf
 %changelog
 * Mon Mar 24 2008 Vitaly Lipatov <lav@altlinux.ru> 1.00-alt2
 - disable empty rpmldflags
+- ignore return status from groupadd/useradd
 
 * Thu Mar 20 2008 Vitaly Lipatov <lav@altlinux.ru> 1.00-alt1
 - fix useradd/groupadd realization again
