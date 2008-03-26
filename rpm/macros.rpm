@@ -30,8 +30,8 @@
 %nil
 
 # PLD compatibility
-%groupadd /usr/sbin/groupadd -r -f 2>/dev/null || :
-%useradd /usr/sbin/useradd -r 2>/dev/null || :
+%groupadd /usr/sbin/groupadd -r -f
+%useradd /usr/sbin/useradd -r
 #%userremove userdel
 #%groupremove groupdel
 
