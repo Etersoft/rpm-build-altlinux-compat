@@ -34,9 +34,9 @@ else
 fi
 
 # Copy .suse.10 or .suse or .rpm
-for i in "$distr.$version $distr $pkgtype rpm" ; do
-	MI=rpm/macros.$i
-	test -r $MI && echo "Copying $MI..." || echo "Skipping $MI..."
+for i in $distr.$version $distr $pkgtype rpm ; do
+	MI="rpm/macros.$i"
+	test -r "$MI" && echo "Copying $MI..." || echo "Skipping $MI..."
 	cat $MI >>$DESTFILE && break || echo " Failed"
 done
 
