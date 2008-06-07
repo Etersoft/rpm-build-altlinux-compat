@@ -17,7 +17,8 @@ bindir=$buildroot/usr/bin
 pkgtype=$(bin/distr_vendor -p)
 distr=$(bin/distr_vendor -s)
 version=$(bin/distr_vendor -v)
-echo "Distro: $distr Version: $version, Pkg: $pkgtype"
+
+echo "Distro: $distr, Version: $version, Pkg: $pkgtype"
 mkdir -p $bindir $buildroot/$rpmmacrosdir
 
 DESTFILE=$buildroot/$rpmmacrosdir/macros
@@ -34,7 +35,9 @@ fi
 
 # Copy .suse.10 or .suse or .rpm
 for i in "$distr.$version $distr $pkgtype rpm" ; do
-	cat rpm/macros.$i >>$DESTFILE 2>/dev/null && break
+	MI=rpm/macros.$i
+	test -r $MI && echo "Copying $MI..." || echo "Skipping $MI..."
+	cat $MI >>$DESTFILE && break || echo " Failed"
 done
 
 exit 0
