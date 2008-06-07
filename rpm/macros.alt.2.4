@@ -1,0 +1,17 @@
+# Start service only after manual install
+# this case is never run due no tty under rpm process install
+# 1 - 1st install, 2 - update package
+%start_service() \
+        [ -z "$DURING_INSTALL" ] && [ "$1" = "1" ] && %_initdir/%{1} start || : \
+%nil
+
+# PLD compatibility
+%groupadd /usr/sbin/groupadd -r -f
+%useradd /usr/sbin/useradd -r
+#%userremove userdel
+#%groupremove groupdel
+
+
+# for backports compatibility (before M30)
+%_niconsdir %_iconsdir
+
