@@ -32,14 +32,6 @@
 %__make %_make_bin
 %make %_make_bin
 
-# it is better to install rpm-build-fonts instead
-%_fontsdir %_datadir/fonts
-%_bitmapfontsdir %_fontsdir/bitmap
-%_type1fontsdir %_fontsdir/type1
-%_ttffontsdir %_fontsdir/ttf
-%_otffontsdir %_fontsdir/otf
-
-
 # due buggy on some systems (Debian)
 %_sysconfdir /etc
 # due buggy on some systems (ALT)
@@ -146,11 +138,6 @@
 # substitute with/without/enable/disable macros.
 %subst_with() %{expand:%%{?_with_%{1}:%%{_with_%{1}}}} %{expand:%%{?_without_%{1}:%%{_without_%{1}}}}
 %subst_enable() %{expand:%%{?_enable_%{1}:%%{_enable_%{1}}}} %{expand:%%{?_disable_%{1}:%%{_disable_%{1}}}}
-
-%set_verify_elf_method #
-
-# FIXME in some way?
-%add_findprov_lib_path #
 
 %add_optflags(a:f:t:p:w:W:d:g:O:A:C:D:E:H:i:M:n:P:U:u:l:s:X:B:I:L:b:V:m:x:c:S:E:o:v:) \
 %global optflags %{optflags} %{**}

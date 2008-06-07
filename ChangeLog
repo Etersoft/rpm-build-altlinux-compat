@@ -1,3 +1,44 @@
+2008-05-16 16:28  yurifil
+
+	* rpm/macros: fix from prev commit
+
+2008-05-16 16:25  yurifil
+
+	* rpm/macros: add %add_optflags
+
+2008-05-08 19:24  lav
+
+	* rpm-build-altlinux-compat.spec, rpm/macros: update to next step
+
+2008-03-26 14:35  lav
+
+	* rpm/macros.rpm: disable -r for redhat
+
+2008-03-26 10:39  lav
+
+	* rpm/: macros.alt, macros.deb, macros.rpm: fix groupadd/useradd
+	  again
+
+2008-03-25 17:55  lav
+
+	* rpm-build-altlinux-compat.spec: bugfix release
+
+2008-03-25 17:35  lav
+
+	* rpm/: macros.alt, macros.deb, macros.rpm: ignore return status
+
+2008-03-24 17:04  lav
+
+	* rpm-build-altlinux-compat.spec: bugfix release
+
+2008-03-24 16:30  lav
+
+	* rpm/macros.intro: disable rpmldflags
+
+2008-03-21 15:30  lav
+
+	* ChangeLog, rpm-build-altlinux-compat.spec: update to new release
+
 2008-03-20 18:54  lav
 
 	* rpm/: macros.alt, macros.deb, macros.rpm: fix groupadd/useradd

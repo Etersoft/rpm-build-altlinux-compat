@@ -1,8 +1,8 @@
 # NOTE: do not use clean_spec or rpmcs for this spec
 
 Name: rpm-build-altlinux-compat
-Version: 1.00
-Release: alt3
+Version: 1.1
+Release: alt1
 
 Summary: ALT Linux compatibility and extensions in rpm build
 
@@ -68,6 +68,10 @@ find -type d -name CVS | xargs rm -rf
 %endif
 
 %changelog
+* Sat Jun 07 2008 Vitaly Lipatov <lav@altlinux.ru> 1.1-alt1
+- add distro specific macroses support
+- set correct fonts path for various distro
+
 * Thu May 08 2008 Vitaly Lipatov <lav@altlinux.ru> 1.00-alt3
 - add add_optflags/remove_optflags
 

@@ -22,26 +22,19 @@ mkdir -p $bindir $buildroot/$rpmmacrosdir
 
 DESTFILE=$buildroot/$rpmmacrosdir/macros
 
+
 if [ $distr = "alt" ] ; then
 	DESTFILE=$buildroot/$rpmmacrosdir/compat
 	cat rpm/macros.altlinux rpm/macros.intro >$DESTFILE
-	# Hack: only for old distros
-	if [ "$version" = "2.3" ] || [ "$version" = "2.4" ] ; then
-		cat rpm/macros.altlinux.backport >>$DESTFILE
-	fi
-	cat rpm/macros.alt >>$DESTFILE
 	install -m755 bin/distr_vendor $bindir
 else
 	cat rpm/macros rpm/macros.altlinux rpm/macros.intro >$DESTFILE
 	install -m755 bin/* $bindir
-	[ ! $pkgtype = "deb" ] && pkgtype="rpm"
-	cat rpm/macros.$pkgtype >>$DESTFILE
 fi
 
-# Hack due using ALT's rpm on ArchLinux
-if [ "$(bin/distr_vendor -d)" = "ArchLinux" ] ; then
-	bin/subst "s|%set_verify_elf_method||g" $DESTFILE
-	bin/subst "s|%add_findprov_lib_path||g" $DESTFILE
-fi
+# Copy .suse.10 or .suse or .rpm
+for i in "$distr.$version $distr $pkgtype rpm" ; do
+	cat rpm/macros.$i >>$DESTFILE 2>/dev/null && break
+done
 
 exit 0

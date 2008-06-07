@@ -1,3 +1,6 @@
+07.06.2008
+- use .rpm or .deb only if distro specific file is missing
+
 09.04.2006
 - add comment about ?iconsdir
 - add niconsdir, fix bug with x11* define

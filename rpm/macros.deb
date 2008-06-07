@@ -22,3 +22,15 @@
 #%userremove userdel
 #%groupremove groupdel
 
+%set_verify_elf_method #
+
+# FIXME in some way?
+%add_findprov_lib_path #
+
+# it is better to install rpm-build-fonts instead
+%_fontsdir %_datadir/fonts
+%_bitmapfontsdir %_fontsdir
+%_type1fontsdir %_fontsdir/type1
+%_ttffontsdir %_fontsdir/truetype
+%_otffontsdir %_fontsdir
+
