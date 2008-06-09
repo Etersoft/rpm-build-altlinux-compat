@@ -82,10 +82,10 @@
 %optflags_default	-O2
 %optflags_shared	-fPIC -DPIC
 
-%remove_optflags(a:f:t:p:w:W:d:g:O:A:C:D:E:H:i:M:n:P:U:u:l:s:X:B:I:L:b:V:m:x:c:S:E:o:v:)<------>\
+%remove_optflags(a:f:t:p:w:W:d:g:O:A:C:D:E:H:i:M:n:P:U:u:l:s:X:B:I:L:b:V:m:x:c:S:E:o:v:) \
 %global optflags %(opt="%optflags"; for f in %{**}; do opt="$(echo "$opt"|sed -e "s/ $f//g;s/$f //g")"; done; echo "$opt")
 
-%add_optflags(a:f:t:p:w:W:d:g:O:A:C:D:E:H:i:M:n:P:U:u:l:s:X:B:I:L:b:V:m:x:c:S:E:o:v:)<->\
+%add_optflags(a:f:t:p:w:W:d:g:O:A:C:D:E:H:i:M:n:P:U:u:l:s:X:B:I:L:b:V:m:x:c:S:E:o:v:) \
 %global optflags %{optflags} %{**}
 
 
@@ -138,6 +138,3 @@
 # substitute with/without/enable/disable macros.
 %subst_with() %{expand:%%{?_with_%{1}:%%{_with_%{1}}}} %{expand:%%{?_without_%{1}:%%{_without_%{1}}}}
 %subst_enable() %{expand:%%{?_enable_%{1}:%%{_enable_%{1}}}} %{expand:%%{?_disable_%{1}:%%{_disable_%{1}}}}
-
-%add_optflags(a:f:t:p:w:W:d:g:O:A:C:D:E:H:i:M:n:P:U:u:l:s:X:B:I:L:b:V:m:x:c:S:E:o:v:) \
-%global optflags %{optflags} %{**}
