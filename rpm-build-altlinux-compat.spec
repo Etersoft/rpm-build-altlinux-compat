@@ -2,7 +2,7 @@
 
 Name: rpm-build-altlinux-compat
 Version: 1.1
-Release: alt1
+Release: alt2
 
 Summary: ALT Linux compatibility and extensions in rpm build
 
@@ -68,6 +68,9 @@ find -type d -name CVS | xargs rm -rf
 %endif
 
 %changelog
+* Mon Jun 09 2008 Vitaly Lipatov <lav@altlinux.ru> 1.1-alt2
+- fix copy/paste error in add_optflags/remove_optflags
+
 * Sat Jun 07 2008 Vitaly Lipatov <lav@altlinux.ru> 1.1-alt1
 - add distro specific macroses support
 - set correct fonts path for various distro
