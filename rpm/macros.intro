@@ -25,13 +25,6 @@
 %_rpmmacrosdir %_sysconfdir/rpm/macros.d
 # various for prev. distro...
 
-# install rpm-build-fonts instead
-#%_fontsdir %_datadir/fonts
-#%_bitmapfontsdir %_fontsdir/bitmap
-#%_type1fontsdir %_fontsdir/type1
-#%_ttffontsdir %_fontsdir/ttf
-#%_otffontsdir %_fontsdir/otf
-
 
 %rpmcflags %optflags
 # due error on SUSE
@@ -40,3 +33,7 @@
 
 %_aclocaldir %_datadir/aclocal
 
+# need to be in rpm-build-python
+# https://bugzilla.altlinux.org/show_bug.cgi?id=13941
+%python_build CFLAGS="%optflags" %__python setup.py build
+%python_install %__python setup.py install --root %buildroot --optimize=2
