@@ -1,3 +1,49 @@
+2008-10-23 23:40  lav
+
+	* rpm/: macros.deb, macros.rpm: add modified macroses from
+	  rpm-build-fonts
+
+2008-07-05 09:42  lav
+
+	* rpm/macros.intro: recommit conflicts
+
+2008-06-26 09:31  lav
+
+	* bin/distr_vendor: right use status of the last command in
+	  functions
+
+2008-06-09 18:50  lav
+
+	* rpm-build-altlinux-compat.spec: update spec
+
+2008-06-09 18:49  lav
+
+	* rpm/macros: fix copy/paste error in *_optflags
+
+2008-06-07 23:12  lav
+
+	* rpm/macros.archlinux: add missed fonts macroses
+
+2008-06-07 21:39  lav
+
+	* install.sh: fix script
+
+2008-06-07 21:31  lav
+
+	* rpm/: macros.alt.2.3, macros.alt.2.4, macros.archlinux,
+	  macros.suse: add missed files
+
+2008-06-07 21:31  lav
+
+	* install.sh: fix script
+
+2008-06-07 20:15  lav
+
+	* ChangeLog, NEWS, install.sh, rpm-build-altlinux-compat.spec,
+	  bin/distr_vendor, rpm/macros, rpm/macros.altlinux.backport,
+	  rpm/macros.deb, rpm/macros.rpm: implements distro specific macros
+	  realizations
+
 2008-05-16 16:28  yurifil
 
 	* rpm/macros: fix from prev commit

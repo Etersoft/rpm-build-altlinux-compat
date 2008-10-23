@@ -1,7 +1,7 @@
 # NOTE: do not use clean_spec or rpmcs for this spec
 
 Name: rpm-build-altlinux-compat
-Version: 1.1
+Version: 1.2
 Release: alt2
 
 Summary: ALT Linux compatibility and extensions in rpm build
@@ -64,10 +64,17 @@ find -type d -name CVS | xargs rm -rf
 %files
 %doc AUTHORS TODO NEWS ChangeLog
 %_rpmmacrosdir/*
-%_bindir/*
+%_bindir/add_changelog
+%_bindir/stamp_spec
+%_bindir/subst
+%_bindir/distr_vendor
 %endif
 
 %changelog
+* Thu Oct 23 2008 Vitaly Lipatov <lav@altlinux.ru> 1.2-alt2
+- add modified macroses from rpm-build-fonts for other systems
+- bin/distr_vendor: right use status of the last command in functions
+
 * Mon Jun 09 2008 Vitaly Lipatov <lav@altlinux.ru> 1.1-alt2
 - fix copy/paste error in add_optflags/remove_optflags
 
