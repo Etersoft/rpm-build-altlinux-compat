@@ -41,7 +41,7 @@
 %add_findprov_lib_path #
 
 # it is better to install rpm-build-fonts instead
-%_fontsdir %_datadir
+%_fontsdir %_datadir/fonts
 %_bitmapfontsdir %_fontsdir
 %_type1fontsdir %_fontsdir
 %_ttffontsdir %_fontsdir/truetype
