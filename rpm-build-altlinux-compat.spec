@@ -2,7 +2,7 @@
 
 Name: rpm-build-altlinux-compat
 Version: 1.2
-Release: alt2
+Release: alt3
 
 Summary: ALT Linux compatibility and extensions in rpm build
 
@@ -71,6 +71,9 @@ find -type d -name CVS | xargs rm -rf
 %endif
 
 %changelog
+* Thu Nov 13 2008 Vitaly Lipatov <lav@altlinux.ru> 1.2-alt3
+- fix font path for other system
+
 * Thu Oct 23 2008 Vitaly Lipatov <lav@altlinux.ru> 1.2-alt2
 - add modified macroses from rpm-build-fonts for other systems
 - bin/distr_vendor: right use status of the last command in functions
