@@ -94,3 +94,5 @@ fi \
 
 # use %%files -f %fname.files in your spec
 
+##############################################################
+%_locksubsysdir %_var/lock/subsys
