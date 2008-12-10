@@ -138,3 +138,8 @@
 # substitute with/without/enable/disable macros.
 %subst_with() %{expand:%%{?_with_%{1}:%%{_with_%{1}}}} %{expand:%%{?_without_%{1}:%%{_without_%{1}}}}
 %subst_enable() %{expand:%%{?_enable_%{1}:%%{_enable_%{1}}}} %{expand:%%{?_disable_%{1}:%%{_disable_%{1}}}}
+
+################# Python ############################
+
+%add_python_req_skip :
+
