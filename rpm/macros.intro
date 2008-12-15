@@ -38,3 +38,8 @@
 %python_build CFLAGS="%optflags" %__python setup.py build
 %python_install %__python setup.py install --root %buildroot --optimize=2
 %python_check %__python setup.py check
+
+# Normalize source file permissions
+%define fix_permissions \
+find -type d -print0 | xargs -0 chmod 0775 \
+find -type f -print0 | xargs -0 chmod 0664
