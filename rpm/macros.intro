@@ -9,8 +9,8 @@
 # for discussion:
 %make_install_std %makeinstall_std
 
-# If macros is component related (like kde, java, perl), use %name_somedir
-# If macros for some dir, %_omfdir
+# If macros is component related (like kde, java, perl), use name like %name_somedir
+# If macros for some dir, use name like %_omfdir
 
 %kde_docdir %_docdir/HTML
 %gtk_docdir %_datadir/gtk-doc/html
