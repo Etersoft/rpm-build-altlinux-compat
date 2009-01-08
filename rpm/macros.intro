@@ -58,3 +58,6 @@ cmake . \\\
     -DCMAKE_C_FLAGS:STRING='%optflags' \\\
     -DCMAKE_CXX_FLAGS:STRING='%optflags' \
 %nil
+
+# Subsys dir placed in various dirs
+%_locksubsysdir %_var/lock/subsys
