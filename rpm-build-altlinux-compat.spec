@@ -77,6 +77,9 @@ find -type d -name CVS | xargs rm -rf
 * Thu Jan 08 2009 Vitaly Lipatov <lav@altlinux.ru> 1.3-alt1
 - introduce cmake, fix_permissions, python_check macros
 
+* Wed Dec 10 2008 Yuri Fil <yurifil@altlinux.org> 1.2-alt4
+- add compat %add_python_req_skip, %_locksubsysdir
+
 * Thu Nov 13 2008 Vitaly Lipatov <lav@altlinux.ru> 1.2-alt3
 - fix font path for other system
 
