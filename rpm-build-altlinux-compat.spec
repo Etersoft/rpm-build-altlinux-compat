@@ -1,8 +1,8 @@
 # NOTE: do not use clean_spec or rpmcs for this spec
 
 Name: rpm-build-altlinux-compat
-Version: 1.2
-Release: alt3
+Version: 1.3
+Release: alt1
 
 Summary: ALT Linux compatibility and extensions in rpm build
 
@@ -16,7 +16,7 @@ Source: http://etersoft.ru/download/%name/%name-%version.tar.bz2
 
 BuildArchitectures: noarch
 
-%if %_vendor == "alt" 
+%if %_vendor == "alt"
 %define _rpmmacrosdir %_sysconfdir/rpm/macros.d
 %else
 Requires: ed
@@ -71,6 +71,9 @@ find -type d -name CVS | xargs rm -rf
 %endif
 
 %changelog
+* Thu Jan 08 2009 Vitaly Lipatov <lav@altlinux.ru> 1.3-alt1
+- introduce cmake, fix_permissions, python_check macros
+
 * Thu Nov 13 2008 Vitaly Lipatov <lav@altlinux.ru> 1.2-alt3
 - fix font path for other system
 

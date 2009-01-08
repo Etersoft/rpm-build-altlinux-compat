@@ -1,3 +1,49 @@
+2009-01-08 16:18  lav
+
+	* rpm/macros.intro: introduce cmake macros
+
+2008-12-15 09:55  lav
+
+	* rpm/macros.intro: introduce fix_permissions macro for source
+	  files permission fixing
+
+2008-12-10 17:25  yurifil
+
+	* rpm/macros.rpm: dd %_locksubsysdir macro
+
+2008-12-10 17:25  yurifil
+
+	* rpm/macros.deb: add %_locksubsysdir macro
+
+2008-12-10 13:13  lav
+
+	* rpm/macros: add add_python_req_skip
+
+2008-11-29 02:02  lav
+
+	* rpm/macros.intro: add python_check
+
+2008-11-13 20:32  lav
+
+	* rpm-build-altlinux-compat.spec: update spec
+
+2008-11-13 20:32  lav
+
+	* rpm/: macros.rpm, macros.suse: fix font path
+
+2008-10-30 15:04  lav
+
+	* rpm/: macros.archlinux, macros.suse: add font macroses in
+	  suse/archlinux files
+
+2008-10-30 15:03  lav
+
+	* release_rpm-build-altlinux-compat.sh: add release target support
+
+2008-10-23 23:43  lav
+
+	* ChangeLog, rpm-build-altlinux-compat.spec: update to new release
+
 2008-10-23 23:40  lav
 
 	* rpm/: macros.deb, macros.rpm: add modified macroses from
