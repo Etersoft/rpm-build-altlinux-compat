@@ -26,3 +26,6 @@
 
 # 
 %_omfdir %_datadir/omf
+
+%_locksubsysdir %_var/lock/subsys
+

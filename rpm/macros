@@ -141,5 +141,35 @@
 
 ################# Python ############################
 
-%add_python_req_skip :
+%add_python_req_skip() %nil
+%setup_std_python_package_deps() %nil
+
+################Licences#############################
+
+%gpl2only GPLv2
+%gpl2plus GPLv2+
+%gpl3only GPLv3
+%gpl3plus GPLv3+
+%lgpl2only LGPLv2
+%lgpl2plus LGPLv2+
+%lgpl3only LGPLv3
+%lgpl3plus LGPLv3+
+%bsd BSD
+%bsdstyle BSD-style
+%mit MIT/X Consortium
+%mpl MPL
+%w3cl W3C
+%asl Apache
+%jpackage_license JPackage
+%sendmail_license Sendmail
+%artistic_license Artistic
+%perl_license Perl (GPL or Artistic)
+%fdl FDL
+%lppl LPPL
+%pubdomain Public domain
+
+%gpllgpl2only GPLv2, LGPLv2
+%gpllgpl2plus GPLv2+, LGPLv2+
+%gpllgpl3only GPLv3, LGPLv3
+%gpllgpl3plus GPLv3+, LGPLv3+
 
