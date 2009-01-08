@@ -43,3 +43,18 @@
 %define fix_permissions \
 find -type d -print0 | xargs -0 chmod 0775 \
 find -type f -print0 | xargs -0 chmod 0664
+
+# Prepare cmake build (since rpm-build-compat 1.3)
+%cmake \
+cmake . \\\
+    -DCMAKE_INSTALL_PREFIX=%prefix \\\
+    -DLIB_DESTINATION=%_lib \\\
+  %if "%_lib" == "lib64" \
+    -DLIB_SUFFIX="64" \\\
+  %else \
+    -DLIB_SUFFIX="" \\\
+  %endif \
+    -DCMAKE_SKIP_RPATH:BOOL=yes \\\
+    -DCMAKE_C_FLAGS:STRING='%optflags' \\\
+    -DCMAKE_CXX_FLAGS:STRING='%optflags' \
+%nil
