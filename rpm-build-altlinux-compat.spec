@@ -55,19 +55,22 @@ find -type d -name CVS | xargs rm -rf
 ./install.sh %buildroot %_rpmmacrosdir
 
 %if %_vendor == "alt"
+
 %files -n rpm-build-compat
 %doc AUTHORS TODO NEWS
-%_rpmmacrosdir/*
+%_rpmmacrosdir/compat
 %_bindir/distr_vendor
+
 %else
 
 %files
 %doc AUTHORS TODO NEWS ChangeLog
-%_rpmmacrosdir/*
+%_rpmmacrosdir/macros
 %_bindir/add_changelog
 %_bindir/stamp_spec
 %_bindir/subst
 %_bindir/distr_vendor
+
 %endif
 
 %changelog
