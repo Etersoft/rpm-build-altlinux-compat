@@ -33,6 +33,10 @@ else
 	install -m755 bin/* $bindir
 fi
 
+cd rpm
+ln -s macros.suse macros.nld
+cd -
+
 # Copy .suse.10 or .suse or .rpm
 for i in $distr.$version $distr $pkgtype rpm ; do
 	MI="rpm/macros.$i"
