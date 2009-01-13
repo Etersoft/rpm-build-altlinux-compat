@@ -2,7 +2,7 @@
 
 Name: rpm-build-altlinux-compat
 Version: 1.3
-Release: alt1
+Release: alt2
 
 Summary: ALT Linux compatibility and extensions in rpm build
 
@@ -52,7 +52,7 @@ Command rpmbph from etersoft-build-utils adds it automatically.
 find -type d -name CVS | xargs rm -rf
 
 %install
-./install.sh %buildroot %_rpmmacrosdir
+./install.sh %buildroot %_bindir %_rpmmacrosdir
 
 %if %_vendor == "alt"
 
@@ -74,6 +74,9 @@ find -type d -name CVS | xargs rm -rf
 %endif
 
 %changelog
+* Tue Jan 13 2009 Vitaly Lipatov <lav@altlinux.ru> 1.3-alt2
+- add bindir to install script
+
 * Thu Jan 08 2009 Vitaly Lipatov <lav@altlinux.ru> 1.3-alt1
 - introduce cmake, fix_permissions, python_check macros
 

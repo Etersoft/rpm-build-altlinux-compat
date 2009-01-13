@@ -11,21 +11,21 @@
 #%endif
 
 buildroot=$1
-rpmmacrosdir=$2
-bindir=$buildroot/usr/bin
+bindir=$buildroot/$2
+rpmmacrosdir=$buildroot/$3
 
 pkgtype=$(bin/distr_vendor -p)
 distr=$(bin/distr_vendor -s)
 version=$(bin/distr_vendor -v)
 
 echo "Distro: $distr, Version: $version, Pkg: $pkgtype"
-mkdir -p $bindir $buildroot/$rpmmacrosdir
+mkdir -p $bindir $rpmmacrosdir
 
-DESTFILE=$buildroot/$rpmmacrosdir/macros
+DESTFILE=$rpmmacrosdir/macros
 
 
 if [ $distr = "alt" ] ; then
-	DESTFILE=$buildroot/$rpmmacrosdir/compat
+	DESTFILE=$rpmmacrosdir/compat
 	cat rpm/macros.altlinux rpm/macros.intro >$DESTFILE
 	install -m755 bin/distr_vendor $bindir
 else
@@ -37,7 +37,7 @@ cd rpm
 ln -s macros.suse macros.nld
 cd -
 
-# Copy .suse.10 or .suse or .rpm
+# Copy .suse.10 or .suse or .rpm f.i.
 for i in $distr.$version $distr $pkgtype rpm ; do
 	MI="rpm/macros.$i"
 	test -r "$MI" && echo "Copying $MI..." || { echo "Skipping $MI..." ; continue ; }
