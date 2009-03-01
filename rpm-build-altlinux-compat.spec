@@ -1,8 +1,8 @@
 # NOTE: do not use clean_spec or rpmcs for this spec
 
 Name: rpm-build-altlinux-compat
-Version: 1.3
-Release: alt2
+Version: 1.4
+Release: alt1
 
 Summary: ALT Linux compatibility and extensions in rpm build
 
@@ -74,6 +74,11 @@ find -type d -name CVS | xargs rm -rf
 %endif
 
 %changelog
+* Mon Mar 02 2009 Vitaly Lipatov <lav@altlinux.ru> 1.4-alt1
+- fix cmake, fix_permissions macros
+- introduce remove_repo_info macro
+- sync python_ macros with rpm-build-python
+
 * Tue Jan 13 2009 Vitaly Lipatov <lav@altlinux.ru> 1.3-alt2
 - add bindir to install script
 

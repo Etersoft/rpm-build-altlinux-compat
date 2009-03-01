@@ -1,3 +1,35 @@
+2009-03-02 00:15  lav
+
+	* rpm/macros.intro: fix fix_permissions macro, add remove_repo_info
+	  macro
+
+2009-03-02 00:10  lav
+
+	* rpm/: macros.altlinux, macros.intro: move python_ macros, fix
+	  cmake macro
+
+2009-01-13 15:05  lav
+
+	* install.sh, rpm-build-altlinux-compat.spec: add bindir to install
+	  script
+
+2009-01-09 22:46  lav
+
+	* install.sh: fix macros for NLD
+
+2009-01-09 22:44  lav
+
+	* bin/distr_vendor: fix new system detecting
+
+2009-01-09 22:33  lav
+
+	* rpm/macros.suse: fix makeinstall macros on SUSE
+
+2009-01-08 17:06  lav
+
+	* ChangeLog, rpm-build-altlinux-compat.spec, rpm/macros.intro:
+	  update changelog
+
 2009-01-08 17:05  lav
 
 	* rpm/macros.altlinux: move _locksubsysdir to intro
