@@ -27,3 +27,11 @@
 # 
 %_omfdir %_datadir/omf
 
+# add in rpm-build-python 0.33.1-alt1
+# https://bugzilla.altlinux.org/show_bug.cgi?id=13941
+%python_build	\
+	%__python setup.py build
+%python_install	\
+	%__python setup.py install --skip-build --root=%buildroot
+# TODO: need to be add
+%python_check %__python setup.py check

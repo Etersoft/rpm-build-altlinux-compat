@@ -25,7 +25,6 @@
 %_rpmmacrosdir %_sysconfdir/rpm/macros.d
 # various for prev. distro...
 
-
 %rpmcflags %optflags
 # due error on SUSE
 #%rpmldflags %nil
@@ -33,18 +32,12 @@
 
 %_aclocaldir %_datadir/aclocal
 
-# need to be in rpm-build-python
-# https://bugzilla.altlinux.org/show_bug.cgi?id=13941
-%python_build CFLAGS="%optflags" %__python setup.py build
-%python_install %__python setup.py install --root %buildroot --optimize=2
-%python_check %__python setup.py check
-
 # Normalize source file permissions
 %define fix_permissions \
 find -type d -print0 | xargs -0 chmod 0775 \
 find -type f -print0 | xargs -0 chmod 0664
 
-# Prepare cmake build (since rpm-build-compat 1.3)
+# Prepare cmake build (since rpm-build-compat 1.4)
 %cmake \
 cmake . \\\
     -DCMAKE_INSTALL_PREFIX=%prefix \\\
@@ -56,8 +49,12 @@ cmake . \\\
   %endif \
     -DCMAKE_SKIP_RPATH:BOOL=yes \\\
     -DCMAKE_C_FLAGS:STRING='%optflags' \\\
-    -DCMAKE_CXX_FLAGS:STRING='%optflags' \
-%nil
+    -DCMAKE_CXX_FLAGS:STRING='%optflags'
+
+# Remove unneeded repository info (since rpm-build-compat 1.4)
+%define remove_repo_info \
+find -type d -name .svn -print0 | xargs -0 --no-run-if-empty rm -rf {} \; || : \
+find -type d -name .CVS -print0 | xargs -0 --no-run-if-empty rm -rf {} \; || :
 
 # Subsys dir placed in various dirs
 %_locksubsysdir %_var/lock/subsys
