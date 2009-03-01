@@ -57,7 +57,7 @@ find -type d -name CVS | xargs rm -rf
 %if %_vendor == "alt"
 
 %files -n rpm-build-compat
-%doc AUTHORS TODO NEWS
+%doc AUTHORS TODO
 %_rpmmacrosdir/compat
 %_bindir/distr_vendor
 
