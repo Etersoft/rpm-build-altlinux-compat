@@ -33,7 +33,7 @@
 %_aclocaldir %_datadir/aclocal
 
 # Normalize source file permissions
-%define fix_permissions \
+%fix_permissions \
 find -type d -print0 | xargs -0 chmod 0775 \
 find -type f -print0 | xargs -0 chmod 0664
 
@@ -52,9 +52,9 @@ cmake . \\\
     -DCMAKE_CXX_FLAGS:STRING='%optflags'
 
 # Remove unneeded repository info (since rpm-build-compat 1.4)
-%define remove_repo_info \
-find -type d -name .svn -print0 | xargs -0 --no-run-if-empty rm -rf {} \; || : \
-find -type d -name .CVS -print0 | xargs -0 --no-run-if-empty rm -rf {} \; || :
+%remove_repo_info \
+find -type d -name .svn -print0 | xargs -0 --no-run-if-empty rm -rf {} \; \
+find -type d -name .CVS -print0 | xargs -0 --no-run-if-empty rm -rf {} \;
 
 # Subsys dir placed in various dirs
 %_locksubsysdir %_var/lock/subsys
