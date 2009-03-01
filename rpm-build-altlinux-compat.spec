@@ -64,7 +64,7 @@ find -type d -name CVS | xargs rm -rf
 %else
 
 %files
-%doc AUTHORS TODO NEWS ChangeLog
+%doc AUTHORS TODO ChangeLog
 %_rpmmacrosdir/macros
 %_bindir/add_changelog
 %_bindir/stamp_spec
