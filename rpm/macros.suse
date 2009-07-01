@@ -36,6 +36,7 @@
 #%groupremove groupdel
 
 %set_verify_elf_method #
+%set_strip_method #
 
 # FIXME in some way?
 %add_findprov_lib_path #
