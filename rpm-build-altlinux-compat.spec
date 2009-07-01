@@ -1,7 +1,7 @@
 # NOTE: do not use clean_spec or rpmcs for this spec
 
 Name: rpm-build-altlinux-compat
-Version: 1.4
+Version: 1.5
 Release: alt1
 
 Summary: ALT Linux compatibility and extensions in rpm build
@@ -74,6 +74,10 @@ find -type d -name CVS | xargs rm -rf
 %endif
 
 %changelog
+* Wed Jul 01 2009 Vitaly Lipatov <lav@altlinux.ru> 1.5-alt1
+- distr_vendor: add -n option for printout distro name in _vendor macros format
+- update distr_vendor to newest distro support
+
 * Mon Mar 02 2009 Vitaly Lipatov <lav@altlinux.ru> 1.4-alt1
 - fix cmake, fix_permissions macros
 - introduce remove_repo_info macro
