@@ -34,8 +34,8 @@
 
 # Normalize source file permissions
 %fix_permissions \
-find -type d -print0 | xargs -0 chmod 0775 \
-find -type f -print0 | xargs -0 chmod 0664
+find ./ -type d -print0 | xargs -0 chmod 0775 \
+find ./ -type f -print0 | xargs -0 chmod 0664
 
 # Prepare cmake build (since rpm-build-compat 1.4)
 %cmake \
@@ -53,8 +53,8 @@ cmake . \\\
 
 # Remove unneeded repository info (since rpm-build-compat 1.5)
 %remove_repo_info \
-find -type d -name .svn -print0 | xargs -0 --no-run-if-empty rm -rf {} \; \
-find -type d -name CVS -print0 | xargs -0 --no-run-if-empty rm -rf {} \;
+find ./ -type d -name .svn -print0 | xargs -0 --no-run-if-empty rm -rf {} \; \
+find ./ -type d -name CVS -print0 | xargs -0 --no-run-if-empty rm -rf {} \;
 
 # Subsys dir placed in various dirs
 %_locksubsysdir %_var/lock/subsys
