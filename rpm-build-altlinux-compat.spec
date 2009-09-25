@@ -12,7 +12,7 @@ Url: http://wiki.sisyphus.ru/devel/RpmBuildAltlinuxCompat
 
 Packager: Vitaly Lipatov <lav@altlinux.ru>
 
-Source: ftp://updates.etersoft.ru/pub/Etersoft/WINE@Etersoft/last/sources/tarball/%name-%version.tar.bz2
+Source: ftp://updates.etersoft.ru/pub/Etersoft/WINE@Etersoft/last/sources/tarball/%name-%version.tar
 
 BuildArchitectures: noarch
 
@@ -49,7 +49,6 @@ Command rpmbph from etersoft-build-utils adds it automatically.
 
 %prep
 %setup -q
-find ./ -type d -name CVS | xargs rm -rf
 
 %install
 ./install.sh %buildroot %_bindir %_rpmmacrosdir
