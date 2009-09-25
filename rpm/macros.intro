@@ -39,7 +39,8 @@ find ./ -type f -print0 | xargs -0 chmod 0664
 
 # Prepare cmake build (since rpm-build-compat 1.4)
 %cmake \
-cmake . \\\
+mkdir build; cd build; \
+cmake .. \\\
     -DCMAKE_INSTALL_PREFIX=%prefix \\\
     -DLIB_DESTINATION=%_lib \\\
   %if "%_lib" == "lib64" \
@@ -49,7 +50,8 @@ cmake . \\\
   %endif \
     -DCMAKE_SKIP_RPATH:BOOL=yes \\\
     -DCMAKE_C_FLAGS:STRING='%optflags' \\\
-    -DCMAKE_CXX_FLAGS:STRING='%optflags'
+    -DCMAKE_CXX_FLAGS:STRING='%optflags' \
+cd -
 
 # Remove unneeded repository info (since rpm-build-compat 1.5)
 %remove_repo_info \
