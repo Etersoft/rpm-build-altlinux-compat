@@ -26,7 +26,7 @@ DESTFILE=$rpmmacrosdir/macros
 
 if [ $distr = "alt" ] ; then
 	DESTFILE=$rpmmacrosdir/compat
-	cat rpm/macros.altlinux rpm/macros.intro >$DESTFILE
+	cat rpm/macros.intro >$DESTFILE
 	install -m755 bin/distr_vendor $bindir
 else
 	cat rpm/macros rpm/macros.altlinux rpm/macros.intro >$DESTFILE

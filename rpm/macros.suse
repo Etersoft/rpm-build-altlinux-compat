@@ -1,4 +1,4 @@
-# ALT compatibility on other platforms (rpm based)
+# ALT compatibility on other platforms (rpm based, SUSE specific)
 
 #%post_service() \
 #if [ "$RPM_INSTALL_ARG1" = "1" ] ; then \
