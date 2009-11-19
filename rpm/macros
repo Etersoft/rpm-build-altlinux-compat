@@ -175,3 +175,41 @@
 %gpllgpl3only GPLv3, LGPLv3
 %gpllgpl3plus GPLv3+, LGPLv3+
 
+# https://bugzilla.altlinux.org/show_bug.cgi?id=22326
+%cmake \
+    __cmake() \
+    { \
+	pushd BUILD \
+	cmake .. \\\
+	    -DCMAKE_SKIP_RPATH:BOOL=yes \\\
+	    -DCMAKE_BUILD_TYPE=MinSizeRel \\\
+	    -DCMAKE_C_FLAGS:STRING='%optflags' \\\
+	    -DCMAKE_CXX_FLAGS:STRING='%optflags' \\\
+	    -DCMAKE_INSTALL_PREFIX=%prefix \\\
+	    -DLIB_DESTINATION=%_lib \\\
+	    %if "%_lib" == "lib64" \
+	    -DLIB_SUFFIX="64" \\\
+	    %else \
+	    -DLIB_SUFFIX="" \\\
+	    %endif \
+	    \\\
+	    "$@" \
+	popd \
+    } \
+    mkdir -p BUILD; \
+    __cmake
+
+%cmake_insource \
+    cmake . \\\
+	-DCMAKE_SKIP_RPATH:BOOL=yes \\\
+	-DCMAKE_BUILD_TYPE=MinSizeRel \\\
+	-DCMAKE_C_FLAGS:STRING='%optflags' \\\
+	-DCMAKE_CXX_FLAGS:STRING='%optflags' \\\
+	-DCMAKE_INSTALL_PREFIX=%prefix \\\
+	-DLIB_DESTINATION=%_lib \\\
+	%if "%_lib" == "lib64" \
+	-DLIB_SUFFIX="64" \\\
+	%else \
+	-DLIB_SUFFIX="" \\\
+	%endif \
+	\\\

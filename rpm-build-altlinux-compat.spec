@@ -1,7 +1,7 @@
 # NOTE: do not use clean_spec or rpmcs for this spec
 
 Name: rpm-build-altlinux-compat
-Version: 1.5.1
+Version: 1.5.2
 Release: alt1
 
 Summary: ALT Linux compatibility and extensions in rpm build
@@ -73,6 +73,9 @@ Command rpmbph from etersoft-build-utils adds it automatically.
 %endif
 
 %changelog
+* Thu Nov 19 2009 Vitaly Lipatov <lav@altlinux.ru> 1.5.2-alt1
+- update cmake macros from cmake 2.8.0-alt1, move it to compat
+
 * Sat Sep 26 2009 Vitaly Lipatov <lav@altlinux.ru> 1.5.1-alt1
 - fix cmake for build in build subdir
 
