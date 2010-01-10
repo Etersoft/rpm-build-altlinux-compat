@@ -5,6 +5,10 @@
 # 05.02.2006, 12.02.2006, 09.04.2006, 22.02.2008
 #
 
+# introduced in rpm 4.0.4-alt96.13 as
+# %_rpmmacrosdir    %_rpmlibdir/macros.d
+%_rpmmacrosdir %_sysconfdir/rpm/macros.d
+
 # introduced in rpm 4.0.4-alt83
 # https://bugzilla.altlinux.org/show_bug.cgi?id=13925
 %autoreconf %__autoreconf

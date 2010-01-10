@@ -23,15 +23,17 @@
 %_javadir %_datadir/java
 %_javadocdir %_datadir/javadoc
 
-%_rpmmacrosdir %_sysconfdir/rpm/macros.d
 # various for prev. distro...
-
+# FIXME: on other platforms only
 %rpmcflags %optflags
 # due error on SUSE
 #%rpmldflags %nil
 %rpmcxxflags %optflags
 
+# https://bugzilla.altlinux.org/show_bug.cgi?id=22710
 %_aclocaldir %_datadir/aclocal
+# Subsys dir placed in various dirs
+%_locksubsysdir %_var/lock/subsys
 
 # Normalize source file permissions
 %fix_permissions \
@@ -43,5 +45,3 @@ find ./ -type f -print0 | xargs -0 chmod 0664
 find ./ -type d -name .svn -print0 | xargs -0 --no-run-if-empty rm -rf {} \; \
 find ./ -type d -name CVS -print0 | xargs -0 --no-run-if-empty rm -rf {} \;
 
-# Subsys dir placed in various dirs
-%_locksubsysdir %_var/lock/subsys
