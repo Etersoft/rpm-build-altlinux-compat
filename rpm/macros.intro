@@ -30,11 +30,6 @@
 #%rpmldflags %nil
 %rpmcxxflags %optflags
 
-# https://bugzilla.altlinux.org/show_bug.cgi?id=22710
-%_aclocaldir %_datadir/aclocal
-# Subsys dir placed in various dirs
-%_locksubsysdir %_var/lock/subsys
-
 # Normalize source file permissions
 %fix_permissions \
 find ./ -type d -print0 | xargs -0 chmod 0775 \
