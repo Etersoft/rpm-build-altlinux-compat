@@ -1,7 +1,7 @@
 # NOTE: do not use clean_spec or rpmcs for this spec
 
 Name: rpm-build-altlinux-compat
-Version: 1.5.3
+Version: 1.5.4
 Release: alt1
 
 Summary: ALT Linux compatibility and extensions in rpm build
@@ -12,7 +12,7 @@ Url: http://wiki.sisyphus.ru/devel/RpmBuildAltlinuxCompat
 
 Packager: Vitaly Lipatov <lav@altlinux.ru>
 
-Source: ftp://updates.etersoft.ru/pub/Etersoft/WINE@Etersoft/last/sources/tarball/%name-%version.tar
+Source: ftp://updates.etersoft.ru/pub/Etersoft/BuildFarm/sources/tarball/%name-%version.tar
 
 BuildArchitectures: noarch
 
@@ -73,6 +73,10 @@ Command rpmbph from etersoft-build-utils adds it automatically.
 %endif
 
 %changelog
+* Sat Mar 06 2010 Vitaly Lipatov <lav@altlinux.ru> 1.5.4-alt1
+- add macros from rpm-build-perl
+- move build to BuildFarm
+
 * Wed Jan 13 2010 Vitaly Lipatov <lav@altlinux.ru> 1.5.3-alt1
 - small rearrange macros
 - move _aclocaldir, _locksubsysdir, _rpmmacrosdir to already realized in ALT

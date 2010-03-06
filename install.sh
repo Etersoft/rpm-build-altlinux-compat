@@ -44,4 +44,9 @@ for i in $distr.$version $distr $pkgtype rpm ; do
 	cat $MI >>$DESTFILE && break || echo " Failed"
 done
 
+if [ ! $distr = "alt" ] ; then
+	echo >>$DESTFILE
+	cat rpm-build/* >>$DESTFILE
+fi
+
 exit 0
