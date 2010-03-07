@@ -2,6 +2,15 @@
 # portable subst (for systems without sed -i)
 # TODO: use sed -i if possible
 set +e
+
+#sed -i "$@" && exit
+
+PRESERVE=
+if [ "$1" = "-p" ] ; then
+	PRESERVE=1
+	shift
+fi
+
 SCRIPT=$1; shift
 
 # Check for broken mktemp
@@ -13,7 +22,9 @@ fi
 
 for s in "$@"; do
 	if cat $s | sed "$SCRIPT" > $T; then
+	   [ -n "$PRESERVE" ] && touch -r $s $T
 	   cat $T > $s
+	   [ -n "$PRESERVE" ] && touch -r $T $s
 	else
 		exit 1
 	fi
