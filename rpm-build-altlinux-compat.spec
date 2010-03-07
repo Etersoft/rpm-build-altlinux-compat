@@ -48,7 +48,7 @@ Add it to buildrequires when backporting packages.
 Command rpmbph from etersoft-build-utils adds it automatically.
 
 %prep
-%setup -q
+%setup
 
 %install
 ./install.sh %buildroot %_bindir %_rpmmacrosdir
@@ -76,6 +76,7 @@ Command rpmbph from etersoft-build-utils adds it automatically.
 * Sun Mar 07 2010 Vitaly Lipatov <lav@altlinux.ru> 1.5.4-alt2
 - fix translation distro name
 - fix Url to new place
+- add support for -p option to subst
 
 * Sat Mar 06 2010 Vitaly Lipatov <lav@altlinux.ru> 1.5.4-alt1
 - add macros from rpm-build-perl
