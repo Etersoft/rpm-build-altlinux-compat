@@ -2,7 +2,7 @@
 
 Name: rpm-build-altlinux-compat
 Version: 1.5.4
-Release: alt1
+Release: alt2
 
 Summary: ALT Linux compatibility and extensions in rpm build
 
@@ -12,7 +12,7 @@ Url: http://wiki.sisyphus.ru/devel/RpmBuildAltlinuxCompat
 
 Packager: Vitaly Lipatov <lav@altlinux.ru>
 
-Source: ftp://updates.etersoft.ru/pub/Etersoft/BuildFarm/sources/tarball/%name-%version.tar
+Source: ftp://updates.etersoft.ru/pub/Etersoft/Sisyphus/sources/tarball/%name-%version.tar
 
 BuildArchitectures: noarch
 
@@ -73,6 +73,10 @@ Command rpmbph from etersoft-build-utils adds it automatically.
 %endif
 
 %changelog
+* Sun Mar 07 2010 Vitaly Lipatov <lav@altlinux.ru> 1.5.4-alt2
+- fix translation distro name
+- fix Url to new place
+
 * Sat Mar 06 2010 Vitaly Lipatov <lav@altlinux.ru> 1.5.4-alt1
 - add macros from rpm-build-perl
 - move build to BuildFarm
