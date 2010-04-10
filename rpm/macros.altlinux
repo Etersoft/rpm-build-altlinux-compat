@@ -47,3 +47,6 @@
 	%__python setup.py install --skip-build --root=%buildroot
 # TODO: need to be add
 %python_check %__python setup.py check
+
+# macro for init scripts configs
+%_sysconfigdir %_sysconfdir/sysconfig

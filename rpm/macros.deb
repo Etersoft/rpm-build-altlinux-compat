@@ -85,3 +85,6 @@ fi \
 #############################################################
 
 %_locksubsysdir %_var/lock
+
+# macro for init scripts configs
+%_sysconfigdir %_sysconfdir/default
