@@ -25,22 +25,18 @@ DESTFILE=$rpmmacrosdir/macros
 
 
 if [ $distr = "alt" ] ; then
-	DESTFILE=$rpmmacrosdir/compat
-	cat rpm/macros.intro >$DESTFILE
+	DESTFILE=$rpmmacrosdir/intro
+	cat macros.base/macros.intro >$DESTFILE
 	install -m755 bin/distr_vendor $bindir
 else
-	cat rpm/macros rpm/macros.altlinux rpm/macros.intro >$DESTFILE
+	cat macros.base/macros.compat macros.base/macros.intro.backport macros.base/macros.intro >$DESTFILE
 	install -m755 bin/* $bindir
 fi
 
-cd rpm
-ln -s macros.suse macros.nld
-cd -
-
-# Copy .suse.10 or .suse or .rpm f.i.
+# Copy .suse.10 or .suse f.i. and rpm
 for i in $distr.$version $distr $pkgtype rpm ; do
-	MI="rpm/macros.$i"
-	test -r "$MI" && echo "Copying $MI..." || { echo "Skipping $MI..." ; continue ; }
+	MI="macros.distro/macros.$i"
+	test -r "$MI" && echo "Applied $MI..." || { echo "Skipping $MI..." ; continue ; }
 	cat $MI >>$DESTFILE && break || echo " Failed"
 done
 

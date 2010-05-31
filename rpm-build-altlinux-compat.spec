@@ -1,7 +1,7 @@
 # NOTE: do not use clean_spec or rpmcs for this spec
 
 Name: rpm-build-altlinux-compat
-Version: 1.5.5
+Version: 1.6.0
 Release: alt1
 
 Summary: ALT Linux compatibility and extensions in rpm build
@@ -73,8 +73,12 @@ Command rpmbph from etersoft-build-utils adds it automatically.
 %endif
 
 %changelog
+* Mon May 31 2010 Vitaly Lipatov <lav@altlinux.ru> 1.6.0-alt1
+- rearrange source macros file
+- update distr_vendor
+
 * Sat Apr 10 2010 Vitaly Lipatov <lav@altlinux.ru> 1.5.5-alt1
-- introduce %_sysconfigdir (%_sysconfdir/sysconfig)
+- introduce %%_sysconfigdir (%%_sysconfdir/sysconfig)
 
 * Sun Mar 07 2010 Vitaly Lipatov <lav@altlinux.ru> 1.5.4-alt2
 - fix translation distro name
