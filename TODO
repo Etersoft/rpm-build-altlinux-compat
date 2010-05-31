@@ -1,18 +1,20 @@
+-intro п╢п╩я▐ п╫п╬п╡я▀я┘ п╪п╟п╨я─п╬я│п╬п╡
+-compat п╢п╩я▐ я│п╠п╬я─п╨п╦ п╫п╟ я│я┌п╟я─я▀я┘ п╢п╦я│я┌я─п╦п╠я┐я┌п╦п╡п╟я┘ (п©п╬п╢п╠п╦я─п╟я┌я▄ п©п╬п╢ п╨п╟п╤п╢я┐я▌ п╡п╣я─я│п╦я▌)
 
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
 
-Не работает в макросах:
-Условное подключение макроса (только если не определён?)
+п²п╣ я─п╟п╠п╬я┌п╟п╣я┌ п╡ п╪п╟п╨я─п╬я│п╟я┘:
+пёя│п╩п╬п╡п╫п╬п╣ п©п╬п╢п╨п╩я▌я┤п╣п╫п╦п╣ п╪п╟п╨я─п╬я│п╟ (я┌п╬п╩я▄п╨п╬ п╣я│п╩п╦ п╫п╣ п╬п©я─п╣п╢п╣п╩я▒п╫?)
 %{?!_niconsdir:%define _niconsdir %_iconsdir}
 
-Новые макросы:
+п²п╬п╡я▀п╣ п╪п╟п╨я─п╬я│я▀:
 xorg-x11-proto-devel - X proto header files
 * Fri Jan 27 2006 Valery Inozemtsev <shrek@altlinux> 7.0.0-alt4
-        %_x11x11libdir  %{_libdir}/X11
-        %_x11modulesdir %{_libdir}/X11/modules
-        %_x11drvddir    %{_prefix}/libexec/X11/drv.d
-        %_x11sysconfdir %{_sysconfdir}/X11
-        %_x11appconfdir %{_sysconfdir}/X11/app-defaults
+б═б═б═б═б═б═б═б═%_x11x11libdir б═%{_libdir}/X11
+б═б═б═б═б═б═б═б═%_x11modulesdir %{_libdir}/X11/modules
+б═б═б═б═б═б═б═б═%_x11drvddir б═ б═%{_prefix}/libexec/X11/drv.d
+б═б═б═б═б═б═б═б═%_x11sysconfdir %{_sysconfdir}/X11
+б═б═б═б═б═б═б═б═%_x11appconfdir %{_sysconfdir}/X11/app-defaults
 
 # TODO: port rpm-utils?
 
