@@ -1,3 +1,6 @@
+
+%_initdir %_sysconfdir/rc.d
+
 # ALT compatibility on other platforms (rpm based, ArchLinux)
 
 #%post_service() \

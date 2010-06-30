@@ -43,8 +43,6 @@
 # deprecated:
 %_defaultdocdir %_datadir/doc
 %_docdir %_datadir/doc
-# FIXME: on Debian!
-%_initdir %_sysconfdir/init.d
 
 # Mdk compatibility
 %_initrddir %_initdir
