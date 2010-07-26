@@ -1,0 +1,37 @@
+%gpl2only GPLv2
+%gpl2plus GPLv2+
+%gpl3only GPLv3
+%gpl3plus GPLv3+
+%lgpl2only LGPLv2
+%lgpl21only LGPLv2.1
+%lgpl2plus LGPLv2+
+%lgpl21plus LGPLv2.1+
+%lgpl3only LGPLv3
+%lgpl3plus LGPLv3+
+%bsd_orig BSD (original)
+%bsd BSD (revised)
+%bsdstyle BSD-style
+%mit MIT/X Consortium
+%mpl MPL
+%w3cl W3C
+%asl Apache
+%jpackage_license JPackage
+%sendmail_license Sendmail
+%artistic_license Artistic
+%perl_license Perl (GPL or Artistic)
+%fdl FDL
+%lppl LPPL
+%ccbysa30 CC-BY-SA-3.0
+%ccby30 CC-BY-3.0
+%ccbysa25 CC-BY-SA-2.5
+%ccby25 CC-BY-2.5
+%epl Erlang Public License
+%pubdomain Public domain
+%distributable Distributable, non-free
+
+# Not sure whether these ones should exist at all. Too clumsy names and vague
+# semantics.
+%gpllgpl2only GPLv2, LGPLv2
+%gpllgpl2plus GPLv2+, LGPLv2+
+%gpllgpl3only GPLv3, LGPLv3
+%gpllgpl3plus GPLv3+, LGPLv3+

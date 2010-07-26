@@ -1,0 +1,255 @@
+# Версия: $Id: python 378 2004-10-05 12:21:51Z cray $
+# -*- coding: utf-8 -*-
+
+# Override __python_version macro provided by rpm-build 
+%__python_version	%(LC_ALL=C %__python -c 'import sys; print "%%u.%%u" %% sys.version_info[0:2]' 2>/dev/null || echo 2.6)
+
+%_target_python_libdir %_target_libdir
+%_python_set_noarch() %global _target_python_libdir %_libexecdir
+%_python_lib_path	""
+%_python_req_method	slight
+%_python_req_skip	""
+%_python_compile_method	ALL
+%_python_compile_exclude	%_defaultdocdir
+%_python_compile_include	%_target_python_libdir
+%_python_compile_deep	20
+%_python_compile_skip_x	1
+%_python_compile_clean	1
+
+%set_python_req_method()	%global _python_req_method %1
+%set_python_compile_method()	%global _python_compile_method %1
+
+%add_python_req_skip()	%global _python_req_skip %_python_req_skip %*
+%add_python_lib_path()	%global _python_lib_path %_python_lib_path %*
+%add_python_compile_exclude() %global _python_compile_exclude %_python_compile_exclude %*
+%add_python_compile_include() %global _python_compile_include %_python_compile_include %*
+
+# _check_python_version_internal <версия_с_точкой> <версия_без_точки>
+#
+#       Проверить указание ключа сборки --with pythonXY, Должна вызываться
+#       для всех поддерживаемых версий питон
+#
+#       Если при сборке было указан ключ --with pythonXY, то определить
+#       переменную __python_package_version, равную <версии_с_точкой>, и
+#       внести кляузу 
+#
+#		BuildPreReq: python = X.Y
+#
+# 	в пакет.
+#
+#       В случае одновременного использования двух разных ключей --with
+#       pythonXY инициируется аварийная остановка сборки
+#
+%_check_python_version_internal() \
+%{expand: %{expand:%%{?_with_python%{2}:%%{?__python_package_version:%%%%{error:Only one python version can be selected at a time}}}}} \
+%(echo %{expand:%%{?_with_python%{2}:%%{?__python_package_version:BuildConflicts: python = %{1}}}}) \
+%(echo %{expand:%%{?_with_python%{2}:BuildPreReq: python = %{1}}}) \
+%{expand: %{expand:%%{?_with_python%{2}:%%{!?__python_package_version:%%%%global __python_package_version %1}}}} \
+%{expand: %{expand:%%{?_with_python%{2}:%%%%global __python_version %1}}}
+
+
+# _check_python_version <версия_с_точкой>
+#
+#	Обертка для функции _check_python_version_internal
+#
+%_check_python_version() \
+%{expand: %%_check_python_version_internal %{1} %(echo %1 | sed -e 's/\\.//g')}
+
+# _bind_python_version_internal <имя_модуля> <версия_с_точкой>
+#
+# 	Привязывает сборку к определенной версии питона путем создания доп.
+# 	файла c именем %_sourcedir/<имя_модуля>.rpmreq и включения его в
+# 	список Source пакета (как Source100: would be ought for everything)
+
+%_bind_python_version() \
+%(echo %%global _with_python%{2} --with-python%{2} | sed -e 's/\\.//g' >%_sourcedir/%{1}.rpmreq) \
+%(echo Source9999: %{1}.rpmreq)
+
+# check_bound_python_version <имя_модуля>
+#
+#       Проверяет наличие файла %_sourcedir/<имя_модуля>.rpmreq и, если он
+#       есть, привязывает данную сборку к указанной в этом файле версии
+#       питона.
+#
+%_check_bound_python_version() \
+%{expand: %(test -f %_sourcedir/%{1}.rpmreq && cat %_sourcedir/%{1}.rpmreq)} \
+%(test -f %_sourcedir/%{1}.rpmreq && echo Source9999: %{1}.rpmreq) \
+%_check_python_version 2.2 \
+%_check_python_version 2.3 \
+%_check_python_version 2.4 \
+%_check_python_version 2.5 \
+%_check_python_version 2.6
+
+%_forget_bound_python_version() \
+%{expand: %{expand: %%%%global __python_package_version %%%%nil}} \
+%{expand: %(test -f %_sourcedir/%{1}.rpmreq && rm -f %_sourcedir/%{1}.rpmreq)}
+
+%_setup_python_module_internal()        \
+%{expand: %%global modulename %{1}} \
+%{expand: %%{?_with_python_auto: %%_forget_bound_python_version %modulename}} \
+%_check_python_version 2.2 \
+%_check_python_version 2.3 \
+%_check_python_version 2.4 \
+%_check_python_version 2.5 \
+%_check_python_version 2.6 \
+%{expand: %{expand: %%{!?__python_package_version:%%{!?__python_disable_bind_version:%%{!?_with_python_auto:%%%%_check_bound_python_version %%modulename}}}}} \
+%{expand: %{expand: %%{?__python_package_version:%%{!?__python_disable_bind_version:%%{!?_with_python_auto:%%%%_bind_python_version %%modulename %%__python_package_version}}}}} \
+%{expand: %%global __python %%(which python%%__python_version 2>/dev/null || echo /bin/false)} \
+%{expand: %{expand: %%{!?__python_package_version:%%%%global __python_package_version %%%%nil}}} \
+%{expand: %%global __python_module_prefix python%%{__python_package_version}-module} \
+%{expand: %%global packagename %%{__python_module_prefix}-%%{modulename}}
+
+%setup_std_python_package_deps() \
+%{expand: %%{!?modulename:%%_setup_python_module_internal %{*}}} \
+%(echo "Requires: python = %__python_version") \
+%(echo "BuildPreReq: python-devel = %__python_version") \
+%(echo "BuildPreReq: rpm-build-python >= 0.8") \
+%(echo "Provides: python%__python_version-module-%modulename = %version-%release") \
+%nil
+
+
+# setup_python_module <имя_модуля>
+#
+# 	Функция, инициирующая спек. Должна указываться в начале спека
+#	для инициализации параметров сборки.
+#
+# 	Проверяет указанные ключа сборки --with pythonXY и/или with
+# 	--python_auto, и устанавливает сборочные зависимости пакета. Кроме
+# 	этого, определяет переменные packagename и __python_package_version
+# 	(в зависимости от ключей и прочих параметров сборки).
+#
+%setup_python_module() \
+%{expand: %%{!?__python_package_version:%%_setup_python_module_internal %{*}}} \
+%{expand: %%setup_std_python_package_deps}
+
+# setup_python_module_loose <имя_модуля>
+#
+# 	Альтернатива setup_python_module, не использующая генерацию .rpmreq
+# 	файла и не выполняющая проверку его наличия
+#
+%setup_python_module_loose() \
+%{expand: %%global __python_disable_bind_version 1} \
+%{expand: %%setup_python_module %{*}}
+
+%setup_python_subpackage() \
+%{expand: %%_setup_python_module_internal %{*}}
+
+%__python_deps_internal() \
+for mod in %{*}; do \
+    echo -n "python%__python_version($mod) "; \
+done; unset mod;\
+%nil
+
+# py_requires <имя_модуля1> [<имя_модуля2> ...]
+#
+#	Добавляет зависимость на указанные модули python. Формируемые
+# 	зависимости имеют вид: pythonX.Y(имя_модуля1) [pythonX.Y(имя_модуля2)...]
+# 	где X.Y - текущая (выбранная) версия python
+#
+%py_requires() \
+%(echo -n "Requires:"; %{expand: %%__python_deps_internal %{*}}) \
+%nil
+
+# py_provides <имя_модуля1> [<имя_модуля2> ...]
+#
+# 	Позволяет принудительно указать предоставляемые модули python. Формируемые
+# 	"provides" имеют вид: pythonX.Y(имя_модуля1) [pythonX.Y(имя_модуля2)...]
+# 	где X.Y - текущая (выбранная) версия python
+#
+%py_provides() \
+%(echo -n "Provides:"; %{expand: %%__python_deps_internal %{*}}) \
+%nil
+
+# py_dependencies <имя_модуля1> [<имя_модуля2> ...]
+#
+# 	Формирует список модулей питон для использования, например,
+# 	в тегах BuildRequires или Obsoletes, н-р, так:
+# 	BuildRequires: %py_dependencies module1 module2 module3
+# 	что будет преобразовано в
+# 	BuildRequires: pythonX.Y(module1) pythonX.Y(module2) pythonX.Y(module3)
+#
+%py_dependencies() %(%{expand: %%__python_deps_internal %{*}})
+
+%__python_package_deps_internal() \
+args="%{*}"; \
+set $args ''; \
+while test $# -gt 1; do \
+  mod=$1; shift; \
+  if test $# -gt 1; then \
+    if test "x$1" = "x<" -o "x$1" = "x<=" -o "x$1" = "x=" -o "x$1" = "x>=" -o "x$1" = "x>"; then \
+      verstr="$1 $2"; shift; shift; \
+    fi; \
+  fi; \
+  echo -n "python%__python_version-module-${mod} $verstr "; \
+  unset mod; unset verstr; \
+done; \
+%nil
+
+# py_package_requires <pypackage1> [[>= <pypackage1_version>] [<pypackage2> ...]]
+#
+# 	Аналогично py_requires, но оперирует не модулями python, а
+# 	пакетами модулей python, возможно, с указанием версий (<, <=, =, =>, >).
+# 	Например, строчка 
+# 	%py_package_requires pack1 pack2 >= 1.0-alt1 pack3
+# 	даст три зависимости:
+#    		pythonX.Y-module-pack1
+#    		pythonX.Y-module-pack2 >= 1.0-alt1
+#    		pythonX.Y-module-pack3
+# где X.Y - текущая (выбранная) версия python.
+%py_package_requires() \
+%(echo -n "Requires:"; %{expand: %%__python_package_deps_internal %{*}}) \
+%nil
+
+#  py_package_provides <pypackage1> [[>= <pypackage1_version>] [<pypackage2> ...]]
+#
+# 	Аналогично py_package_requires, но формирует не списки Requires, а списки
+# 	Provides
+#
+%py_package_provides() \
+%(echo -n "Provides:"; %{expand: %%__python_package_deps_internal %{*}}) \
+%nil
+
+# py_package_dependencies <pypackage1> [[>= <pypackage1_version>] [<pypackage2> ...]]
+#
+# 	Аналогично py_package_requires, но формирует только список, без указания
+# 	RPM-предиката, то есть, подходит для использования, например, так
+# 	BuildRequires: %py_package_dependencies pack1 pack2 >= 1.2-alt1 pack3
+# 	ВНИМАНИЕ: НЕ ТЕСТИРОВАЛОСЬ! ;-)
+#
+%py_package_dependencies() %(%{expand: %%__python_package_deps_internal %{*}})
+
+# Заголовочные файлы для компиляции расширений на C
+%python_includedir %_includedir/python%__python_version
+
+# Модули Python, включенные в официальный релиз
+%python_libdir %_target_python_libdir/python%__python_version
+
+# Модули Python, установленные в дополнение к официальному релизу
+%python_sitelibdir %python_libdir/site-packages
+
+# Библиотеки расширений для языка Python
+%python_dynlibdir %python_libdir/lib-dynload
+
+# Утилиты на языке Python
+%python_tooldir %python_libdir/tools
+
+# python_module_declare <путь к модулю>
+#
+#	Декларировать что данный модуль может быть распилен на
+#	составляющие подмодули.
+#
+
+%_python_module_declared ""
+%python_module_declare() %global _python_module_declared %1 %_python_module_declared  
+
+# python_req_hier
+#
+#	Включить поиск иерархических зависимостей
+#
+%python_req_hier %global _python_req_hier yes
+
+# traditional build/install macros
+%python_build	\
+	%__python setup.py build
+%python_install	\
+	%__python setup.py install --skip-build --root=%buildroot

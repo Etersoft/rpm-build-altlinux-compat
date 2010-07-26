@@ -1,7 +1,7 @@
 # NOTE: do not use clean_spec or rpmcs for this spec
 
 Name: rpm-build-altlinux-compat
-Version: 1.6.0
+Version: 1.6.1
 Release: alt1
 
 Summary: ALT Linux compatibility and extensions in rpm build
@@ -17,7 +17,9 @@ Source: ftp://updates.etersoft.ru/pub/Etersoft/Sisyphus/sources/tarball/%name-%v
 BuildArchitectures: noarch
 
 %if %_vendor == "alt"
+%ifndef _rpmmacrosdir
 %define _rpmmacrosdir %_sysconfdir/rpm/macros.d
+%endif
 %else
 Requires: ed
 %define _rpmmacrosdir /etc/rpm
@@ -57,7 +59,7 @@ Command rpmbph from etersoft-build-utils adds it automatically.
 
 %files -n rpm-build-compat
 %doc AUTHORS TODO
-%_rpmmacrosdir/compat
+%_rpmmacrosdir/intro
 %_bindir/distr_vendor
 
 %else
@@ -73,6 +75,9 @@ Command rpmbph from etersoft-build-utils adds it automatically.
 %endif
 
 %changelog
+* Mon Jul 26 2010 Vitaly Lipatov <lav@altlinux.ru> 1.6.1-alt1
+- add python, perl macros
+
 * Mon May 31 2010 Vitaly Lipatov <lav@altlinux.ru> 1.6.0-alt1
 - rearrange source macros file
 - update distr_vendor

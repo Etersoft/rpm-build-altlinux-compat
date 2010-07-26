@@ -42,7 +42,7 @@ done
 
 if [ ! $distr = "alt" ] ; then
 	echo >>$DESTFILE
-	cat rpm-build/* >>$DESTFILE
+	cat rpm-build/[0-9a-z]* >>$DESTFILE
 fi
 
 exit 0

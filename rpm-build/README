@@ -1,4 +1,5 @@
 macroses from ALT:
 cmake from cmake package
 perl5-alt-rpm-macros from rpm-build-perl package
-
+python from rpm-build-python package
+licenses from rpm-build-licenses package
