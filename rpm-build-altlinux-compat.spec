@@ -1,7 +1,7 @@
 # NOTE: do not use clean_spec or rpmcs for this spec
 
 Name: rpm-build-altlinux-compat
-Version: 1.6.1
+Version: 1.6.2
 Release: alt1
 
 Summary: ALT Linux compatibility and extensions in rpm build
@@ -75,6 +75,10 @@ Command rpmbph from etersoft-build-utils adds it automatically.
 %endif
 
 %changelog
+* Fri Oct 01 2010 Vitaly Lipatov <lav@altlinux.ru> 1.6.2-alt1
+- update SUSE/Mandriva/PCLinux detections
+- fix install pkgtype related macros
+
 * Mon Jul 26 2010 Vitaly Lipatov <lav@altlinux.ru> 1.6.1-alt1
 - add python, perl macros
 
