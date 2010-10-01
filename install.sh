@@ -33,13 +33,21 @@ else
 	install -m755 bin/* $bindir
 fi
 
-# Copy .suse.10 or .suse f.i. and rpm
-for i in $distr.$version $distr $pkgtype rpm ; do
+# Copy .suse.10 or .suse f.i.
+for i in $distr.$version $distr ; do
 	MI="macros.distro/macros.$i"
 	test -r "$MI" && echo "Applied $MI..." || { echo "Skipping $MI..." ; continue ; }
 	cat $MI >>$DESTFILE && break || echo " Failed"
 done
 
+# Copy pkgtype related
+for i in $pkgtype ; do
+	MI="macros.base/macros.$i"
+	test -r "$MI" && echo "Applied $MI..." || { echo "Skipping $MI..." ; continue ; }
+	cat $MI >>$DESTFILE && break || echo " Failed"
+done
+
+# Add macros copied from ALT's rpm-build-* packages
 if [ ! $distr = "alt" ] ; then
 	echo >>$DESTFILE
 	cat rpm-build/[0-9a-z]* >>$DESTFILE
