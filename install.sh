@@ -29,6 +29,7 @@ copy_macros()
 	for MI in $@ ; do
 		test -r "$MI" && echo "Applied $MI..." || { echo "Skipping $MI..." ; continue ; }
 		echo >>$DESTFILE
+		echo "# Included from file $MI" >>$DESTFILE
 		cat $MI >>$DESTFILE
 	done
 }
@@ -56,7 +57,11 @@ copy_macros macros.distro/macros.$distr
 if [ $distr = "alt" ] ; then
 	# For ALT will put distro/version section in rpm-build-compat package
 	DESTFILE=$rpmmacrosdir/compat
-	echo >>$DESTFILE
+	echo -n >$DESTFILE
+	if [ "$version" = "Sisyphus" ] ; then
+		echo "# This file have to be empty after build in ALT Linux Sisyphus (check backported package)" >> $DESTFILE
+		echo "# Build at $(date)" >> $DESTFILE
+	fi
 else
 	# Add macros copied from ALT's rpm-build-* packages
 	echo >>$DESTFILE
