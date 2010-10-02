@@ -32,22 +32,33 @@ Requires: rpm-build
 %description
 This package contains ALT Linux compatibility layer
 and some extensions for rpm build
-on various rpm-based platforms.
-Add it to buildrequires when backporting packages.
-Command rpmbph from etersoft-build-utils adds it automatically.
+on various rpm running platforms.
+
+%package -n rpm-build-intro
+Summary: New macros for ALT Linux rpm build
+Group: Development/Other
+Requires: %_rpmmacrosdir
+# we will use distr_vendor from it
+# Requires: rpm-build-compat
+
+%description -n rpm-build-intro
+This package contains new macros introduced for
+include in ALT Linux rpm build.
+
+If you wish to use these macros, add rpm-build-intro
+package to buildrequires.
 
 %package -n rpm-build-compat
-Summary: ALT Linux compatibility and extensions in rpm build
+Summary: ALT Linux compatibility macros for backport purposes
 Group: Development/Other
 Requires: %_rpmmacrosdir
 
 %description -n rpm-build-compat
 This package contains ALT Linux compatibility layer
-and some extensions for rpm build
-on ALT Linux systems.
+for ALT Linux rpm build.
 It is useful for backporting packages to previous ALT Linux distros.
 Add it to buildrequires when backporting packages.
-Command rpmbph from etersoft-build-utils adds it automatically.
+Command rpmbph from etersoft-build-utils will do it automatically.
 
 %prep
 %setup
@@ -57,9 +68,13 @@ Command rpmbph from etersoft-build-utils adds it automatically.
 
 %if %_vendor == "alt"
 
-%files -n rpm-build-compat
+%files -n rpm-build-intro
 %doc AUTHORS TODO
-%_rpmmacrosdir/intro
+%_rpmmacrosdir/etersoft-intro
+
+%files -n rpm-build-compat
+%doc AUTHORS
+%_rpmmacrosdir/compat
 %_bindir/distr_vendor
 
 %else

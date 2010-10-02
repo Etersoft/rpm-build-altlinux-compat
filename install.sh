@@ -25,32 +25,41 @@ DESTFILE=$rpmmacrosdir/macros
 
 
 if [ $distr = "alt" ] ; then
-	DESTFILE=$rpmmacrosdir/intro
-	cat macros.base/macros.intro >$DESTFILE
+	DESTFILE=$rpmmacrosdir/etersoft-intro
+	# new macros, introduced for ALT and other, but not applied
+	cat macros.intro/macros.intro >$DESTFILE
 	install -m755 bin/distr_vendor $bindir
 else
-	cat macros.base/macros.compat macros.base/macros.intro.backport macros.base/macros.intro >$DESTFILE
+	# new macros, introduced for ALT and other
+	cat macros.intro/macros.intro >$DESTFILE
+	# ALT Linux only macros applied in ALT already (for ALT will add it in distro/version section)
+	cat macros.intro/macros.intro.backport >>$DESTFILE
+
+	# Copy pkgtype related ALT compatibility for other platform
+	for i in compat $pkgtype ; do
+		MI="macros.base/macros.$i"
+		test -r "$MI" && echo "Applied $MI..." || { echo "Skipping $MI..." ; continue ; }
+		echo >>$DESTFILE
+		cat $MI >>$DESTFILE && break || echo " Failed"
+	done
+
 	install -m755 bin/* $bindir
 fi
 
-# Copy .suse.10 or .suse f.i.
+if [ $distr = "alt" ] ; then
+	# For ALT will put distro/version section in rpm-build-compat package
+	DESTFILE=$rpmmacrosdir/compat
+else
+	# Add macros copied from ALT's rpm-build-* packages
+	echo >>$DESTFILE
+	cat macros.rpm-build/[0-9a-z]* >>$DESTFILE
+fi
+
+# Distro/version section. Copy .suse.10 or .suse f.i.
 for i in $distr.$version $distr ; do
 	MI="macros.distro/macros.$i"
 	test -r "$MI" && echo "Applied $MI..." || { echo "Skipping $MI..." ; continue ; }
 	cat $MI >>$DESTFILE && break || echo " Failed"
 done
-
-# Copy pkgtype related
-for i in $pkgtype ; do
-	MI="macros.base/macros.$i"
-	test -r "$MI" && echo "Applied $MI..." || { echo "Skipping $MI..." ; continue ; }
-	cat $MI >>$DESTFILE && break || echo " Failed"
-done
-
-# Add macros copied from ALT's rpm-build-* packages
-if [ ! $distr = "alt" ] ; then
-	echo >>$DESTFILE
-	cat rpm-build/[0-9a-z]* >>$DESTFILE
-fi
 
 exit 0
