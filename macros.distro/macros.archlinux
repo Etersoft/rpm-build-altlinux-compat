@@ -1,3 +1,4 @@
+# Platform and version dependend macros
 
 %_initdir %_sysconfdir/rc.d
 

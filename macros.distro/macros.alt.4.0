@@ -1,3 +1,6 @@
+# Platform and version dependend macros
+# These macros will packed in rpm-build-compat package on ALT
+
 # Prepare cmake build (since rpm-build-compat 1.4)
 %cmake \
 mkdir build; cd build; \

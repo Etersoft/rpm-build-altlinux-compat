@@ -1,9 +1,5 @@
-# TODO from 19.11.09: copy needed macroses to alt.4.0 and alt.4.1
-# ALT Linux compatibility and enchancement macroses.
+# Introduced for ALT Linux and already applied in Sisyphus macros
 # Collected by Vitaly Lipatov <lav@etersoft.ru>
-# TODO: split by distros' version (check by package's version?)
-# 05.02.2006, 12.02.2006, 09.04.2006, 22.02.2008
-#
 
 # introduced since rpm-4.0.4-alt98.28
 # https://bugzilla.altlinux.org/show_bug.cgi?id=22710
