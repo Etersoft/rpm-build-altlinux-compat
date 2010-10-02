@@ -1,5 +1,6 @@
 # Platform and version dependend macros (ALT Linux only)
-# These macros will packed in rpm-build-compat package on ALT
+# These macros introduced for ALT and packed for ALT Linux only
+# These macros will packed in rpm-build-intro package on ALT
 
 # Start service only after manual install
 # this case is never run due no tty under rpm process install
