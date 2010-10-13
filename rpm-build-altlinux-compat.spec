@@ -2,7 +2,7 @@
 
 Name: rpm-build-altlinux-compat
 Version: 1.7.1
-Release: alt1
+Release: alt2
 
 Summary: ALT Linux compatibility and extensions in rpm build
 
@@ -90,6 +90,9 @@ Command rpmbph from etersoft-build-utils will do it automatically.
 %endif
 
 %changelog
+* Wed Oct 13 2010 Vitaly Lipatov <lav@altlinux.ru> 1.7.1-alt2
+- define _initddir for all pkgtype
+
 * Wed Oct 13 2010 Vitaly Lipatov <lav@altlinux.ru> 1.7.1-alt1
 - remove python env. var. (http://bugs.etersoft.ru/show_bug.cgi?id=4754#c25)
 - use _initddir instead _initdir, add _initdir to ALT compat macros (see ALT #24290)
