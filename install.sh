@@ -65,8 +65,7 @@ if [ $distr = "alt" ] ; then
 	fi
 else
 	# Add macros copied from ALT's rpm-build-* packages
-	echo >>$DESTFILE
-	cat macros.rpm-build/[0-9a-z]* >>$DESTFILE
+	copy_macros macros.rpm-build/[0-9a-z]*
 fi
 
 # Distro/version section. (f.i., .suse.10)
