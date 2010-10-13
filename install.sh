@@ -46,6 +46,7 @@ else
 	cat macros.intro/macros.intro.backport >>$DESTFILE
 
 	# Copy pkgtype related ALT compatibility for other platform
+	[ "$pkgtype" = "deb" ] || [ "$pkgtype" = "rpm" ] || pkgtype="generic"
 	copy_macros macros.base/macros.compat macros.base/macros.$pkgtype
 
 	install -m755 bin/* $bindir
