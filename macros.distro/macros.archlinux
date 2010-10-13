@@ -1,43 +1,6 @@
 # Platform and version dependend macros
 
-%_initdir %_sysconfdir/rc.d
-
-# ALT compatibility on other platforms (rpm based, ArchLinux)
-
-#%post_service() \
-#if [ "$RPM_INSTALL_ARG1" = "1" ] ; then \
-#chkconfig --add %1 || : \
-#else \
-#%_initdir/%1 condrestart || : \
-#fi
-
-#%preun_service() \
-#if [ "$RPM_INSTALL_ARG1" != "0" ]; then \
-#%_initdir/%1 condstop ||: \
-#chkconfig --del %1 || : \
-#fi
-
-%post_service() \
-	test -x /sbin/chkconfig && chkconfig --add %1 || : \
-	%_initdir/%1 condrestart || : \
-%nil
-
-%preun_service() \
-	test -x /sbin/chkconfig && chkconfig --del %1 || : \
-	%_initdir/%1 condstop || : \
-%nil
-
-# Start service only after manual install
-# 1 - 1st install, 2 - update package
-%start_service() \
-	[ -z "$DURING_INSTALL" ] && [ "$1" = "1" ] && %_initdir/%{1} start || : \
-%nil
-
-# PLD compatibility (-f removed as redhat specific extension)
-%groupadd /usr/sbin/groupadd -r
-%useradd /usr/sbin/useradd -r
-#%userremove userdel
-#%groupremove groupdel
+%_initddir %_sysconfdir/rc.d
 
 # it is better to install rpm-build-fonts instead
 %_fontsdir %_datadir/default
@@ -45,48 +8,4 @@
 %_type1fontsdir %_fontsdir/Type1
 %_ttffontsdir %_fontsdir/TTF
 %_otffontsdir %_fontsdir/OTF
-
-
-# Helper macroses for fonts packages in ALT Linux.
-# Check to ALT Linux font policy: http://www.freesource.info/wiki/Altlinux/Policy/Fonts
-# Modified: remove X scale file creating
-
-# for use in %%install section (use with name of font family)
-# %%build helpers
-#############################################################
-%ttf_fonts_install() \
-%global __currentfontsdir %_ttffontsdir/%{1} \
-mkdir -p %buildroot%__currentfontsdir \
-cat <<EOF >%{1}.files \
-%%dir %__currentfontsdir \
-EOF\
-install -p -m644 *.ttf %buildroot%__currentfontsdir/ \
-find %buildroot%__currentfontsdir/ -name "*.ttf" | sed -e "s|%buildroot||g" >>%{1}.files \
-%nil
-
-#############################################################
-%otf_fonts_install() \
-%global __currentfontsdir %_otffontsdir/%{1} \
-mkdir -p %buildroot%__currentfontsdir \
-cat <<EOF >%{1}.files \
-%%dir %__currentfontsdir \
-EOF\
-install -p -m644 *.otf %buildroot%__currentfontsdir/ \
-find %buildroot%__currentfontsdir/ -name "*.otf" | sed -e "s|%buildroot||g" >>%{1}.files \
-%nil
-
-
-# for use in %%post section
-%post_fonts \
-%_bindir/fc-cache %__currentfontsdir || : \
-%nil
-
-# for use in %%postun section
-%postun_fonts \
-if [ "$1" = "0" ]; then \
-%_bindir/fc-cache --system-only || : \
-fi \
-%nil
-
-# use %%files -f %fname.files in your spec
 

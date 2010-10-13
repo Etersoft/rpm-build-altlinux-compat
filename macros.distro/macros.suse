@@ -1,33 +1,5 @@
 # Platform and version dependend macros
 
-%post_service() \
-	test -x /sbin/chkconfig && chkconfig --add %1 || : \
-	%_initdir/%1 condrestart || : \
-%nil
-
-%preun_service() \
-	test -x /sbin/chkconfig && chkconfig --del %1 || : \
-	%_initdir/%1 condstop || : \
-%nil
-
-# Start service only after manual install
-# 1 - 1st install, 2 - update package
-%start_service() \
-	[ -z "$DURING_INSTALL" ] && [ "$1" = "1" ] && %_initdir/%{1} start || : \
-%nil
-
-# PLD compatibility (-f removed as redhat specific extension)
-%groupadd /usr/sbin/groupadd -r
-%useradd /usr/sbin/useradd -r
-#%userremove userdel
-#%groupremove groupdel
-
-%set_verify_elf_method #
-%set_strip_method #
-
-# FIXME in some way?
-%add_findprov_lib_path #
-
 # it is better to install rpm-build-fonts instead
 %_fontsdir %_datadir/fonts
 %_bitmapfontsdir %_fontsdir
