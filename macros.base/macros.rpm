@@ -4,29 +4,29 @@
 #if [ "$RPM_INSTALL_ARG1" = "1" ] ; then \
 #chkconfig --add %1 || : \
 #else \
-#%_initdir/%1 condrestart || : \
+#%_initddir/%1 condrestart || : \
 #fi
 
 #%preun_service() \
 #if [ "$RPM_INSTALL_ARG1" != "0" ]; then \
-#%_initdir/%1 condstop ||: \
+#%_initddir/%1 condstop ||: \
 #chkconfig --del %1 || : \
 #fi
 
 %post_service() \
 	test -x /sbin/chkconfig && chkconfig --add %1 || : \
-	%_initdir/%1 condrestart || : \
+	%_initddir/%1 condrestart || : \
 %nil
 
 %preun_service() \
 	test -x /sbin/chkconfig && chkconfig --del %1 || : \
-	%_initdir/%1 condstop || : \
+	%_initddir/%1 condstop || : \
 %nil
 
 # Start service only after manual install
 # 1 - 1st install, 2 - update package
 %start_service() \
-	[ -z "$DURING_INSTALL" ] && [ "$1" = "1" ] && %_initdir/%{1} start || : \
+	[ -z "$DURING_INSTALL" ] && [ "$1" = "1" ] && %_initddir/%{1} start || : \
 %nil
 
 # PLD compatibility (-f removed as redhat specific extension)

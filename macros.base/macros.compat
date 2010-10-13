@@ -44,8 +44,11 @@
 %_defaultdocdir %_datadir/doc
 %_docdir %_datadir/doc
 
+# deprecated (see https://bugzilla.altlinux.org/show_bug.cgi?id=24290):
+%_initrddir %_initddir
+%_initdir %_initddir
+
 # Mdk compatibility
-%_initrddir %_initdir
 %_iconsdir %_datadir/icons
 %_liconsdir %_iconsdir/mini
 %_miconsdir %_iconsdir/large

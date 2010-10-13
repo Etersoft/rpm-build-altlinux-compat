@@ -1,21 +1,21 @@
 # ALT compatibility on other platforms (Debian based)
 
-%_initdir %_sysconfdir/init.d
+%_initddir %_sysconfdir/init.d
 
 %post_service() \
 	test -x /usr/sbin/update-rc.d && update-rc.d %1 defaults || : \
-	%_initdir/%1 condrestart || : \
+	%_initddir/%1 condrestart || : \
 %nil
 
 %preun_service() \
-	%_initdir/%1 condstop || : \
+	%_initddir/%1 condstop || : \
 	test -x /usr/sbin/update-rc.d && update-rc.d -f %1 remove || : \
 %nil
 
 # Start service only after manual install
 # 1 - 1st install, 2 - update package
 %start_service() \
-	[ -z "$DURING_INSTALL" ] && [ "$1" = "1" ] && %_initdir/%{1} start || : \
+	[ -z "$DURING_INSTALL" ] && [ "$1" = "1" ] && %_initddir/%{1} start || : \
 %nil
 
 # PLD compatibility
