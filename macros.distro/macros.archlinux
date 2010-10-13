@@ -1,7 +1,5 @@
 # Platform and version dependend macros
 
-%_initddir %_sysconfdir/rc.d
-
 # it is better to install rpm-build-fonts instead
 %_fontsdir %_datadir/default
 %_bitmapfontsdir %_fontsdir/../bitmap-fonts

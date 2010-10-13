@@ -1,5 +1,6 @@
 # ALT compatibility on other platforms (Debian based)
 
+# canonical name, but can be skipped yet
 %_initddir %_sysconfdir/init.d
 
 %post_service() \
