@@ -1,8 +1,8 @@
 # NOTE: do not use clean_spec or rpmcs for this spec
 
 Name: rpm-build-altlinux-compat
-Version: 1.7.1
-Release: alt2
+Version: 1.7.2
+Release: alt1
 
 Summary: ALT Linux compatibility and extensions in rpm build
 
@@ -90,6 +90,10 @@ Command rpmbph from etersoft-build-utils will do it automatically.
 %endif
 
 %changelog
+* Fri Feb 04 2011 Vitaly Lipatov <lav@altlinux.ru> 1.7.2-alt1
+- distr_vendor: get Mandriva version via lsb-release
+- use rc.d/init.d for rpm based distro (eterbug #6629)
+
 * Wed Oct 13 2010 Vitaly Lipatov <lav@altlinux.ru> 1.7.1-alt2
 - define _initddir for all pkgtype
 
