@@ -1,6 +1,9 @@
 # Platform and version dependend macros
 
-# it is better to install rpm-build-fonts instead
+# canonical name, but can be skipped yet
+%_initddir %_sysconfdir/init.d
+
+# TODO: it is better to install rpm-build-fonts instead
 %_fontsdir %_datadir/fonts
 %_bitmapfontsdir %_fontsdir
 %_type1fontsdir %_fontsdir
