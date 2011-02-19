@@ -2,7 +2,7 @@
 
 Name: rpm-build-altlinux-compat
 Version: 1.7.2
-Release: alt2
+Release: alt3
 
 Summary: ALT Linux compatibility and extensions in rpm build
 
@@ -90,6 +90,9 @@ Command rpmbph from etersoft-build-utils will do it automatically.
 %endif
 
 %changelog
+* Sat Feb 19 2011 Vitaly Lipatov <lav@altlinux.ru> 1.7.2-alt3
+- fix version detection for Fedora
+
 * Tue Feb 08 2011 Vitaly Lipatov <lav@altlinux.ru> 1.7.2-alt2
 - use /etc/init.d for SUSE based distro (eterbug #6629)
 
