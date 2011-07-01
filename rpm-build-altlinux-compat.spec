@@ -1,7 +1,7 @@
 # NOTE: do not use clean_spec or rpmcs for this spec
 
 Name: rpm-build-altlinux-compat
-Version: 1.7.3
+Version: 1.7.4
 Release: alt1
 
 Summary: ALT Linux compatibility and extensions in rpm build
@@ -90,6 +90,9 @@ Command rpmbph from etersoft-build-utils will do it automatically.
 %endif
 
 %changelog
+* Fri Jul 01 2011 Vitaly Lipatov <lav@altlinux.ru> 1.7.4-alt1
+- distr_vendor: use uname -r for FreeBSD
+
 * Sat Apr 02 2011 Vitaly Lipatov <lav@altlinux.ru> 1.7.3-alt1
 - add _target_libdir, _target_libdir_noarch (needed for python macros)
 
