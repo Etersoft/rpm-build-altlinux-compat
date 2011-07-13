@@ -21,8 +21,14 @@ BuildArchitectures: noarch
 %define _rpmmacrosdir %_sysconfdir/rpm/macros.d
 %endif
 %else
-Requires: ed
+# FreeBSD
+%if %_vendor == "portbld"
+%define _rpmmacrosdir %_etcrpm
+%else
 %define _rpmmacrosdir /etc/rpm
+%endif
+
+Requires: ed
 # ALT has it in rpm, but regular rpm requires define it
 BuildRoot: %{_tmppath}/%{name}-%{version}
 %endif
