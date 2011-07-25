@@ -1,0 +1,2 @@
+%_ttsdir	/etc/tts.d
+%tts_unregister	/usr/sbin/tts-unregister
