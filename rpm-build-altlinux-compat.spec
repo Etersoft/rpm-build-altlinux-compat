@@ -1,7 +1,7 @@
 # NOTE: do not use clean_spec or rpmcs for this spec
 
 Name: rpm-build-altlinux-compat
-Version: 1.7.5
+Version: 1.7.6
 Release: alt1
 
 Summary: ALT Linux compatibility and extensions in rpm build
@@ -96,6 +96,9 @@ Command rpmbph from etersoft-build-utils will do it automatically.
 %endif
 
 %changelog
+* Mon Jul 25 2011 Vitaly Lipatov <lav@altlinux.ru> 1.7.6-alt1
+- add rpm-build-tts
+
 * Wed Jul 13 2011 Vitaly Lipatov <lav@altlinux.ru> 1.7.5-alt1
 - distr_vendor: fixes for ALT Linux
 - spec: add FreeBSD support for macros dir
