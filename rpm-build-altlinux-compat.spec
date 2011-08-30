@@ -2,7 +2,7 @@
 
 Name: rpm-build-altlinux-compat
 Version: 1.7.6
-Release: alt1
+Release: alt2
 
 Summary: ALT Linux compatibility and extensions in rpm build
 
@@ -96,6 +96,9 @@ Command rpmbph from etersoft-build-utils will do it automatically.
 %endif
 
 %changelog
+* Tue Aug 30 2011 Denis Baranov <baraka@altlinux.ru> 1.7.6-alt2
+- spec: add openpkg from SunOS support for macros dir
+
 * Mon Jul 25 2011 Vitaly Lipatov <lav@altlinux.ru> 1.7.6-alt1
 - add rpm-build-tts
 
