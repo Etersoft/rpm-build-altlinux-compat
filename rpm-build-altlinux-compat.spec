@@ -22,7 +22,7 @@ BuildArchitectures: noarch
 %endif
 %else
 # FreeBSD
-%if %_vendor == "portbld"
+%if %_vendor == "portbld" || %_vendor == "any"
 %define _rpmmacrosdir %_etcrpm
 %else
 %define _rpmmacrosdir /etc/rpm
