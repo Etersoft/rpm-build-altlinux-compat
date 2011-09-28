@@ -1,0 +1,21 @@
+# control(8) macros
+
+%_controldir	%_sysconfdir/control.d/facilities
+
+# in %%pre section.
+%pre_control()	\
+if [ $1 -ge 2 ]; then \
+	/usr/sbin/control-dump %* \
+fi \
+%nil
+
+# in %%post section.
+%post_control(s:)	\
+if [ $1 -ge 2 ]; then \
+	/usr/sbin/control-restore %* \
+else \
+	for facility in %*; do \
+		/usr/sbin/control "$facility" %{-s*}%{!-s:public} \
+	done \
+fi \
+%nil

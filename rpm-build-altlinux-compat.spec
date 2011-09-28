@@ -1,8 +1,8 @@
 # NOTE: do not use clean_spec or rpmcs for this spec
 
 Name: rpm-build-altlinux-compat
-Version: 1.7.6
-Release: alt2
+Version: 1.7.7
+Release: alt1
 
 Summary: ALT Linux compatibility and extensions in rpm build
 
@@ -96,6 +96,9 @@ Command rpmbph from etersoft-build-utils will do it automatically.
 %endif
 
 %changelog
+* Wed Sep 28 2011 Vitaly Lipatov <lav@altlinux.ru> 1.7.7-alt1
+- add macros from control
+
 * Tue Aug 30 2011 Denis Baranov <baraka@altlinux.ru> 1.7.6-alt2
 - spec: add openpkg from SunOS support for macros dir
 
