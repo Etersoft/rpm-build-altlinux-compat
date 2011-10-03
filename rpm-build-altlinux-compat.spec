@@ -1,7 +1,7 @@
 # NOTE: do not use clean_spec or rpmcs for this spec
 
 Name: rpm-build-altlinux-compat
-Version: 1.7.7
+Version: 1.7.8
 Release: alt1
 
 Summary: ALT Linux compatibility and extensions in rpm build
@@ -96,6 +96,9 @@ Command rpmbph from etersoft-build-utils will do it automatically.
 %endif
 
 %changelog
+* Mon Oct 03 2011 Vitaly Lipatov <lav@altlinux.ru> 1.7.8-alt1
+- do not use pushd/popd in specs
+
 * Wed Sep 28 2011 Vitaly Lipatov <lav@altlinux.ru> 1.7.7-alt1
 - add macros from control
 

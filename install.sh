@@ -71,4 +71,9 @@ fi
 # Distro/version section. (f.i., .suse.10)
 copy_macros $distr.$version
 
+# for systems with ash as sh (f.i., Ubuntu)
+subst "s|^pushd \(.*\)|cd \1|g" $DESTFILE
+subst "s|^popd|cd - >/dev/null|g" $DESTFILE
+
+
 exit 0
