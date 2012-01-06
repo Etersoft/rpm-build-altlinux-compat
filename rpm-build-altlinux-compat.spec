@@ -1,7 +1,7 @@
 # NOTE: do not use clean_spec or rpmcs for this spec
 
 Name: rpm-build-altlinux-compat
-Version: 1.7.8
+Version: 1.7.9
 Release: alt1
 
 Summary: ALT Linux compatibility and extensions in rpm build
@@ -17,6 +17,7 @@ Source: ftp://updates.etersoft.ru/pub/Etersoft/Sisyphus/sources/tarball/%name-%v
 BuildArchitectures: noarch
 
 %if %_vendor == "alt"
+%define macrofilename macros
 %ifndef _rpmmacrosdir
 %define _rpmmacrosdir %_sysconfdir/rpm/macros.d
 %endif
@@ -24,8 +25,16 @@ BuildArchitectures: noarch
 # FreeBSD
 %if %_vendor == "portbld" || %_vendor == "any"
 %define _rpmmacrosdir %_etcrpm
+%define macrofilename macros
+%else
+# in Mandriva for example
+%if %{expand:%%{?_sys_macros_dir:1}%%{!?_sys_macros_dir:0}}
+%define _rpmmacrosdir %_sys_macros_dir
+%define macrofilename 99-altlinux-compat.macros
 %else
 %define _rpmmacrosdir /etc/rpm
+%define macrofilename macros
+%endif
 %endif
 
 Requires: ed
@@ -70,7 +79,7 @@ Command rpmbph from etersoft-build-utils will do it automatically.
 %setup
 
 %install
-./install.sh %buildroot %_bindir %_rpmmacrosdir
+./install.sh %buildroot %_bindir %_rpmmacrosdir %macrofilename
 
 %if %_vendor == "alt"
 
@@ -87,7 +96,7 @@ Command rpmbph from etersoft-build-utils will do it automatically.
 
 %files
 %doc AUTHORS TODO ChangeLog
-%_rpmmacrosdir/macros
+%_rpmmacrosdir/%macrofilename
 %_bindir/add_changelog
 %_bindir/stamp_spec
 %_bindir/subst
@@ -96,6 +105,9 @@ Command rpmbph from etersoft-build-utils will do it automatically.
 %endif
 
 %changelog
+* Fri Jan 06 2012 Vitaly Lipatov <lav@altlinux.ru> 1.7.9-alt1
+- use _sys_macros_dir for macros dir if defined
+
 * Mon Oct 03 2011 Vitaly Lipatov <lav@altlinux.ru> 1.7.8-alt1
 - do not use pushd/popd in specs
 

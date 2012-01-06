@@ -13,6 +13,7 @@
 buildroot=$1
 bindir=$buildroot/$2
 rpmmacrosdir=$buildroot/$3
+macroname=$4
 
 pkgtype=$(bin/distr_vendor -p)
 distr=$(bin/distr_vendor -s)
@@ -21,7 +22,7 @@ version=$(bin/distr_vendor -v)
 echo "Distro: $distr, Version: $version, Pkg: $pkgtype"
 mkdir -p $bindir $rpmmacrosdir
 
-DESTFILE=$rpmmacrosdir/macros
+DESTFILE=$rpmmacrosdir/$macroname
 
 # Add files from param to DESTFILE
 copy_macros()
