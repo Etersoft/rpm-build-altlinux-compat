@@ -18,6 +18,7 @@ macroname=$4
 pkgtype=$(bin/distr_vendor -p)
 distr=$(bin/distr_vendor -s)
 version=$(bin/distr_vendor -v)
+archname=$(uname -m)
 
 echo "Distro: $distr, Version: $version, Pkg: $pkgtype"
 mkdir -p $bindir $rpmmacrosdir
@@ -46,15 +47,15 @@ else
 	# ALT Linux only macros applied in ALT already (for ALT will add it in distro/version section)
 	cat macros.intro/macros.intro.backport >>$DESTFILE
 
-	# Copy pkgtype related ALT compatibility for other platform
+	# Copy pkgtype related ALT compatibility for other platform (f.i., .deb or .deb.x86_64)
 	[ "$pkgtype" = "deb" ] || [ "$pkgtype" = "rpm" ] || pkgtype="generic"
-	copy_macros macros.base/macros.compat macros.base/macros.$pkgtype
+	copy_macros macros.base/macros.compat macros.base/macros.$pkgtype macros.base/macros.$pkgtype.$archname
 
 	install -m755 bin/* $bindir
 fi
 
-# Copy base distro macros (f.i., .suse)
-copy_macros macros.distro/macros.$distr
+# Copy base distro macros (f.i., .suse or suse.x86_64)
+copy_macros macros.distro/macros.$distr macros.distro/macros.$distr.$archname
 
 if [ $distr = "alt" ] ; then
 	# For ALT will put distro/version section in rpm-build-compat package
