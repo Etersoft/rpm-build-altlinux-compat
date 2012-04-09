@@ -1,7 +1,7 @@
 # NOTE: do not use clean_spec or rpmcs for this spec
 
 Name: rpm-build-altlinux-compat
-Version: 1.7.10
+Version: 1.7.11
 Release: alt1
 
 Summary: ALT Linux compatibility and extensions in rpm build
@@ -16,6 +16,7 @@ Source: ftp://updates.etersoft.ru/pub/Etersoft/Sisyphus/sources/tarball/%name-%v
 
 BuildArchitectures: noarch
 
+# Tune additional rpm macros file placement
 %if %_vendor == "alt"
 %define macrofilename macros
 %ifndef _rpmmacrosdir
@@ -105,6 +106,9 @@ Command rpmbph from etersoft-build-utils will do it automatically.
 %endif
 
 %changelog
+* Mon Apr 09 2012 Vitaly Lipatov <lav@altlinux.ru> 1.7.11-alt1
+- macros.intro: add _lib32dir
+
 * Tue Mar 06 2012 Vitaly Lipatov <lav@altlinux.ru> 1.7.10-alt1
 - add .x86_64 support and add hack for deb based systems
 
