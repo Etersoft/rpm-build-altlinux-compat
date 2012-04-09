@@ -6,4 +6,4 @@
 # TODO: fix this back in Debian packages
 %_lib lib
 %_libdir %{prefix}/lib
-
+%_lib32dir %{prefix}/lib32

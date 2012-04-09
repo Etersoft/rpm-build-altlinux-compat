@@ -38,3 +38,6 @@ find ./ -type d -name CVS -print0 | xargs -0 --no-run-if-empty rm -rf {} \;
 
 # macro for init scripts configs (/etc/default in Debian/Ubuntu)
 %_sysconfigdir %_sysconfdir/sysconfig
+
+# for build 32bit libs inside 64bit package
+%_lib32dir /usr/lib
