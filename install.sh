@@ -74,7 +74,7 @@ fi
 copy_macros $distr.$version
 
 # for systems with ash as sh (f.i., Ubuntu)
-subst "s|pushd \(.*\)|cd \1|g" $DESTFILE
-subst "s|popd|cd - >/dev/null|g" $DESTFILE
+bin/subst "s|pushd \(.*\)|cd \1|g" $DESTFILE
+bin/subst "s|popd|cd - >/dev/null|g" $DESTFILE
 
 exit 0
