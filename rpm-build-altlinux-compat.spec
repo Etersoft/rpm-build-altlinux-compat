@@ -1,7 +1,7 @@
 # NOTE: do not use clean_spec or rpmcs for this spec
 
 Name: rpm-build-altlinux-compat
-Version: 1.7.11
+Version: 1.7.12
 Release: alt1
 
 Summary: ALT Linux compatibility and extensions in rpm build
@@ -106,6 +106,9 @@ Command rpmbph from etersoft-build-utils will do it automatically.
 %endif
 
 %changelog
+* Tue Apr 10 2012 Vitaly Lipatov <lav@altlinux.ru> 1.7.12-alt1
+- set _initddir as /etc/rc.d for ArchLinux (eterbug #7863)
+
 * Mon Apr 09 2012 Vitaly Lipatov <lav@altlinux.ru> 1.7.11-alt1
 - macros.intro: add _lib32dir
 
