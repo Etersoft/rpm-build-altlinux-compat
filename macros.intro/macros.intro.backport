@@ -1,5 +1,6 @@
 # Introduced for ALT Linux and already applied in Sisyphus macros
 # Collected by Vitaly Lipatov <lav@etersoft.ru>
+# These macros will be packed in rpm-build-compat package (only on ALT)
 
 # introduced since rpm-4.0.4-alt98.28
 # https://bugzilla.altlinux.org/show_bug.cgi?id=22710
@@ -46,3 +47,6 @@
 
 # macro for init scripts configs
 %_sysconfigdir %_sysconfdir/sysconfig
+
+# for build 32bit libs inside 64bit package
+%_lib32dir /usr/lib

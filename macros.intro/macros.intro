@@ -1,7 +1,10 @@
 # Introduced for ALT Linux macros.
 # Collected by Vitaly Lipatov <lav@etersoft.ru>
 # I guess these macros are not defined in Sisyphus in the package build time
-# These macros will packed in rpm-build-intro package
+# These macros will be packed in rpm-build-intro package
+
+# NOTE!
+# Don't forget copy the same to macros.intro.backport
 
 # for discussion:
 %make_install_std %makeinstall_std
