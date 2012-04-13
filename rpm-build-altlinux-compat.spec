@@ -22,6 +22,7 @@ BuildArchitectures: noarch
 %ifndef _rpmmacrosdir
 %define _rpmmacrosdir %_sysconfdir/rpm/macros.d
 %endif
+BuildPreReq: altlinux-release
 %else
 # FreeBSD
 %if %_vendor == "portbld" || %_vendor == "any"

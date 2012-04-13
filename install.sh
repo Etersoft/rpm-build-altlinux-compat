@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/sh -x
 
 # ALT: /etc/rpm/macros.d
 # Scientific: /etc/rpm/macros.name (who else?)
@@ -28,8 +28,9 @@ DESTFILE=$rpmmacrosdir/$macroname
 # Add files from param to DESTFILE
 copy_macros()
 {
+	local MI
 	for MI in $@ ; do
-		test -r "$MI" && echo "Applied $MI..." || { echo "Skipping $MI..." ; continue ; }
+		test -r "$MI" && echo "Applied $MI..." || { echo "Skipping $MI (missed)..." ; continue ; }
 		echo >>$DESTFILE
 		echo "# Included from file $MI" >>$DESTFILE
 		cat $MI >>$DESTFILE
@@ -62,8 +63,10 @@ if [ $distr = "alt" ] ; then
 	DESTFILE=$rpmmacrosdir/compat
 	echo -n >$DESTFILE
 	if [ "$version" = "Sisyphus" ] ; then
-		echo "# This file have to be empty after build in ALT Linux Sisyphus (check backported package)" >> $DESTFILE
+		echo "# This file have to be empty after build in ALT Linux Sisyphus (check rpm-build-intro package)" >> $DESTFILE
 		echo "# Build at $(date)" >> $DESTFILE
+	else
+		copy_macros macros.distro/macros.$distr
 	fi
 else
 	# Add macros copied from ALT's rpm-build-* packages
@@ -71,10 +74,12 @@ else
 fi
 
 # Distro/version section. (f.i., .suse.10)
-copy_macros $distr.$version
+copy_macros macros.distro/macros.$distr.$version
 
+# FIXME: we need use bash in rpm for any case?
 # for systems with ash as sh (f.i., Ubuntu)
 bin/subst "s|pushd \(.*\)|cd \1|g" $DESTFILE
 bin/subst "s|popd|cd - >/dev/null|g" $DESTFILE
+ls -l $DESTFILE
 
 exit 0
