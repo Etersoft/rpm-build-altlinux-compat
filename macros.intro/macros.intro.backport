@@ -44,9 +44,3 @@
 	%__python setup.py install --skip-build --root=%buildroot
 # TODO: need to be add
 %python_check %__python setup.py check
-
-# macro for init scripts configs
-%_sysconfigdir %_sysconfdir/sysconfig
-
-# for build 32bit libs inside 64bit package
-%_lib32dir /usr/lib

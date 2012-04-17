@@ -39,14 +39,16 @@ copy_macros()
 
 if [ $distr = "alt" ] ; then
 	DESTFILE=$rpmmacrosdir/etersoft-intro
+	echo -n >$DESTFILE
 	# new macros, introduced for ALT and other, but not applied
-	cat macros.intro/macros.intro >$DESTFILE
+	copy_macros macros.intro/macros.intro
 	install -m755 bin/distr_vendor $bindir
 else
+	echo -n >$DESTFILE
 	# new macros, introduced for ALT and other
-	cat macros.intro/macros.intro >$DESTFILE
+	copy_macros macros.intro/macros.intro
 	# ALT Linux only macros applied in ALT already (for ALT will add it in distro/version section)
-	cat macros.intro/macros.intro.backport >>$DESTFILE
+	copy_macros macros.intro/macros.intro.backport
 
 	# Copy pkgtype related ALT compatibility for other platform (f.i., .deb or .deb.x86_64)
 	[ "$pkgtype" = "deb" ] || [ "$pkgtype" = "rpm" ] || pkgtype="generic"
@@ -66,6 +68,10 @@ if [ $distr = "alt" ] ; then
 		echo "# This file have to be empty after build in ALT Linux Sisyphus (check rpm-build-intro package)" >> $DESTFILE
 		echo "# Build at $(date)" >> $DESTFILE
 	else
+		copy_macros macros.intro/macros.intro
+		# TODO: move to separate alt.p6 and so on (what will with non alt? - load it all)
+		copy_macros macros.intro/macros.intro.backport
+		# ALT Linux only macros applied in ALT already (for ALT will add it in distro/version section)
 		copy_macros macros.distro/macros.$distr
 	fi
 else
