@@ -1,7 +1,7 @@
 # NOTE: do not use clean_spec or rpmcs for this spec
 
 Name: rpm-build-altlinux-compat
-Version: 1.7.16
+Version: 1.7.17
 Release: alt1
 
 Summary: ALT Linux compatibility and extensions in rpm build
@@ -107,6 +107,10 @@ Command rpmbph from etersoft-build-utils will do it automatically.
 %endif
 
 %changelog
+* Sat May 05 2012 Vitaly Lipatov <lav@altlinux.ru> 1.7.17-alt1
+- add support for Ubuntu 12.04 multiarch
+- macros.intro: use prefix instead /usr (FreeBSD/Solaris uses /usr/local)
+
 * Tue Apr 17 2012 Vitaly Lipatov <lav@altlinux.ru> 1.7.16-alt1
 - add intro.backport to compat
 
