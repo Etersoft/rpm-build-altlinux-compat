@@ -91,3 +91,5 @@ fi \
 
 # macro for init scripts configs
 %_sysconfigdir %_sysconfdir/default
+
+%_libexecdir %_prefix/lib
