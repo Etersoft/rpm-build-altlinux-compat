@@ -5,5 +5,5 @@
 # Really 64bit Debian/Ubuntu used /usr/lib not /usr/lib64 (depricated, forbidden and unused)
 # TODO: fix this back in Debian packages
 %_lib lib
-%_libdir %{prefix}/lib
-%_lib32dir %{prefix}/lib32
+%_libdir %_prefix/lib
+%_lib32dir %_prefix/lib32
