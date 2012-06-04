@@ -1,7 +1,7 @@
 # NOTE: do not use clean_spec or rpmcs for this spec
 
 Name: rpm-build-altlinux-compat
-Version: 1.7.19
+Version: 1.7.20
 Release: alt1
 
 Summary: ALT Linux compatibility and extensions in rpm build
@@ -107,6 +107,9 @@ Command rpmbph from etersoft-build-utils will do it automatically.
 %endif
 
 %changelog
+* Tue Jun 05 2012 Vitaly Lipatov <lav@altlinux.ru> 1.7.20-alt1
+- use x86_64 version instead regular if it exists
+
 * Tue May 22 2012 Vitaly Lipatov <lav@altlinux.ru> 1.7.19-alt1
 - major improve distr_vendor:
  + add support without ROOTDIR translation names
