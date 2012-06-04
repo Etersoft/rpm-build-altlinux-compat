@@ -80,7 +80,11 @@ else
 fi
 
 # Distro/version section. (f.i., .suse.10)
-copy_macros macros.distro/macros.$distr.$version
+if [ -r macros.distro/macros.$distr.$version.$archname ] ; then
+	copy_macros macros.distro/macros.$distr.$version.$archname
+else
+	copy_macros macros.distro/macros.$distr.$version
+fi
 
 # FIXME: we need use bash in rpm for any case?
 # for systems with ash as sh (f.i., Ubuntu)
