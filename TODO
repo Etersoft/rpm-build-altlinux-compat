@@ -1,3 +1,7 @@
+Проблемы с _localstatedir / _sharedstatedir
+https://bugzilla.redhat.com/show_bug.cgi?id=185862
+
+
 %{!?__pear: %{expand: %%global __pear %{_bindir}/pear}}
 
 Не работает в макросах:
