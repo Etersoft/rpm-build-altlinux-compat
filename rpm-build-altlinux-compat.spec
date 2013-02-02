@@ -19,7 +19,8 @@ BuildArchitectures: noarch
 # Tune additional rpm macros file placement
 %if %_vendor == "alt"
 %define macrofilename macros
-%ifndef _rpmmacrosdir
+#ifndef _rpmmacrosdir
+%if %{expand:%%{?_rpmmacrosdir:0}%%{!?_rpmmacrosdir:1}}
 %define _rpmmacrosdir %_sysconfdir/rpm/macros.d
 %endif
 BuildPreReq: altlinux-release
