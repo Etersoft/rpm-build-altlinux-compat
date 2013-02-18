@@ -44,3 +44,6 @@ find ./ -type d -name CVS -print0 | xargs -0 --no-run-if-empty rm -rf {} \;
 
 # 32bit libs placement dir (inside 64bit package too)
 %_lib32dir %_prefix/lib
+
+# path to /etc/sudoers extension dir
+%_sudoersdir %_sysconfdir/sudoers.d
