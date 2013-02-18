@@ -47,3 +47,7 @@ find ./ -type d -name CVS -print0 | xargs -0 --no-run-if-empty rm -rf {} \;
 
 # path to /etc/sudoers extension dir
 %_sudoersdir %_sysconfdir/sudoers.d
+
+# cups lib dir
+%_cupslibdir %_prefix/lib/cups
+
