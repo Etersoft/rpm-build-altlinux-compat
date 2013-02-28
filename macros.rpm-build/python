@@ -105,9 +105,9 @@
 
 %setup_std_python_package_deps() \
 %{expand: %%{!?modulename:%%_setup_python_module_internal %{*}}} \
-%(echo "Requires: python = %__python_version") \
-%(echo "BuildPreReq: python-devel = %__python_version") \
-%(echo "BuildPreReq: rpm-build-python >= 0.8") \
+%(echo "#Requires: python = %__python_version") \
+%(echo "#BuildPreReq: python-devel = %__python_version") \
+%(echo "BuildPreReq: rpm-build-altlinux-compat >= 1.7.26") \
 %(echo "Provides: python%__python_version-module-%modulename = %version-%release") \
 %nil
 
