@@ -2,16 +2,18 @@
 # -*- coding: utf-8 -*-
 
 # Override __python_version macro provided by rpm-build 
-%__python_version	%(LC_ALL=C %__python -c 'import sys; print "%%u.%%u" %% sys.version_info[0:2]' 2>/dev/null || echo 2.6)
+%__python_version	%(LC_ALL=C %__python -c 'import sys; print "%%u.%%u" %% sys.version_info[0:2]' 2>/dev/null || echo 2.7)
+%_python_version %__python_version
 
 %_target_python_libdir %_target_libdir
-%_python_set_noarch() %global _target_python_libdir %_libexecdir
+%_python_set_noarch() %global _target_python_libdir %_target_libdir_noarch
+%_python_set_arch() %global _target_python_libdir %_target_libdir
 %_python_lib_path	""
 %_python_req_method	slight
 %_python_req_skip	""
 %_python_compile_method	ALL
-%_python_compile_exclude	%_defaultdocdir
-%_python_compile_include	%_target_python_libdir
+%_python_compile_exclude	%_defaultdocdir %_target_libdir/python3.2 %_target_libdir_noarch/python3.2 %_target_libdir/python3.3 %_target_libdir_noarch/python3.3
+%_python_compile_include	%_target_libdir %_target_libdir_noarch
 %_python_compile_deep	20
 %_python_compile_skip_x	1
 %_python_compile_clean	1
@@ -78,7 +80,8 @@
 %_check_python_version 2.3 \
 %_check_python_version 2.4 \
 %_check_python_version 2.5 \
-%_check_python_version 2.6
+%_check_python_version 2.6 \
+%_check_python_version 2.7
 
 %_forget_bound_python_version() \
 %{expand: %{expand: %%%%global __python_package_version %%%%nil}} \
@@ -92,6 +95,7 @@
 %_check_python_version 2.4 \
 %_check_python_version 2.5 \
 %_check_python_version 2.6 \
+%_check_python_version 2.7 \
 %{expand: %{expand: %%{!?__python_package_version:%%{!?__python_disable_bind_version:%%{!?_with_python_auto:%%%%_check_bound_python_version %%modulename}}}}} \
 %{expand: %{expand: %%{?__python_package_version:%%{!?__python_disable_bind_version:%%{!?_with_python_auto:%%%%_bind_python_version %%modulename %%__python_package_version}}}}} \
 %{expand: %%global __python %%(which python%%__python_version 2>/dev/null || echo /bin/false)} \
@@ -227,6 +231,9 @@ done; \
 # Модули Python, установленные в дополнение к официальному релизу
 %python_sitelibdir %python_libdir/site-packages
 
+# архитектурно-независимые модули Python, установленные в дополнение к официальному релизу
+%python_sitelibdir_noarch %_target_libdir_noarch/python%__python_version/site-packages
+
 # Библиотеки расширений для языка Python
 %python_dynlibdir %python_libdir/lib-dynload
 
@@ -250,6 +257,19 @@ done; \
 
 # traditional build/install macros
 %python_build	\
+	CFLAGS="${CFLAGS:-%optflags}" ; export CFLAGS ; \
+	CXXFLAGS="${CXXFLAGS:-%optflags}" ; export CXXFLAGS ; \
+	FFLAGS="${FFLAGS:-%optflags}" ; export FFLAGS ; \
 	%__python setup.py build
+%python_build_debug	\
+	CFLAGS="${CFLAGS:-%optflags}" ; export CFLAGS ; \
+	CXXFLAGS="${CXXFLAGS:-%optflags}" ; export CXXFLAGS ; \
+	FFLAGS="${FFLAGS:-%optflags}" ; export FFLAGS ; \
+	%__python setup.py build --debug
 %python_install	\
 	%__python setup.py install --skip-build --root=%buildroot
+%python_build_install	\
+	CFLAGS="${CFLAGS:-%optflags}" ; export CFLAGS ; \
+	CXXFLAGS="${CXXFLAGS:-%optflags}" ; export CXXFLAGS ; \
+	FFLAGS="${FFLAGS:-%optflags}" ; export FFLAGS ; \
+	%__python setup.py install --root=%buildroot
