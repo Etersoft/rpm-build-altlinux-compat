@@ -25,6 +25,11 @@
 #%userremove userdel
 #%groupremove groupdel
 
+# from /usr/lib/rpm/*/macros
+# systemd
+%_presetdir	/lib/systemd/system-preset
+%_unitdir	/lib/systemd/system
+
 %set_verify_elf_method #
 %set_strip_method #
 
@@ -97,3 +102,10 @@ fi \
 # target libdir.
 %_target_libdir_noarch	/usr/lib
 %_target_libdir	%{expand:%%{?_target_libdir_%_target_cpu}%%{!?_target_libdir_%_target_cpu:%%_libdir}}
+
+
+# (from /usr/lib/rpm/*/macros), I believe it is Fedora compatible names
+# systemd
+%_presetdir	/lib/systemd/system-preset
+%_unitdir	/lib/systemd/system
+

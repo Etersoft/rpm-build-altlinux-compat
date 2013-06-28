@@ -1,0 +1,6 @@
+# Platform and version dependend macros
+
+# from /usr/lib/rpm/*/macros
+# systemd
+%_presetdir	/lib/systemd/system-preset
+%_unitdir	/lib/systemd/system
