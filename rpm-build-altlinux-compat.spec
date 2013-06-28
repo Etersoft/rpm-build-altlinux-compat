@@ -1,7 +1,7 @@
 # NOTE: do not use clean_spec or rpmcs for this spec
 
 Name: rpm-build-altlinux-compat
-Version: 1.7.27
+Version: 1.7.28
 Release: alt1
 
 Summary: ALT Linux compatibility and extensions in rpm build
@@ -110,6 +110,9 @@ Command rpmbph from etersoft-build-utils will do it automatically.
 %endif
 
 %changelog
+* Fri Jun 28 2013 Vitaly Lipatov <lav@altlinux.ru> 1.7.28-alt1
+- add unitdir macro for systemd dir for deb systems, archlinux and slackware
+
 * Wed Mar 20 2013 Vitaly Lipatov <lav@altlinux.ru> 1.7.27-alt1
 - import macros from rpm-macros-qt*
 - add qmake_qt4 macro (Mandriva like)
