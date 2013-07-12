@@ -1,7 +1,7 @@
 # NOTE: do not use clean_spec or rpmcs for this spec
 
 Name: rpm-build-altlinux-compat
-Version: 1.7.28
+Version: 1.7.29
 Release: alt1
 
 Summary: ALT Linux compatibility and extensions in rpm build
@@ -110,6 +110,9 @@ Command rpmbph from etersoft-build-utils will do it automatically.
 %endif
 
 %changelog
+* Fri Jul 12 2013 Vitaly Lipatov <lav@altlinux.ru> 1.7.29-alt1
+- add _unitdir for old RHEL, Mandriva, SUSE distros
+
 * Fri Jun 28 2013 Vitaly Lipatov <lav@altlinux.ru> 1.7.28-alt1
 - add unitdir macro for systemd dir for deb systems, archlinux and slackware
 
