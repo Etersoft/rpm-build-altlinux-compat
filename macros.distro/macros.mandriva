@@ -1,0 +1,4 @@
+# (from /usr/lib/rpm/*/macros), I believe it is Fedora compatible names
+# systemd
+%_presetdir	/lib/systemd/system-preset
+%_unitdir	/lib/systemd/system
