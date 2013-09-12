@@ -4,3 +4,6 @@
 # _sharedstatedir is broken on ALTLinux p6 and early
 # https://bugzilla.redhat.com/show_bug.cgi?id=185862
 %_sharedstatedir /var/lib
+
+# path to /etc/sudoers extension dir
+%_sudoersdir %_sysconfdir/sudo.d
