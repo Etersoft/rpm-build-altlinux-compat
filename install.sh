@@ -57,9 +57,6 @@ else
 	install -m755 bin/* $bindir
 fi
 
-# Copy base distro macros (f.i., .suse or suse.x86_64)
-copy_macros macros.distro/macros.$distr macros.distro/macros.$distr.$archname
-
 if [ $distr = "alt" ] ; then
 	# For ALT will put distro/version section in rpm-build-compat package
 	DESTFILE=$rpmmacrosdir/compat
@@ -78,6 +75,9 @@ else
 	# Add macros copied from ALT's rpm-build-* packages
 	copy_macros macros.rpm-build/[0-9a-z]*
 fi
+
+# Copy base distro macros (f.i., .suse or suse.x86_64)
+copy_macros macros.distro/macros.$distr macros.distro/macros.$distr.$archname
 
 # Distro/version section. (f.i., .suse.10)
 if [ -r macros.distro/macros.$distr.$version.$archname ] ; then
