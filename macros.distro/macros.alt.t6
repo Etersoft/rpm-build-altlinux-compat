@@ -6,4 +6,4 @@
 %_sharedstatedir /var/lib
 
 # path to /etc/sudoers extension dir
-%_sudoersdir %_sysconfdir/sudo.d
+%_sudoersdir %_sysconfdir/sudoers.d
