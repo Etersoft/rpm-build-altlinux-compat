@@ -1,7 +1,7 @@
 # NOTE: do not use clean_spec or rpmcs for this spec
 
 Name: rpm-build-altlinux-compat
-Version: 1.7.31
+Version: 1.7.32
 Release: alt1
 
 Summary: ALT Linux compatibility and extensions in rpm build
@@ -110,6 +110,11 @@ Command rpmbph from etersoft-build-utils will do it automatically.
 %endif
 
 %changelog
+* Wed Oct 02 2013 Vitaly Lipatov <lav@altlinux.ru> 1.7.32-alt1
+- fixes for _sudoers dir on ALT Linux
+- disable python.env (eterbug # 9477)
+- change macros order for override version specific macros
+
 * Mon Sep 16 2013 Vitaly Lipatov <lav@altlinux.ru> 1.7.31-alt1
 - fix _qt4dir for Ubuntu/Debian
 
