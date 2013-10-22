@@ -25,7 +25,7 @@ cat <<EOF >%{1}.files \
 %%dir %__currentfontsdir \
 EOF\
 install -p -m644 *.ttf %buildroot%__currentfontsdir/ \
-find %buildroot%__currentfontsdir/ -name "*.ttf" | sed -e "s|%buildroot||g" >>%{1}.files \
+find %buildroot%__currentfontsdir/ -name "*.ttf" | sed -e 's|%buildroot\\(.*\\)|"\\1"|g' >>%{1}.files \
 %nil
 
 #############################################################
@@ -36,7 +36,7 @@ cat <<EOF >%{1}.files \
 %%dir %__currentfontsdir \
 EOF\
 install -p -m644 *.otf %buildroot%__currentfontsdir/ \
-find %buildroot%__currentfontsdir/ -name "*.otf" | sed -e "s|%buildroot||g" >>%{1}.files \
+find %buildroot%__currentfontsdir/ -name "*.otf" | sed -e 's|%buildroot\\(.*\\)|"\\1"|g' >>%{1}.files \
 %nil
 
 
