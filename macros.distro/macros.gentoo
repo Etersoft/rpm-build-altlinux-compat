@@ -1,7 +1,7 @@
 # Platform and version dependend macros
 
-# http://bugs.etersoft.ru/show_bug.cgi?id=7863
-%_initddir %_sysconfdir/rc.d
+# https://bugs.etersoft.ru/show_bug.cgi?id=9701#c11
+%_initddir %_sysconfdir/init.d
 
 # from /usr/lib/rpm/*/macros
 # systemd
