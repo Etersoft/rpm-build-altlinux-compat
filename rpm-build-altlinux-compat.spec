@@ -1,7 +1,7 @@
 # NOTE: do not use clean_spec or rpmcs for this spec
 
 Name: rpm-build-altlinux-compat
-Version: 1.7.35
+Version: 1.7.36
 Release: alt1
 
 Summary: ALT Linux compatibility and extensions in rpm build
@@ -110,6 +110,9 @@ Command rpmbph from etersoft-build-utils will do it automatically.
 %endif
 
 %changelog
+* Thu Dec 12 2013 Vitaly Lipatov <lav@altlinux.ru> 1.7.36-alt1
+- fix _initdir for Gentoo (eterbug #9701)
+
 * Tue Oct 22 2013 Vitaly Lipatov <lav@altlinux.ru> 1.7.35-alt1
 - fix fonts install macro
 
