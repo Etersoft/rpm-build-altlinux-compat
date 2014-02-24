@@ -2,7 +2,7 @@
 
 Name: rpm-build-altlinux-compat
 Version: 1.7.36
-Release: alt2
+Release: alt3
 
 Summary: ALT Linux compatibility and extensions in rpm build
 
@@ -110,6 +110,9 @@ Command rpmbph from etersoft-build-utils will do it automatically.
 %endif
 
 %changelog
+* Mon Feb 24 2014 Vitaly Lipatov <lav@altlinux.ru> 1.7.36-alt3
+- add macros for Debian/7
+
 * Wed Dec 18 2013 Vitaly Lipatov <lav@altlinux.ru> 1.7.36-alt2
 - add symlink for correct build ROSA specific
 
