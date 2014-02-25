@@ -1,8 +1,8 @@
 # NOTE: do not use clean_spec or rpmcs for this spec
 
 Name: rpm-build-altlinux-compat
-Version: 1.7.36
-Release: alt3
+Version: 1.7.37
+Release: alt1
 
 Summary: ALT Linux compatibility and extensions in rpm build
 
@@ -110,6 +110,9 @@ Command rpmbph from etersoft-build-utils will do it automatically.
 %endif
 
 %changelog
+* Wed Feb 26 2014 Vitaly Lipatov <lav@altlinux.ru> 1.7.37-alt1
+- improve distro specific macros detection (use prev. if exits)
+
 * Mon Feb 24 2014 Vitaly Lipatov <lav@altlinux.ru> 1.7.36-alt3
 - add macros for Debian/7
 
