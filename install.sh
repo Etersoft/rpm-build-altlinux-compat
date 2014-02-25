@@ -19,11 +19,49 @@ pkgtype=$(bin/distr_vendor -p)
 distr=$(bin/distr_vendor -s)
 version=$(bin/distr_vendor -v)
 archname=$(uname -m)
+# hack for strict 32bit arch name
+[ "$archname" = "x86_64" ] || archname="i586"
 
 echo "Distro: $distr, Version: $version, Pkg: $pkgtype"
 mkdir -p $bindir $rpmmacrosdir
 
 DESTFILE=$rpmmacrosdir/$macroname
+
+# See tests/get_macros_distro.sh
+# vendor, arch, distro
+get_macros_distro()
+{
+	local REPLBASE=macros.distro/macros
+	local PKGVENDOR="$1"
+	local ARCH="$2"
+	local FINDPKG="$3"
+
+	local ARCHEXT=".$ARCH"
+	[ -z "$ARCH" ] && ARCHEXT=
+
+
+	if [ "$ARCH" = "x86_64" ] ; then
+		ls -1 $REPLBASE.$PKGVENDOR*.$ARCH 2>/dev/null | \
+			grep -v "$PKGVENDOR\.$ARCH\$"
+		echo "$REPLBASE.$FINDPKG.$ARCH"
+	else
+		ls -1 $REPLBASE.$PKGVENDOR* 2>/dev/null | \
+			grep -v "i586" | grep -v "x86_64" | grep -v "$PKGVENDOR\$"
+		echo "$REPLBASE.$FINDPKG"
+	fi | \
+		sort -u | sort -r -n -t . -k 4 | grep "^$REPLBASE.$FINDPKG$ARCHEXT$" -A1000 | sort -r -n -t . -k 4 | head -n2
+}
+
+# arch distro version
+get_macros_distro_file()
+{
+	local i
+	for i in $(get_macros_distro "$2" "$1" "$2.$3") ; do
+		test -r "$i" && echo "$i" && return
+	done
+	return 1
+}
+
 
 # Add files from param to DESTFILE
 copy_macros()
@@ -79,11 +117,13 @@ fi
 # Copy base distro macros (f.i., .suse or suse.x86_64)
 copy_macros macros.distro/macros.$distr macros.distro/macros.$distr.$archname
 
-# Distro/version section. (f.i., .suse.10)
-if [ -r macros.distro/macros.$distr.$version.$archname ] ; then
-	copy_macros macros.distro/macros.$distr.$version.$archname
+# Distro/version section. (f.i., .suse.10) or prev. version
+mfile=$(get_macros_distro_file $archname $distr $version)
+if [ -n "$mfile" ] ; then
+	copy_macros $mfile
 else
-	copy_macros macros.distro/macros.$distr.$version
+	mfile=$(get_macros_distro_file "" $distr $version)
+	copy_macros $mfile
 fi
 
 # FIXME: we need use bash in rpm for any case?
