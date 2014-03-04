@@ -25,8 +25,6 @@ archname=$(uname -m)
 echo "Distro: $distr, Version: $version, Pkg: $pkgtype"
 mkdir -p $bindir $rpmmacrosdir
 
-DESTFILE=$rpmmacrosdir/$macroname
-
 # See tests/get_macros_distro.sh
 # vendor, arch, distro
 get_macros_distro()
@@ -75,14 +73,56 @@ copy_macros()
 	done
 }
 
+# TODO: use fixbashisms project here
+fixbashisms()
+{
+	local DESTFILE="$1"
+	# FIXME: we need use bash in rpm for any case?
+	# for systems with ash as sh (f.i., Ubuntu)
+	bin/subst "s|pushd \(.*\)|cd \1|g" $DESTFILE
+	bin/subst "s|popd|cd - >/dev/null|g" $DESTFILE
+}
+
+copy_distro_macros()
+{
+	local mfile
+	# Distro/version section. (f.i., .suse.10) or prev. version
+	mfile=$(get_macros_distro_file $archname $distr $version)
+	if [ -n "$mfile" ] ; then
+		copy_macros $mfile
+	else
+		mfile=$(get_macros_distro_file "" $distr $version)
+		copy_macros $mfile
+	fi
+}
+
 if [ $distr = "alt" ] ; then
+	install -m755 bin/distr_vendor $bindir
 	DESTFILE=$rpmmacrosdir/etersoft-intro
-	echo -n >$DESTFILE
 	# new macros, introduced for ALT and other, but not applied
 	copy_macros macros.intro/macros.intro
-	install -m755 bin/distr_vendor $bindir
+
+	# Copy base distro macros (f.i., .alt or alt.x86_64)
+	copy_macros macros.distro/macros.$distr macros.distro/macros.$distr.$archname
+
+	if [ "$version" = "Sisyphus" ] ; then
+		COMDESTFILE=$rpmmacrosdir/compat
+		echo "# This file have to be empty after build in ALT Linux Sisyphus" >> $COMDESTFILE
+		echo "# (see rpm-build-intro package for real macros)" >> $COMDESTFILE
+		echo "# Build at $(date)" >> $COMDESTFILE
+	else
+		fixbashisms $DESTFILE
+		# For ALT will put distro/version section in rpm-build-compat package
+		DESTFILE=$rpmmacrosdir/compat
+
+		# TODO: move to separate alt.p6 and so on (what will with non alt? - load it all)
+		copy_macros macros.intro/macros.intro.backport
+
+		# alt.p6 and so on
+		copy_distro_macros
+	fi
 else
-	echo -n >$DESTFILE
+	DESTFILE=$rpmmacrosdir/$macroname
 	# new macros, introduced for ALT and other
 	copy_macros macros.intro/macros.intro
 	# ALT Linux only macros applied in ALT already (for ALT will add it in distro/version section)
@@ -93,43 +133,18 @@ else
 	copy_macros macros.base/macros.compat macros.base/macros.$pkgtype macros.base/macros.$pkgtype.$archname
 
 	install -m755 bin/* $bindir
-fi
 
-if [ $distr = "alt" ] ; then
-	# For ALT will put distro/version section in rpm-build-compat package
-	DESTFILE=$rpmmacrosdir/compat
-	echo -n >$DESTFILE
-	if [ "$version" = "Sisyphus" ] ; then
-		echo "# This file have to be empty after build in ALT Linux Sisyphus (check rpm-build-intro package)" >> $DESTFILE
-		echo "# Build at $(date)" >> $DESTFILE
-	else
-		copy_macros macros.intro/macros.intro
-		# TODO: move to separate alt.p6 and so on (what will with non alt? - load it all)
-		copy_macros macros.intro/macros.intro.backport
-		# ALT Linux only macros applied in ALT already (for ALT will add it in distro/version section)
-		copy_macros macros.distro/macros.$distr
-	fi
-else
 	# Add macros copied from ALT's rpm-build-* packages
 	copy_macros macros.rpm-build/[0-9a-z]*
+
+	# Copy base distro macros (f.i., .suse or suse.x86_64)
+	copy_macros macros.distro/macros.$distr macros.distro/macros.$distr.$archname
+
+	# suse/11 and so on
+	copy_distro_macros
 fi
 
-# Copy base distro macros (f.i., .suse or suse.x86_64)
-copy_macros macros.distro/macros.$distr macros.distro/macros.$distr.$archname
 
-# Distro/version section. (f.i., .suse.10) or prev. version
-mfile=$(get_macros_distro_file $archname $distr $version)
-if [ -n "$mfile" ] ; then
-	copy_macros $mfile
-else
-	mfile=$(get_macros_distro_file "" $distr $version)
-	copy_macros $mfile
-fi
+fixbashisms $DESTFILE
 
-# FIXME: we need use bash in rpm for any case?
-# for systems with ash as sh (f.i., Ubuntu)
-bin/subst "s|pushd \(.*\)|cd \1|g" $DESTFILE
-bin/subst "s|popd|cd - >/dev/null|g" $DESTFILE
 ls -l $DESTFILE
-
-exit 0
