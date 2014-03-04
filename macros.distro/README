@@ -1,0 +1,6 @@
+We will add base file for distro:
+ - macros.alt
+and special file for a concrete version:
+ - macros.alt.p7
+(and will use p6 for ALTLinux p7 if p6 file is absent
+
