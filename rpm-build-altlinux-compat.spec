@@ -1,7 +1,7 @@
 # NOTE: do not use clean_spec or rpmcs for this spec
 
 Name: rpm-build-altlinux-compat
-Version: 1.8.1
+Version: 1.8.2
 Release: alt1
 
 Summary: ALT Linux compatibility and extensions in rpm build
@@ -29,7 +29,7 @@ BuildPreReq: altlinux-release
 Provides: rpm-build-python rpm-build-perl rpm-macros-ttf rpm-build-licenses rpm-macros-cmake
 # FreeBSD
 %if %_vendor == "portbld" || %_vendor == "any"
-%define _rpmmacrosdir %_etcrpm
+%define _rpmmacrosdir /usr/local/etc/rpm
 %define macrofilename macros
 %else
 # in Mandriva for example
@@ -110,6 +110,9 @@ Command rpmbph from etersoft-build-utils will do it automatically.
 %endif
 
 %changelog
+* Tue Jun 03 2014 Vitaly Lipatov <lav@altlinux.ru> 1.8.2-alt1
+- fix build with rpm4 on FreeBSD
+
 * Sat Mar 15 2014 Vitaly Lipatov <lav@altlinux.ru> 1.8.1-alt1
 - rename madriva macros file to correct name macros.mdv
 
