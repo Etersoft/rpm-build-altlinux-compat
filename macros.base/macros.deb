@@ -32,6 +32,7 @@
 
 %set_verify_elf_method #
 %set_strip_method #
+%set_gcc_version #
 
 # FIXME in some way?
 %add_findprov_lib_path #

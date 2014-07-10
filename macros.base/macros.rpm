@@ -40,6 +40,7 @@
 
 %set_verify_elf_method #
 %set_strip_method #
+%set_gcc_version #
 
 # FIXME in some way?
 %add_findprov_lib_path #
@@ -104,6 +105,6 @@ fi \
 # macro for init scripts configs
 %_sysconfigdir %_sysconfdir/sysconfig
 
-# target libdir.
+# target libdir
 %_target_libdir_noarch	/usr/lib
 %_target_libdir	%{expand:%%{?_target_libdir_%_target_cpu}%%{!?_target_libdir_%_target_cpu:%%_libdir}}
