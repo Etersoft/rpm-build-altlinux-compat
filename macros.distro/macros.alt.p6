@@ -7,3 +7,13 @@
 
 # path to /etc/sudoers extension dir
 %_sudoersdir %_sysconfdir/sudoers.d
+
+# since rpm-macros-cmake-2.8.8-alt1
+%cmake_build \
+    %make_build -C BUILD
+
+%cmake_install \
+    %make_install -C BUILD
+
+%cmakeinstall_std \
+    %makeinstall_std -C BUILD

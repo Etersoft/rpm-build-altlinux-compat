@@ -2,6 +2,7 @@
 # These macros will packed in rpm-build-compat package on ALT
 
 # Prepare cmake build (since rpm-build-compat 1.4)
+# old macro
 %cmake \
 mkdir build; cd build; \
 cmake .. \\\
@@ -16,6 +17,38 @@ cmake .. \\\
     -DCMAKE_C_FLAGS:STRING='%optflags' \\\
     -DCMAKE_CXX_FLAGS:STRING='%optflags' \
 cd -
+
+# since rpm-macros-cmake-2.8.1-alt3
+%_cmake_skip_rpath -DCMAKE_SKIP_RPATH:BOOL=ON
+
+%cmake_insource \
+    cmake . \\\
+	%{?_cmake_skip_rpath} \\\
+	-DCMAKE_SKIP_INSTALL_RPATH:BOOL=yes \\\
+	-DCMAKE_C_FLAGS:STRING='%optflags' \\\
+	-DCMAKE_CXX_FLAGS:STRING='%optflags' \\\
+	-DCMAKE_Fortran_FLAGS:STRING='%optflags' \\\
+	-DCMAKE_INSTALL_PREFIX=%prefix \\\
+	-DINCLUDE_INSTALL_DIR:PATH=%_includedir \\\
+	-DLIB_INSTALL_DIR:PATH=%_libdir \\\
+	-DSYSCONF_INSTALL_DIR:PATH=%_sysconfdir \\\
+	-DSHARE_INSTALL_PREFIX:PATH=%_datadir \\\
+	%if "%_lib" == "lib64" \
+	-DLIB_SUFFIX="64" \\\
+	%else \
+	-DLIB_SUFFIX="" \\\
+	%endif \
+	-DLIB_DESTINATION=%_lib
+
+%cmake_build \
+    %make_build -C BUILD
+
+%cmake_install \
+    %make_install -C BUILD
+
+%cmakeinstall_std \
+    %makeinstall_std -C BUILD
+
 
 # _sharedstatedir is broken on ALTLinux p6 and early
 # https://bugzilla.redhat.com/show_bug.cgi?id=185862

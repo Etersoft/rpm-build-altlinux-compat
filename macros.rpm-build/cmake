@@ -1,13 +1,22 @@
+# Macros for cmake
+#
+%_cmake_skip_rpath -DCMAKE_SKIP_RPATH:BOOL=ON
+
 %cmake \
     __cmake() \
     { \
 	pushd BUILD \
 	cmake .. \\\
-	    -DCMAKE_SKIP_RPATH:BOOL=yes \\\
-	    -DCMAKE_BUILD_TYPE=MinSizeRel \\\
+	    %{?_cmake_skip_rpath} \\\
+	    -DCMAKE_SKIP_INSTALL_RPATH:BOOL=yes \\\
 	    -DCMAKE_C_FLAGS:STRING='%optflags' \\\
 	    -DCMAKE_CXX_FLAGS:STRING='%optflags' \\\
+	    -DCMAKE_Fortran_FLAGS:STRING='%optflags' \\\
 	    -DCMAKE_INSTALL_PREFIX=%prefix \\\
+	    -DINCLUDE_INSTALL_DIR:PATH=%_includedir \\\
+	    -DLIB_INSTALL_DIR:PATH=%_libdir \\\
+	    -DSYSCONF_INSTALL_DIR:PATH=%_sysconfdir \\\
+	    -DSHARE_INSTALL_PREFIX:PATH=%_datadir \\\
 	    -DLIB_DESTINATION=%_lib \\\
 	    %if "%_lib" == "lib64" \
 	    -DLIB_SUFFIX="64" \\\
@@ -23,16 +32,28 @@
 
 %cmake_insource \
     cmake . \\\
-	-DCMAKE_SKIP_RPATH:BOOL=yes \\\
-	-DCMAKE_BUILD_TYPE=MinSizeRel \\\
+	%{?_cmake_skip_rpath} \\\
+	-DCMAKE_SKIP_INSTALL_RPATH:BOOL=yes \\\
 	-DCMAKE_C_FLAGS:STRING='%optflags' \\\
 	-DCMAKE_CXX_FLAGS:STRING='%optflags' \\\
+	-DCMAKE_Fortran_FLAGS:STRING='%optflags' \\\
 	-DCMAKE_INSTALL_PREFIX=%prefix \\\
-	-DLIB_DESTINATION=%_lib \\\
+	-DINCLUDE_INSTALL_DIR:PATH=%_includedir \\\
+	-DLIB_INSTALL_DIR:PATH=%_libdir \\\
+	-DSYSCONF_INSTALL_DIR:PATH=%_sysconfdir \\\
+	-DSHARE_INSTALL_PREFIX:PATH=%_datadir \\\
 	%if "%_lib" == "lib64" \
 	-DLIB_SUFFIX="64" \\\
 	%else \
 	-DLIB_SUFFIX="" \\\
 	%endif \
-	\\\
+	-DLIB_DESTINATION=%_lib
 
+%cmake_build \
+    %make_build -C BUILD
+
+%cmake_install \
+    %make_install -C BUILD
+
+%cmakeinstall_std \
+    %makeinstall_std -C BUILD
