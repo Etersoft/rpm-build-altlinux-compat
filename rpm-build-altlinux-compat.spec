@@ -1,7 +1,7 @@
 # NOTE: do not use clean_spec or rpmcs for this spec
 
 Name: rpm-build-altlinux-compat
-Version: 1.8.3
+Version: 1.8.4
 Release: alt1
 
 Summary: ALT Linux compatibility and extensions in rpm build
@@ -110,6 +110,10 @@ Command rpmbph from etersoft-build-utils will do it automatically.
 %endif
 
 %changelog
+* Thu Jul 09 2015 Vitaly Lipatov <lav@altlinux.ru> 1.8.4-alt1
+- update macros cmake
+- macros.compat: add _runtimedir
+
 * Thu Jul 10 2014 Vitaly Lipatov <lav@altlinux.ru> 1.8.3-alt1
 - set_gcc_version ignoring
 
@@ -117,7 +121,7 @@ Command rpmbph from etersoft-build-utils will do it automatically.
 - fix build with rpm4 on FreeBSD
 
 * Sat Mar 15 2014 Vitaly Lipatov <lav@altlinux.ru> 1.8.1-alt1
-- rename madriva macros file to correct name macros.mdv
+- rename mandriva macros file to correct name macros.mdv
 
 * Wed Mar 05 2014 Vitaly Lipatov <lav@altlinux.ru> 1.8.0-alt1
 - update README
