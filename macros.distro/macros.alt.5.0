@@ -56,3 +56,6 @@ cd -
 
 # path to /etc/sudoers extension dir
 %_sudoersdir %_sysconfdir/sudo.d
+
+%_udevhwdbdir	/lib/udev/hwdb.d
+%_udevrulesdir	/lib/udev/rules.d
