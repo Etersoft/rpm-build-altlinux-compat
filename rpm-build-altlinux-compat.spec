@@ -1,7 +1,7 @@
 # NOTE: do not use clean_spec or rpmcs for this spec
 
 Name: rpm-build-altlinux-compat
-Version: 1.8.7
+Version: 1.8.8
 Release: alt1
 
 Summary: ALT Linux compatibility and extensions in rpm build
@@ -111,6 +111,10 @@ Command rpmbph from etersoft-build-utils will do it automatically.
 %endif
 
 %changelog
+* Thu Sep 03 2015 Vitaly Lipatov <lav@altlinux.ru> 1.8.8-alt1
+- add udev macros for CentOS/6
+- add mcst support
+
 * Sat Aug 22 2015 Vitaly Lipatov <lav@altlinux.ru> 1.8.7-alt1
 - fix add_findreq_skiplist/add_findprov_skiplist for deb based distro
 - add udevrulesdir for deb based distros
