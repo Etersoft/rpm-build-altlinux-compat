@@ -15,3 +15,5 @@
 %_ttffontsdir %_fontsdir/TTF
 %_otffontsdir %_fontsdir/OTF
 
+%_udevhwdbdir	/lib/udev/hwdb.d
+%_udevrulesdir	/lib/udev/rules.d
