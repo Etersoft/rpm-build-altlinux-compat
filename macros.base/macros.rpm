@@ -110,3 +110,7 @@ fi \
 # target libdir
 %_target_libdir_noarch	/usr/lib
 %_target_libdir	%{expand:%%{?_target_libdir_%_target_cpu}%%{!?_target_libdir_%_target_cpu:%%_libdir}}
+
+%_qt5_prefix %_libdir/qt5
+%_qt5_translationdir %_datadir/qt5/translations
+%_qt5_qmake %_qt5_prefix/bin/qmake

@@ -115,3 +115,7 @@ fi \
 
 %_udevhwdbdir	/lib/udev/hwdb.d
 %_udevrulesdir	/lib/udev/rules.d
+
+%_qt5_prefix %_libdir/qt5
+%_qt5_translationdir %_datadir/qt5/translations
+%_qt5_qmake %_qt5_prefix/bin/qmake

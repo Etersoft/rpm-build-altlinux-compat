@@ -1,0 +1,20 @@
+# partially copied from ALT
+
+%qmake_qt5 \
+    __qmake_qt5() \
+    { \
+        export CPPFLAGS="%optflags %optflags_shared" ; \\\
+        %_qt5_qmake \\\
+        QMAKE_CFLAGS="%optflags %optflags_shared" \\\
+        QMAKE_CXXFLAGS="%optflags %optflags_shared" \\\
+        "$@" \
+    } \
+    __qmake_qt5
+
+%install_qt5_base \
+    __install_qt5_base() \
+    { \
+	make install INSTALL_ROOT=%buildroot "$@" \
+    }\
+    __install_qt5_base
+
