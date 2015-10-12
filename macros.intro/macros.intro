@@ -51,10 +51,3 @@ find ./ -type d -name CVS -print0 | xargs -0 --no-run-if-empty rm -rf {} \;
 # cups lib dir
 %_cupslibdir %_prefix/lib/cups
 
-# todo for rpm-macros-qt4 (altbug #28724)
-%qmake_qt4 \
-  CPPFLAGS="${CPPFLAGS:-%optflags}" ; export CPPFLAGS ; \
-  %_qt4dir/bin/qmake \\\
-  QMAKE_CFLAGS="${CFLAGS:-%optflags}" \\\
-  QMAKE_CXXFLAGS="${CXXFLAGS:-%optflags}" \\\
-  QMAKE_LFLAGS="%{?ldflags}"

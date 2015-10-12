@@ -1,1 +1,11 @@
-%_qt4dir /usr/lib/qt4
+%_qt4dir %_libdir/qt4
+%qmake_qt4 \
+    __qmake_qt4() \
+    { \
+	CPPFLAGS="${CPPFLAGS:-%optflags -DPIC -fPIC}" ; export CPPFLAGS ; \\\
+	%_qt4dir/bin/qmake \\\
+	QMAKE_CFLAGS="${CFLAGS:-%optflags -DPIC -fPIC}" \\\
+	QMAKE_CXXFLAGS="${CXXFLAGS:-%optflags -DPIC -fPIC}" \\\
+	"$@" \
+    } \
+    __qmake_qt4

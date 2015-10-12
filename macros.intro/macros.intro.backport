@@ -44,3 +44,12 @@
 	%__python setup.py install --skip-build --root=%buildroot
 # TODO: need to be add
 %python_check %__python setup.py check
+
+
+# introduced in rpm-macros-qt4-4.8.4-alt3 21.03.2013
+%qmake_qt4 \
+  CPPFLAGS="${CPPFLAGS:-%optflags}" ; export CPPFLAGS ; \
+  %_qt4dir/bin/qmake \\\
+  QMAKE_CFLAGS="${CFLAGS:-%optflags}" \\\
+  QMAKE_CXXFLAGS="${CXXFLAGS:-%optflags}" \\\
+  QMAKE_LFLAGS="%{?ldflags}"
