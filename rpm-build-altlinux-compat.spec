@@ -1,7 +1,7 @@
 # NOTE: do not use clean_spec or rpmcs for this spec
 
 Name: rpm-build-altlinux-compat
-Version: 1.9.0
+Version: 1.9.1
 Release: alt1
 
 Summary: ALT Linux compatibility and extensions in rpm build
@@ -111,6 +111,9 @@ Command rpmbph from etersoft-build-utils will do it automatically.
 %endif
 
 %changelog
+* Mon Nov 23 2015 Vitaly Lipatov <lav@altlinux.ru> 1.9.1-alt1
+- set udev macros for CentOS/5
+
 * Sun Nov 22 2015 Vitaly Lipatov <lav@altlinux.ru> 1.9.0-alt1
 - introduce configure32
 
