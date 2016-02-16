@@ -57,3 +57,6 @@ CFLAGS="%optflags32"; export CFLAGS; \
 CXXFLAGS="%optflags32"; export CXXFLAGS; \
 FFLAGS="%optflags32"; export FFLAGS; \
 %configure --libdir=%_lib32dir
+
+# TODO: need to be add (ALT bug #31808)
+%python_check %__python setup.py check

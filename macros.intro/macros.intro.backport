@@ -42,9 +42,8 @@
 	%__python setup.py build
 %python_install	\
 	%__python setup.py install --skip-build --root=%buildroot
-# TODO: need to be add
+# TODO: need to be add (ALT bug #31808)
 %python_check %__python setup.py check
-
 
 # introduced in rpm-macros-qt4-4.8.4-alt3 21.03.2013
 %qmake_qt4 \
