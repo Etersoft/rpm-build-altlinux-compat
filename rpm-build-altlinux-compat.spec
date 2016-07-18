@@ -1,7 +1,7 @@
 # NOTE: do not use clean_spec or rpmcs for this spec
 
 Name: rpm-build-altlinux-compat
-Version: 1.9.4
+Version: 1.9.5
 Release: alt1
 
 Summary: ALT Linux compatibility and extensions in rpm build
@@ -111,6 +111,10 @@ Command rpmbph from etersoft-build-utils will do it automatically.
 %endif
 
 %changelog
+* Mon Jul 18 2016 Vitaly Lipatov <lav@altlinux.ru> 1.9.5-alt1
+- update distr_vendor
+- add AstraLinux support
+
 * Sat Apr 16 2016 Vitaly Lipatov <lav@altlinux.ru> 1.9.4-alt1
 - distr_vendor: use Sisyphus for ALT Linux as default
 
