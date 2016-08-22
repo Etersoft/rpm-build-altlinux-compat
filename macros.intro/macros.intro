@@ -60,3 +60,4 @@ FFLAGS="%optflags32"; export FFLAGS; \
 
 # TODO: need to be add (ALT bug #31808)
 %python_check %__python setup.py check
+
