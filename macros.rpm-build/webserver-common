@@ -1,0 +1,13 @@
+%webserver_group			_webserver
+%webserver_webmaster		webmaster
+
+%webserver_datadir		%_var/www
+%webserver_htdocsdir		%webserver_datadir/html
+%webserver_htdocsaddondir	%webserver_htdocsdir/addon-modules
+%webserver_manualaddonsdir	%webserver_datadir/manual-addons
+%webserver_cgibindir		%webserver_datadir/cgi-bin
+%webserver_iconsdir		%webserver_datadir/icons
+%webserver_iconssmalldir		%webserver_iconsdir/small
+%webserver_vhostdir		%webserver_datadir/vhosts
+%webserver_webappsdir		%webserver_datadir/webapps
+%webserver_uploadsdir		%webserver_datadir/uploads
