@@ -54,6 +54,11 @@ cd -
 # https://bugzilla.redhat.com/show_bug.cgi?id=185862
 %_sharedstatedir /var/lib
 
+# hardcode localstatedir to correct value
+# https://bugzilla.altlinux.org/show_bug.cgi?id=10382
+%_localstatedir /var
+
+
 # path to /etc/sudoers extension dir
 %_sudoersdir %_sysconfdir/sudo.d
 
