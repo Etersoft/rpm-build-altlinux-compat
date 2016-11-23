@@ -1,7 +1,7 @@
 # NOTE: do not use clean_spec or rpmcs for this spec
 
 Name: rpm-build-altlinux-compat
-Version: 1.9.11
+Version: 1.9.12
 Release: alt1
 
 Summary: ALT Linux compatibility and extensions in rpm build
@@ -111,6 +111,9 @@ Command rpmbph from etersoft-build-utils will do it automatically.
 %endif
 
 %changelog
+* Wed Nov 23 2016 Vitaly Lipatov <lav@altlinux.ru> 1.9.12-alt1
+- add logrotate dir
+
 * Tue Nov 15 2016 Vitaly Lipatov <lav@altlinux.ru> 1.9.11-alt1
 - add link to macros for GosLinux
 
