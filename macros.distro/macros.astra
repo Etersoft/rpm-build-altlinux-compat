@@ -1,2 +1,7 @@
-%_qt4dir %_datadir/qt4
 # ALT compatibility on other platforms
+
+%_qt4dir %_datadir/qt4
+
+%_lib lib
+%_libdir %_prefix/lib/
+%_lib32dir %_prefix/lib32

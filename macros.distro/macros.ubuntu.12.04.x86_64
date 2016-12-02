@@ -1,5 +1,7 @@
 # ALT compatibility on other platforms
 
-%_lib lib
-%_libdir %_prefix/lib/
-%_lib32dir %_prefix/lib32
+# Since Ubuntu 12.04
+# See https://bugs.etersoft.ru/show_bug.cgi?id=7871
+
+%_libdir %_prefix/lib/x86_64-linux-gnu
+%_lib32dir %_prefix/lib/i386-linux-gnu
