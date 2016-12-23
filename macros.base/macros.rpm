@@ -117,3 +117,4 @@ fi \
 
 # logrotate configs.
 %_logrotatedir %{_sysconfdir}/logrotate.d
+

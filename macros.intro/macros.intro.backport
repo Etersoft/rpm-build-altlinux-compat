@@ -17,6 +17,12 @@
 # https://bugzilla.altlinux.org/show_bug.cgi?id=13925
 %autoreconf %__autoreconf
 
+# introduced in rpm 4.0.4-alt60
+# https://bugzilla.altlinux.org/show_bug.cgi?id=9067
+%_liconsdir %_datadir/icons/hicolor/48x48/apps
+%_miconsdir %_datadir/icons/hicolor/16x16/apps
+%_niconsdir %_datadir/icons/hicolor/32x32/apps
+
 # introduced in rpm 4.0.4-alt55
 #  + Add macros: %_desktopdir, %_pixmapsdir (#8767)
 %_desktopdir %_datadir/applications

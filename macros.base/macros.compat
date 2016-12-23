@@ -56,14 +56,6 @@
 
 # Mdk compatibility
 %_iconsdir %_datadir/icons
-%_liconsdir %_iconsdir/mini
-%_miconsdir %_iconsdir/large
-%_niconsdir %_iconsdir
-
-# altbug #9047
-#%_liconsdir %_datadir/icons/hicolor/48x48/apps 
-#%_miconsdir %_datadir/icons/hicolor/16x16/apps 
-#%_niconsdir %_datadir/icons/hicolor/32x32/apps 
 
 %_man1dir %_mandir/man1
 %_man2dir %_mandir/man2
