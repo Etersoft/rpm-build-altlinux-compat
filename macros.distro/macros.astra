@@ -5,3 +5,5 @@
 %_lib lib
 %_libdir %_prefix/lib/
 %_lib32dir %_prefix/lib32
+
+%_target_python_libdir %_prefix/lib/
