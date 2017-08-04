@@ -140,3 +140,12 @@
 %subst_with() %{expand:%%{?_with_%{1}:%%{_with_%{1}}}} %{expand:%%{?_without_%{1}:%%{_without_%{1}}}}
 %subst_enable() %{expand:%%{?_enable_%{1}:%%{_enable_%{1}}}} %{expand:%%{?_disable_%{1}:%%{_disable_%{1}}}}
 
+################################################
+
+%_qt5_prefix %_libdir/qt5
+%_qt5_translationdir %_datadir/qt5/translations
+%_qt5_qmake %_qt5_prefix/bin/qmake
+
+# logrotate configs.
+%_logrotatedir %{_sysconfdir}/logrotate.d
+
