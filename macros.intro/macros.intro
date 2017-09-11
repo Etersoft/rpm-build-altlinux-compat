@@ -61,3 +61,5 @@ FFLAGS="%optflags32"; export FFLAGS; \
 # TODO: need to be add (ALT bug #31808)
 %python_check %__python setup.py check
 
+# ln -sr %buildroot%_somedir/file %buildroot%_newdir/file
+%_ln_sr() ln -sf `relative "%{1}" "%{2}"` "%{2}"
