@@ -65,3 +65,87 @@ FFLAGS="%optflags32"; export FFLAGS; \
 %_ln_sr() \
 ln -sf --relative "%{1}" "%{2}" || ln -sf "%(echo '%{1}' | sed -e 's!%buildroot!!g')" "%{2}" \
 %nil
+
+# TODO: fix in rpm-build-python (remove %__python_version)
+%__FIXED_python_package_deps_internal() \
+args="%{*}"; \
+set $args ''; \
+while test $# -gt 1; do \
+  mod=$1; shift; \
+  if test $# -gt 1; then \
+    if test "x$1" = "x<" -o "x$1" = "x<=" -o "x$1" = "x=" -o "x$1" = "x>=" -o "x$1" = "x>"; then \
+      verstr="$1 $2"; shift; shift; \
+    fi; \
+  fi; \
+  echo -n "python-module-${mod} $verstr "; \
+  unset mod; unset verstr; \
+done; \
+%nil
+
+# TODO
+%py_use() \
+BuildRequires: %(%{expand: %%__FIXED_python_package_deps_internal %{*}}) \
+Requires: %(%{expand: %%__FIXED_python_package_deps_internal %{*}}) \
+%nil
+
+%__lib_devel_use_internal() \
+args="%{*}"; \
+set $args ''; \
+while test $# -gt 1; do \
+  mod=$1; shift; \
+  if test $# -gt 1; then \
+    if test "x$1" = "x<" -o "x$1" = "x<=" -o "x$1" = "x=" -o "x$1" = "x>=" -o "x$1" = "x>"; then \
+      verstr="$1 $2"; shift; shift; \
+    fi; \
+  fi; \
+  echo -n "lib${mod}-devel $verstr "; \
+  unset mod; unset verstr; \
+done; \
+%nil
+
+%__lib_use_internal() \
+args="%{*}"; \
+set $args ''; \
+while test $# -gt 1; do \
+  mod=$1; shift; \
+  if test $# -gt 1; then \
+    if test "x$1" = "x<" -o "x$1" = "x<=" -o "x$1" = "x=" -o "x$1" = "x>=" -o "x$1" = "x>"; then \
+      verstr="$1 $2"; shift; shift; \
+    fi; \
+  fi; \
+  echo -n "lib${mod} $verstr "; \
+  unset mod; unset verstr; \
+done; \
+%nil
+
+# F.i. %lib_use rync > 5 will generate BR: librsync-devel > 5 and R: librsync >5
+%lib_use() \
+BuildRequires: %(%{expand: %%__lib_devel_use_internal %{*}}) \
+Requires: %(%{expand: %%__lib_use_internal %{*}}) \
+%nil
+
+# TODO: need to be add
+%python3_dirsetup \
+%if_with python3 \
+rm -rf ../python3 \
+cp -a . ../python3 \
+%endif \
+%nil
+
+#find ../python3 -name "*.py" | xargs %__subst "s|^#!/usr/bin/env python$|#!/usr/bin/python3|g"
+
+%python3_dirbuild \
+%if_with python3 \
+cd ../python3 \
+%python3_build \
+cd - >/dev/null \
+%endif \
+%nil
+
+%python3_dirinstall \
+%if_with python3 \
+cd ../python3 \
+%python3_install \
+cd - >/dev/null \
+%endif \
+%nil
