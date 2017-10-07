@@ -170,3 +170,11 @@ cd ../python3 \
 cd - >/dev/null \
 %endif \
 %nil
+
+%python3_dircheck \
+%if_with python3 \
+cd ../python3 \
+%python3_check \
+cd - >/dev/null \
+%endif \
+%nil
