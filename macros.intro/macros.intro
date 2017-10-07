@@ -82,10 +82,30 @@ while test $# -gt 1; do \
 done; \
 %nil
 
+%__python3_package_deps_internal() \
+args="%{*}"; \
+set $args ''; \
+while test $# -gt 1; do \
+  mod=$1; shift; \
+  if test $# -gt 1; then \
+    if test "x$1" = "x<" -o "x$1" = "x<=" -o "x$1" = "x=" -o "x$1" = "x>=" -o "x$1" = "x>"; then \
+      verstr="$1 $2"; shift; shift; \
+    fi; \
+  fi; \
+  echo -n "python3-module-${mod} $verstr "; \
+  unset mod; unset verstr; \
+done; \
+%nil
+
 # TODO
 %py_use() \
 BuildRequires: %(%{expand: %%__FIXED_python_package_deps_internal %{*}}) \
 Requires: %(%{expand: %%__FIXED_python_package_deps_internal %{*}}) \
+%nil
+
+%py3_use() \
+BuildRequires: %(%{expand: %%__python3_package_deps_internal %{*}}) \
+Requires: %(%{expand: %%__python3_package_deps_internal %{*}}) \
 %nil
 
 %__lib_devel_use_internal() \
