@@ -155,26 +155,26 @@ cp -a . ../python3 \
 
 #find ../python3 -name "*.py" | xargs %__subst "s|^#!/usr/bin/env python$|#!/usr/bin/python3|g"
 
-%python3_dirbuild \
+%python3_dirbuild() \
 %if_with python3 \
 cd ../python3 \
-%python3_build \
+%python3_build %{*} \
 cd - >/dev/null \
 %endif \
 %nil
 
-%python3_dirinstall \
+%python3_dirinstall() \
 %if_with python3 \
 cd ../python3 \
-%python3_install \
+%python3_install %{*} \
 cd - >/dev/null \
 %endif \
 %nil
 
-%python3_dircheck \
+%python3_dircheck() \
 %if_with python3 \
 cd ../python3 \
-%python3_check \
+%python3_check %{*} \
 cd - >/dev/null \
 %endif \
 %nil
