@@ -62,8 +62,13 @@ FFLAGS="%optflags32"; export FFLAGS; \
 %python_check %__python setup.py check
 %python3_check %__python3 setup.py check
 
-# ln -sr %buildroot%_somedir/file %buildroot%_newdir/file
+# obsoleted name
 %_ln_sr() \
+ln -sf --relative "%{1}" "%{2}" || ln -sf "%(echo '%{1}' | sed -e 's!%buildroot!!g')" "%{2}" \
+%nil
+
+# ln -sr %buildroot%_somedir/file %buildroot%_newdir/file
+%__ln_sr() \
 ln -sf --relative "%{1}" "%{2}" || ln -sf "%(echo '%{1}' | sed -e 's!%buildroot!!g')" "%{2}" \
 %nil
 
