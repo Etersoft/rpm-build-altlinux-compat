@@ -98,6 +98,7 @@ copy_distro_macros()
 
 if [ $distr = "alt" ] ; then
 	install -m755 bin/distr_vendor $bindir
+
 	DESTFILE=$rpmmacrosdir/etersoft-intro
 	# new macros, introduced for ALT and other, but not applied
 	copy_macros macros.intro/macros.intro
@@ -105,10 +106,15 @@ if [ $distr = "alt" ] ; then
 	# Copy base distro macros (f.i., .alt or alt.x86_64)
 	copy_macros macros.distro/macros.$distr macros.distro/macros.$distr.$archname
 
+	DESTFILE=$rpmmacrosdir/etersoft-intro-conflicts
+	# conflicts macros introduced for ALT
+	# copy base distro macros (f.i., .alt or alt.x86_64)
+	copy_macros macros.intro.conflicts/macros.$distr macros.intro.conflicts/macros.$distr.$archname
+
 	if [ "$version" = "Sisyphus" ] ; then
 		COMDESTFILE=$rpmmacrosdir/compat
-		echo "# This file have to be empty after build in ALT Linux Sisyphus" >> $COMDESTFILE
-		echo "# (see rpm-build-intro package for real macros)" >> $COMDESTFILE
+		echo "# This file have to be empty for ALT Linux Sisyphus" >> $COMDESTFILE
+		echo "# (see rpm-build-intro and rpm-macros-intro-conflicts packages for real macros)" >> $COMDESTFILE
 		echo "# Build at $(date)" >> $COMDESTFILE
 	else
 		fixbashisms $DESTFILE

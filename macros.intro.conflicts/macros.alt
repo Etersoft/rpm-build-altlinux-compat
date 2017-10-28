@@ -1,0 +1,8 @@
+# Platform and version dependend macros (ALT Linux only)
+# These macros introduced for ALT and packed for ALT Linux only
+# These macros will packed in rpm-macros-intro-conflicts package on ALT
+
+# hardcode _localstatedir to the world compatible correct value
+# https://bugzilla.altlinux.org/show_bug.cgi?id=10382
+# https://bugzilla.altlinux.org/show_bug.cgi?id=32554
+%_localstatedir /var

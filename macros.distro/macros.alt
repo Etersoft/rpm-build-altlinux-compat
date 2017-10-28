@@ -15,6 +15,3 @@
 #%userremove userdel
 #%groupremove groupdel
 
-# hardcode localstatedir to correct value
-# https://bugzilla.altlinux.org/show_bug.cgi?id=10382
-%_localstatedir /var
