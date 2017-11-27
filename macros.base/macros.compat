@@ -52,7 +52,11 @@
 %_initrddir %_initddir
 %_initdir %_initddir
 
+# deprecated
 %_runtimedir /var/run
+
+%_rundir /var/run
+%_logdir /var/log
 
 # Mdk compatibility
 %_iconsdir %_datadir/icons
