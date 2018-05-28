@@ -186,3 +186,5 @@ cd - >/dev/null \
 
 # Use: # Source-url: %__pypi_url %modulename
 %__pypi_url() https://pypi.io/packages/source/%(echo %{1} | cut -c1)/%{1}/%{1}-%version.tar.gz %nil
+
+%_userunitdir %_prefix/lib/systemd/user
