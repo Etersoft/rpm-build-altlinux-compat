@@ -62,6 +62,10 @@ FFLAGS="%optflags32"; export FFLAGS; \
 %python_check %__python setup.py check
 %python3_check %__python3 setup.py check
 
+# TODO: setyp.py test runs unit tests
+%python_test %__python setup.py test
+%python3_test %__python3 setup.py test
+
 # obsoleted name
 %_ln_sr() \
 ln -sf --relative "%{1}" "%{2}" || ln -sf "%(echo '%{1}' | sed -e 's!%buildroot!!g')" "%{2}" \
@@ -188,6 +192,14 @@ cd - >/dev/null \
 %if_with python3 \
 cd ../python3 \
 %python3_check %{*} \
+cd - >/dev/null \
+%endif \
+%nil
+
+%python3_dirtest() \
+%if_with python3 \
+cd ../python3 \
+%python3_test %{*} \
 cd - >/dev/null \
 %endif \
 %nil
