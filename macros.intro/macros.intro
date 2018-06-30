@@ -168,6 +168,14 @@ cd - >/dev/null \
 %endif \
 %nil
 
+%python3_dirbuild_debug() \
+%if_with python3 \
+cd ../python3 \
+%python3_build_debug %{*} \
+cd - >/dev/null \
+%endif \
+%nil
+
 %python3_dirinstall() \
 %if_with python3 \
 cd ../python3 \
