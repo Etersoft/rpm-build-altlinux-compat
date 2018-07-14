@@ -208,3 +208,11 @@ cd - >/dev/null \
 %__pypi_url() https://pypi.io/packages/source/%(echo %{1} | cut -c1)/%{1}/%{1}-%version.tar.gz %nil
 
 %_userunitdir %_prefix/lib/systemd/user
+
+# override __nprocs in depend of system memory size, __nprocs and a process size (in MB)
+# __nprocs = max(min(round(MAX/NEED)-1,NPROC),1)
+# uses distr_vendor from rpm-build-intro
+# use with suggested compiler process size
+%_tune_parallel_build_by_procsize() \
+    %global __nprocs %(N=$((%(distr_vendor -m)/%{1})); [ "$N" -gt 0 ] || N=1; [ "$N" -lt %__nprocs ] || N=%__nprocs ;  echo "$N") \
+%nil
