@@ -58,3 +58,6 @@
   QMAKE_CFLAGS="${CFLAGS:-%optflags}" \\\
   QMAKE_CXXFLAGS="${CXXFLAGS:-%optflags}" \\\
   QMAKE_LFLAGS="%{?ldflags}"
+
+# introduced in 4.0.4-alt100.62
+%EVR	%{?epoch:%epoch:}%{version}-%{release}
