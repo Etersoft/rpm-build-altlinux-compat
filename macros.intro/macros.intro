@@ -214,5 +214,6 @@ cd - >/dev/null \
 # uses distr_vendor from rpm-build-intro
 # use with suggested compiler process size
 %_tune_parallel_build_by_procsize() \
-    %global __nprocs %(N=$((%(distr_vendor -m)/%{1})); [ "$N" -gt 0 ] || N=1; [ "$N" -lt %__nprocs ] || N=%__nprocs ;  echo "$N") \
+BuildRequires(pre): /proc \
+%global __nprocs %(N=$((%(distr_vendor -m)/%{1})); [ "$N" -gt 0 ] || N=1; [ "$N" -lt %__nprocs ] || N=%__nprocs ;  echo "$N") \
 %nil
