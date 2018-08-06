@@ -213,7 +213,8 @@ cd - >/dev/null \
 # __nprocs = max(min(round(MAX/NEED)-1,NPROC),1)
 # uses distr_vendor from rpm-build-intro
 # use with suggested compiler process size
+# Note: divided by 4 now (see https://lists.altlinux.org/pipermail/devel/2018-July/204969.html)
 %_tune_parallel_build_by_procsize() \
 BuildRequires(pre): /proc \
-%global __nprocs %(N=$((%(distr_vendor -m)/%{1})); [ "$N" -gt 0 ] || N=1; [ "$N" -lt %__nprocs ] || N=%__nprocs ;  echo "$N") \
+%global __nprocs %(N=$((%(distr_vendor -m)/%{1}/4)); [ "$N" -gt 0 ] || N=1; [ "$N" -lt %__nprocs ] || N=%__nprocs ;  echo "$N") \
 %nil
