@@ -56,6 +56,7 @@ find ./ -type d -name CVS -print0 | xargs -0 --no-run-if-empty rm -rf {} \;
 CFLAGS="%optflags32"; export CFLAGS; \
 CXXFLAGS="%optflags32"; export CXXFLAGS; \
 FFLAGS="%optflags32"; export FFLAGS; \
+LDFLAGS="-L%_lib32dir" ; export LDFLAGS; \
 %configure --libdir=%_lib32dir
 
 # TODO: need to be add (ALT bug #31808)
