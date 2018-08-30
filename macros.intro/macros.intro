@@ -51,6 +51,8 @@ find ./ -type d -name CVS -print0 | xargs -0 --no-run-if-empty rm -rf {} \;
 # cups lib dir
 %_cupslibdir %_prefix/lib/cups
 
+%_metainfodir %_datadir/metainfo
+
 %configure32 \
 %global optflags32 %(echo "%optflags" | sed -e "s/-m64//g") \
 CFLAGS="%optflags32"; export CFLAGS; \
