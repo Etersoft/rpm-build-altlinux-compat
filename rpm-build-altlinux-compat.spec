@@ -1,7 +1,7 @@
 # NOTE: do not use clean_spec or rpmcs for this spec
 
 Name: rpm-build-altlinux-compat
-Version: 2.1.9
+Version: 2.1.10
 Release: alt1
 
 Summary: ALT Linux compatibility and extensions in rpm build
@@ -128,6 +128,9 @@ Command rpmbph from etersoft-build-utils will do it automatically.
 %endif
 
 %changelog
+* Thu Mar 21 2019 Vitaly Lipatov <lav@altlinux.ru> 2.1.10-alt1
+- base rpm: add _cachedir
+
 * Thu Aug 30 2018 Vitaly Lipatov <lav@altlinux.ru> 2.1.9-alt1
 - introduced _metainfodir (like in Fedora)
 
