@@ -112,3 +112,4 @@ fi \
 %_target_libdir_noarch	/usr/lib
 %_target_libdir	%{expand:%%{?_target_libdir_%_target_cpu}%%{!?_target_libdir_%_target_cpu:%%_libdir}}
 
+%_cachedir	%{_var}/cache
