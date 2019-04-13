@@ -4,6 +4,7 @@
 # Override __python_version macro provided by rpm-build 
 %__python_version	%(LC_ALL=C %__python -c 'import sys; print "%%u.%%u" %% sys.version_info[0:2]' 2>/dev/null || echo 2.7)
 %_python_version %__python_version
+%python_version_nodots() %(LC_ALL=C %1 -c "import sys; sys.stdout.write('{0.major}{0.minor}'.format(sys.version_info))" 2>/dev/null || echo unknown)
 
 %_target_python_libdir %_target_libdir
 %_python_set_noarch() %global _target_python_libdir %_target_libdir_noarch
@@ -12,8 +13,10 @@
 %_python_req_method	slight
 %_python_req_skip	""
 %_python_compile_method	ALL
-%_python_compile_exclude	%_defaultdocdir %_target_libdir/python3.2 %_target_libdir_noarch/python3.2 %_target_libdir/python3.3 %_target_libdir_noarch/python3.3
+%_python_compile_exclude	%_defaultdocdir
 %_python_compile_include	%_target_libdir %_target_libdir_noarch
+# Where we really expect normal Python modules:
+%_python_compile_include_restricted %python_libdir %python_sitelibdir %python_sitelibdir_noarch
 %_python_compile_deep	20
 %_python_compile_skip_x	1
 %_python_compile_clean	1
@@ -105,9 +108,9 @@
 
 %setup_std_python_package_deps() \
 %{expand: %%{!?modulename:%%_setup_python_module_internal %{*}}} \
-%(echo "#Requires: python = %__python_version") \
-%(echo "#BuildPreReq: python-devel = %__python_version") \
-%(echo "BuildPreReq: rpm-build-altlinux-compat >= 1.7.26") \
+%(echo "Requires: python = %__python_version") \
+%(echo "BuildPreReq: python-devel = %__python_version") \
+%(echo "BuildPreReq: rpm-build-python >= 0.8") \
 %(echo "Provides: python%__python_version-module-%modulename = %version-%release") \
 %nil
 
@@ -151,7 +154,7 @@ done; unset mod;\
 # 	где X.Y - текущая (выбранная) версия python
 #
 %py_requires() \
-%(echo -n "Requires:"; %{expand: %%__python_deps_internal %{*}}) \
+Requires: %(%{expand: %%__python_deps_internal %{*}}) \
 %nil
 
 # py_provides <имя_модуля1> [<имя_модуля2> ...]
@@ -161,7 +164,7 @@ done; unset mod;\
 # 	где X.Y - текущая (выбранная) версия python
 #
 %py_provides() \
-%(echo -n "Provides:"; %{expand: %%__python_deps_internal %{*}}) \
+Provides: %(%{expand: %%__python_deps_internal %{*}}) \
 %nil
 
 # py_dependencies <имя_модуля1> [<имя_модуля2> ...]
@@ -201,7 +204,7 @@ done; \
 #    		pythonX.Y-module-pack3
 # где X.Y - текущая (выбранная) версия python.
 %py_package_requires() \
-%(echo -n "Requires:"; %{expand: %%__python_package_deps_internal %{*}}) \
+Requires: %(%{expand: %%__python_package_deps_internal %{*}}) \
 %nil
 
 #  py_package_provides <pypackage1> [[>= <pypackage1_version>] [<pypackage2> ...]]
@@ -210,7 +213,7 @@ done; \
 # 	Provides
 #
 %py_package_provides() \
-%(echo -n "Provides:"; %{expand: %%__python_package_deps_internal %{*}}) \
+Provides: %(%{expand: %%__python_package_deps_internal %{*}}) \
 %nil
 
 # py_package_dependencies <pypackage1> [[>= <pypackage1_version>] [<pypackage2> ...]]
@@ -254,22 +257,46 @@ done; \
 #	Включить поиск иерархических зависимостей
 #
 %python_req_hier %global _python_req_hier yes
+#
+#	Выключить поиск иерархических зависимостей
+#
+%python_req_nohier %undefine _python_req_hier
 
 # traditional build/install macros
-%python_build	\
+%python_setup() \
+	%global _buildrequires_build %_buildrequires_build %python_setup_buildrequires \
 	CFLAGS="${CFLAGS:-%optflags}" ; export CFLAGS ; \
 	CXXFLAGS="${CXXFLAGS:-%optflags}" ; export CXXFLAGS ; \
 	FFLAGS="${FFLAGS:-%optflags}" ; export FFLAGS ; \
-	%__python setup.py build
-%python_build_debug	\
-	CFLAGS="${CFLAGS:-%optflags}" ; export CFLAGS ; \
-	CXXFLAGS="${CXXFLAGS:-%optflags}" ; export CXXFLAGS ; \
-	FFLAGS="${FFLAGS:-%optflags}" ; export FFLAGS ; \
-	%__python setup.py build --debug
-%python_install	\
-	%__python setup.py install --skip-build --root=%buildroot --prefix=%_prefix
-%python_build_install	\
-	CFLAGS="${CFLAGS:-%optflags}" ; export CFLAGS ; \
-	CXXFLAGS="${CXXFLAGS:-%optflags}" ; export CXXFLAGS ; \
-	FFLAGS="${FFLAGS:-%optflags}" ; export FFLAGS ; \
-	%__python setup.py install --root=%buildroot
+	%__python setup.py
+%python_build %{python_setup:} build
+%python_build_debug %{python_setup:} build --debug
+%python_install	%{python_setup:} install --skip-build --root=%buildroot --force
+%python_build_install %{python_setup:} install --root=%buildroot --force
+# Let's assume that in most cases setuptools are used or make no harm
+# if those traditional Python build/install macros are used (overridable):
+%python_setup_buildrequires python-module-setuptools
+
+##################################################
+# Handling of the ABI dep
+#
+# For python-2.x, we re-use the already present name borrowed from Fedora
+# (looking like: python(abi) = 2.7).
+
+# %%_python_version is the ABI version in the target system.
+# It is set to the version from the build system in order
+# to guarantee the match between the built package contents
+# and the properties of the target system.
+# That's fine for building Python2 modules.
+%python_ABI_dep python(abi) = %_python_version
+
+%__libpython %_libdir/libpython%_python_version.so
+%_files_to_ld_preload_python %files_requiring_python_ABI%(for d in %_python_compile_include_restricted; do echo -n " $d/*"; done)
+%files_requiring_python_ABI %nil
+
+# libpython*.so (which is to be ld_preloaded) resides in python-devel
+%requires_python_ABI_for_files() \
+BuildPreReq: python-devel \
+Requires: %python_ABI_dep \
+%global files_requiring_python_ABI %files_requiring_python_ABI %* \
+%nil

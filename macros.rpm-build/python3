@@ -1,0 +1,188 @@
+##################################################
+# The "properties" of the build environment (__*)
+# (i.e., what we are using for compilation):
+%__python3 /usr/bin/python3
+%__python3_version %(LC_ALL=C %__python3 -c 'import sys; print("{0}.{1}".format(sys.version_info[0],sys.version_info[1]))' 2>/dev/null || echo unknown)
+%__python3_abiflags %(%__python3-config --abiflags 2>/dev/null || echo unknown)
+
+##################################################
+# The "properties" of the target system (_*)
+# (for which we are building).
+# Normally, the target properties must be set according to
+# the "properties" of the build environment:
+# otherwise, there will be a mismatch between the real built package contents
+# and the wished target system. An exception is building python3 package
+# itself: then we should override the target "properties", because
+# the present python3 in the build environment doesn't matter.
+
+%_python3_abiflags %__python3_abiflags
+%_python3_extension_suffix %(%__python3-config --extension-suffix 2>/dev/null || echo .so)
+# According to our new ALT Sisyphus policy,
+# there is only a single version of python3.
+# So, %%_python3_version should not matter.
+# TODO: redefine it to constant 3.
+# Before that, we need to know where and how it is used in packages.
+# It seems it is only used to export RPM_PYTHON3_VERSION
+# (which only is used to determine the fallback value for RPM_PYTHON3_COMPILE_INCLUDE
+# and might be used in some external packages...
+# As for RPM_PYTHON3_COMPILE_INCLUDE, having the path with minor version there
+# must matter only for the build of python3 itself,
+# and can be modified just in its spec.
+# No need to handle it in the general case here.)
+%_python3_version %__python3_version
+# A macro which will be used to guarantee the match between the ABIs
+# (make sure to redefine it when building a new python3 package in its spec)
+%_python3_abi_version %__python3_version
+
+# traditional build/install macros
+%python3_setup() \
+	%global _buildrequires_build %_buildrequires_build %python3_setup_buildrequires \
+	CFLAGS="${CFLAGS:-%optflags}" ; export CFLAGS ; \
+	CXXFLAGS="${CXXFLAGS:-%optflags}" ; export CXXFLAGS ; \
+	FFLAGS="${FFLAGS:-%optflags}" ; export FFLAGS ; \
+	%__python3 setup.py
+%python3_build %{python3_setup:} build
+%python3_build_debug %{python3_setup:} build --debug
+%python3_install	%{python3_setup:} install --skip-build --root=%buildroot --force
+%python3_build_install %{python3_setup:} install --root=%buildroot --force
+# Let's assume that in most cases setuptools are used or make no harm
+# if those traditional Python3 build/install macros are used (overridable):
+%python3_setup_buildrequires python3-module-setuptools
+
+# When building the python3 distribution itself, set this to its specific minor-versioned location:
+#_python3_path %%python3_libdir %%python3_libdir_noarch
+# (or perhaps simply unset it).
+# Otherwise, we care just about python3/site-packages/ (without the minor version;
+# anything outside site-packages/ is disallowed anyway):
+%_python3_path %python3_sitelibdir %python3_sitelibdir_noarch
+%add_python3_path()	%global _python3_path %_python3_path %* \
+			%global _python_compile_exclude %_python_compile_exclude %*
+
+# Additional paths where our deps are allowed to be located:
+%_python3_import_path %nil
+%allow_python3_import_path()	%global _python3_import_path %_python3_import_path %*
+
+%_python3_req_hier yes
+#
+#	Включить поиск иерархических зависимостей
+#
+%python3_req_hier %global _python3_req_hier yes
+#
+#	Выключить поиск иерархических зависимостей
+#
+%python3_req_nohier %undefine _python3_req_hier
+
+%_target_python3_libdir %_target_libdir
+%_python3_set_noarch() %global _target_python3_libdir %_target_libdir_noarch
+%_python3_set_arch() %global _target_python3_libdir %_target_libdir
+
+%_python3_lib_path	""
+%_python3_req_method	slight
+%_python3_req_skip	""
+%_python3_compile_exclude	%_defaultdocdir
+%_python3_compile_include	%_python3_path
+%_python3_compile_deep	20
+%_python3_compile_skip_x	1
+%_python3_compile_clean	1
+
+%set_python3_req_method()	%global _python3_req_method %1
+
+%add_python3_req_skip()	%global _python3_req_skip %_python3_req_skip %*
+%add_python3_lib_path()	%{expand:%%add_python3_path %*} \
+                        %global _python3_lib_path %_python3_lib_path %*
+%add_python3_compile_exclude() %global _python3_compile_exclude %_python3_compile_exclude %*
+%add_python3_compile_include() %global _python3_compile_include %_python3_compile_include %*
+# TODO: consider declaring them for python (non 3) compile_exclude
+# (as is done in %%add_python3_path), too:
+#			       %global _python_compile_exclude %_python_compile_exclude %*
+#
+# The problem is: can people have a single path with mixed Python2/3 stuff?
+# This is not crucial for python.req/prov because it seems to have a smart filter.
+
+# Заголовочные файлы для компиляции расширений на C
+%__python3_includedir %_includedir/python%__python3_version%__python3_abiflags
+
+# Модули Python3, включенные в официальный релиз
+%__python3_libdir %_target_libdir/python%__python3_version
+%__python3_dynlibdir %python3_libdir/lib-dynload
+%__python3_tooldir %python3_libdir/Tools
+# The _noarch location is not used as of now in the python3-3.3.1-alt4 distribution
+# (for targets when it is different from %%python3_libdir); we define it for adaptability
+# to the future (and for internal use by brp-fix_python3_site-packages_location):
+%__python3_libdir_noarch %_target_libdir_noarch/python%__python3_version
+
+# Compatibility macros (which might have been used in other packages).
+# TODO: check and switch other packages to %__* build system macros
+# (for overall clarity of the system of macros).
+%python3_libdir %__python3_libdir
+%python3_dynlibdir %__python3_dynlibdir
+
+# Модули Python3, установленные в дополнение к официальному релизу
+%python3_sitelibdir %_target_python3_libdir/python3/site-packages
+
+# архитектурно-независимые модули Python3, установленные в дополнение к официальному релизу
+%python3_sitelibdir_noarch %_target_libdir_noarch/python3/site-packages
+
+%__python3_deps_internal() \
+for mod in %{*}; do \
+    echo -n "python3($mod)${rpm_python3_deps_constraint:+ $rpm_python3_deps_constraint} "; \
+done; unset mod;\
+%nil
+
+%__python3_req_constraint %(%__python3 %_rpmlibdir/python3.req.constraint.py %buildroot %_python3_import_path)
+
+# py3_requires <имя_модуля1> [<имя_модуля2> ...]
+#
+#	Добавляет зависимость на указанные модули Python3. Формируемые
+# 	зависимости имеют вид: python3(имя_модуля1) [python3(имя_модуля2)...]
+#
+%py3_requires() \
+Requires: %(rpm_python3_deps_constraint='%__python3_req_constraint'; %{expand: %%__python3_deps_internal %{*}}) \
+%nil
+
+# py3_provides <имя_модуля1> [<имя_модуля2> ...]
+#
+# 	Позволяет принудительно указать предоставляемые модули Python3. Формируемые
+# 	"provides" имеют вид: python3(имя_модуля1) [python3(имя_модуля2)...]
+#
+%py3_provides() \
+Provides: %(%{expand: %%__python3_deps_internal %{*}}) \
+%nil
+
+##################################################
+# Handling of the ABI dep
+#
+# It's an ALT Sisyphus special name
+# (looking like: python3.3-ABI(64bit)).
+
+# What follows next is a computation of the suffix, which is
+# new-arch-ABI-proof and which can be generally useful in all RPM specs
+# (not python-specific).
+#
+# If a new weird arch-ABI arises, at least, we'll have
+# a weird suffix here, not coinciding with another existing one:
+#
+# if "%_lib" == "lib", then empty string;
+# otherwise, for example,
+# if "%_lib" == "lib64", then "(64bit)" (without the quotation marks).
+%ABI_suffix %(s="%_lib"; s=${s#lib}; echo "${s:+(${s}bit)}")
+
+# %%_python3_abi_version is the ABI version in the target system.
+# It is set to the version from the build system in order
+# to guarantee the match between the built package contents
+# and the properties of the target system
+# That's fine for building Python3 modules.
+# If one is building python3 package itself,
+# one should override %%_python3_abi_version.
+%python3_ABI_dep python%_python3_abi_version-ABI%ABI_suffix
+
+%__libpython3 %_libdir/libpython%_python3_abi_version%_python3_abiflags.so
+%_files_to_ld_preload_python3 %files_requiring_python3_ABI%(for d in %_python3_compile_include; do echo -n " $d/*"; done)
+%files_requiring_python3_ABI %nil
+
+# libpython3*.so (which is to be ld_preloaded) resides in python3-devel
+%requires_python3_ABI_for_files() \
+BuildPreReq: python3-devel \
+Requires: %python3_ABI_dep \
+%global files_requiring_python3_ABI %files_requiring_python3_ABI %* \
+%nil

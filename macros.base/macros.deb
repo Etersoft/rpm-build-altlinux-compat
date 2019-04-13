@@ -117,3 +117,19 @@ fi \
 %_udevhwdbdir	/lib/udev/hwdb.d
 %_udevrulesdir	/lib/udev/rules.d
 
+##################################################################3
+# Модули Python, установленные в дополнение к официальному релизу
+%python_sitelibdir %python_libdir/dist-packages
+
+# архитектурно-независимые модули Python, установленные в дополнение к официальному релизу
+%python_sitelibdir_noarch %_target_libdir_noarch/python%__python_version/dist-packages
+
+# Модули Python3, установленные в дополнение к официальному релизу
+%python3_sitelibdir %_target_python3_libdir/python3/dist-packages
+
+# архитектурно-независимые модули Python3, установленные в дополнение к официальному релизу
+%python3_sitelibdir_noarch %_target_libdir_noarch/python3/dist-packages
+
+# need setup correct prefix
+%python_install	%{python_setup:} install --skip-build --root=%buildroot --prefix=%_prefix --force
+%python3_install %{python3_setup:} install --skip-build --root=%buildroot --prefix=%_prefix --force
