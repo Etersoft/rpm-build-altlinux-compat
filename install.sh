@@ -129,6 +129,9 @@ if [ $distr = "alt" ] ; then
 	fi
 else
 	DESTFILE=$rpmmacrosdir/$macroname
+	# Add macros copied from ALT's rpm-build-* packages
+	copy_macros macros.rpm-build/[0-9a-z]*
+
 	# new macros, introduced for ALT and other
 	copy_macros macros.intro/macros.intro
 	# ALT Linux only macros applied in ALT already (for ALT will add it in distro/version section)
@@ -138,16 +141,15 @@ else
 	[ "$pkgtype" = "deb" ] || [ "$pkgtype" = "rpm" ] || pkgtype="generic"
 	copy_macros macros.base/macros.compat macros.base/macros.$pkgtype macros.base/macros.$pkgtype.$archname
 
-	install -m755 bin/* $bindir
-
-	# Add macros copied from ALT's rpm-build-* packages
-	copy_macros macros.rpm-build/[0-9a-z]*
 
 	# Copy base distro macros (f.i., .suse or suse.x86_64)
 	copy_macros macros.distro/macros.$distr macros.distro/macros.$distr.$archname
 
 	# suse/11 and so on
 	copy_distro_macros
+
+	install -m755 bin/* $bindir
+
 fi
 
 
