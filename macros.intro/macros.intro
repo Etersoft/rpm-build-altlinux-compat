@@ -69,6 +69,9 @@ LDFLAGS="-L%_lib32dir" ; export LDFLAGS; \
 %python_test %__python setup.py test
 %python3_test %__python3 setup.py test
 
+%__python_package_prefix python-module
+%__python3_package_prefix python3-module
+
 # obsoleted name
 %_ln_sr() \
 ln -sf --relative "%{1}" "%{2}" || ln -sf "%(echo '%{1}' | sed -e 's!%buildroot!!g')" "%{2}" \
@@ -90,7 +93,7 @@ while test $# -gt 1; do \
       verstr="$1 $2"; shift; shift; \
     fi; \
   fi; \
-  echo -n "python-module-${mod} $verstr "; \
+  echo -n "%__python_package_prefix-${mod} $verstr "; \
   unset mod; unset verstr; \
 done; \
 %nil
@@ -105,7 +108,7 @@ while test $# -gt 1; do \
       verstr="$1 $2"; shift; shift; \
     fi; \
   fi; \
-  echo -n "python3-module-${mod} $verstr "; \
+  echo -n "%__python3_package_prefix-${mod} $verstr "; \
   unset mod; unset verstr; \
 done; \
 %nil
