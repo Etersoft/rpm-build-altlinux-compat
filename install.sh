@@ -18,9 +18,9 @@ macroname=$4
 pkgtype=$(bin/distr_vendor -p)
 distr=$(bin/distr_vendor -s)
 version=$(bin/distr_vendor -v)
-archname=$(uname -m)
-# hack for strict 32bit arch name
-[ "$archname" = "x86_64" ] || archname="i586"
+archname=$(bin/distr_vendor -a)
+# hack for a compatibility
+[ "$archname" = "x86" ] && archname="i586"
 
 echo "Distro: $distr, Version: $version, Pkg: $pkgtype"
 mkdir -p $bindir $rpmmacrosdir
