@@ -96,10 +96,26 @@ copy_distro_macros()
 	fi
 }
 
+create_distr_vendor_macros()
+{
+cat <<EOF >macros.distr_vendor
+
+# The distribution info how it was be retrieved via distro_info
+%_distro_pkgtype $pkgtype
+%_distro_name $(bin/distr_vendor -d)
+%_distro_version $version
+
+EOF
+}
+
 if [ $distr = "alt" ] ; then
 	install -m755 bin/distr_vendor $bindir
 
 	DESTFILE=$rpmmacrosdir/etersoft-intro
+
+	create_distr_vendor_macros
+	copy_macros macros.distr_vendor
+
 	# new macros, introduced for ALT and other, but not applied
 	copy_macros macros.intro/macros.intro
 
