@@ -26,7 +26,7 @@ BuildArchitectures: noarch
 # see eterbug #10699 https://bugs.etersoft.ru/show_bug.cgi?id=10699
 #BuildPreReq: altlinux-release
 %else
-# Provide includes macros
+# Provide included macros (see macros.rpm-build dir)
 Provides: rpm-build-python rpm-build-perl rpm-macros-ttf rpm-build-licenses rpm-macros-cmake
 # FreeBSD
 %if %_vendor == "portbld" || %_vendor == "any"
@@ -61,6 +61,7 @@ Group: Development/Other
 Requires: %_rpmmacrosdir
 # we will use distr_vendor from it
 Requires: rpm-build-compat = %version-%release
+Provides: rpm-macros-intro = %version-%release
 
 %description -n rpm-build-intro
 This package contains new macros introduced for
@@ -74,6 +75,7 @@ Summary: Conflicts macros for ALT Linux rpm build
 Group: Development/Other
 Requires: %_rpmmacrosdir
 Requires: rpm-build-intro = %version-%release
+Provides: rpm-macros-intro-conflicts = %version-%release
 
 %description -n rpm-macros-intro-conflicts
 This package contains conflicts macros for
@@ -86,6 +88,7 @@ package to build requires.
 Summary: ALT Linux compatibility macros for backport purposes
 Group: Development/Other
 Requires: %_rpmmacrosdir
+Provides: rpm-macros-compat = %version-%release
 
 %description -n rpm-build-compat
 This package contains ALT Linux compatibility layer
