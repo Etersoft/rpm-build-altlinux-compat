@@ -1,7 +1,7 @@
 # NOTE: do not use clean_spec or rpmcs for this spec
 
 Name: rpm-build-altlinux-compat
-Version: 2.1.14
+Version: 2.2.0
 Release: alt1
 
 Summary: ALT Linux compatibility and extensions in rpm build
@@ -131,6 +131,10 @@ Command rpmbph from etersoft-build-utils will do it automatically.
 %endif
 
 %changelog
+* Wed Sep 09 2020 Vitaly Lipatov <lav@altlinux.ru> 2.2.0-alt1
+- fix remove_repo_info macro
+- provide all packages as rpm-macros-*
+
 * Tue Sep 08 2020 Vitaly Lipatov <lav@altlinux.ru> 2.1.14-alt1
 - remove_repo_info: add .DS_Store removing
 - install.sh: get arch info from distr_vendor (adds support for non x86 arches)
