@@ -38,7 +38,7 @@ find ./ -type f -print0 | xargs -0 chmod 0664
 %remove_repo_info \
 find ./ -type d -name .svn -print0 | xargs -0 --no-run-if-empty rm -rfv {} \; \
 find ./ -type d -name CVS -print0 | xargs -0 --no-run-if-empty rm -rfv {} \; \
-find ./ \( -name '*.DS_Store' -o -name '*.DS_Store.gz' \) -print -delete \
+find ./ \\( -name '*.DS_Store' -o -name '*.DS_Store.gz' \\) -print -delete \
 %nil
 
 # macro for init scripts configs (/etc/default in Debian/Ubuntu)
