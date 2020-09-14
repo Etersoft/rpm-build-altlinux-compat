@@ -6,7 +6,7 @@ Release: alt1
 
 Summary: ALT Linux compatibility and extensions in rpm build
 
-License: GPL
+License: GPLv2
 Group: Development/Other
 Url: http://wiki.sisyphus.ru/devel/RpmBuildAltlinuxCompat
 
