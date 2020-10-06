@@ -15,14 +15,18 @@ bindir=$buildroot/$2
 rpmmacrosdir=$buildroot/$3
 macroname=$4
 
-pkgtype=$(bin/distr_vendor -p)
-distr=$(bin/distr_vendor -s)
-version=$(bin/distr_vendor -v)
-archname=$(bin/distr_vendor -a)
+pkgtype=$(bin/distr_vendor -p) || exit
+[ -n "$pkgtype" ] || exit
+distr=$(bin/distr_vendor -s) || exit
+[ -n "$distr" ] || exit
+version=$(bin/distr_vendor -v) || exit
+[ -n "$version" ] || exit
+archname=$(bin/distr_vendor -a) || exit
+[ -n "$archname" ] || exit
 # hack for a compatibility
 [ "$archname" = "x86" ] && archname="i586"
 
-echo "Distro: $distr, Version: $version, Pkg: $pkgtype"
+echo "Distro: $distr, Version: $version, Pkg: $pkgtype, Arch: $archname"
 mkdir -p $bindir $rpmmacrosdir
 
 # See tests/get_macros_distro.sh
@@ -98,11 +102,13 @@ copy_distro_macros()
 
 create_distr_vendor_macros()
 {
+local dname="$(bin/distr_vendor -d)" || exit
+[ -n "$dname" ] || exit
 cat <<EOF >macros.distr_vendor
 
 # The distribution info how it was be retrieved via distro_info
 %_distro_pkgtype $pkgtype
-%_distro_name $(bin/distr_vendor -d)
+%_distro_name $dname
 %_distro_version $version
 
 EOF
