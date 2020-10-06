@@ -1,10 +1,7 @@
 #!/bin/sh
-# Author: Vitaly Lipatov <lav@etersoft.ru>
-# 2007, 2009, 2010, 2012, 2016, 2017, 2018 (c) Etersoft
-# 2007-2018 Public domain
-
-# Detect the distro and version
-# Welcome to send updates!
+# 2007-2019 (c) Vitaly Lipatov <lav@etersoft.ru>
+# 2007-2019 (c) Etersoft
+# 2007-2019 Public domain
 
 # You can set ROOTDIR to root system dir
 #ROOTDIR=
@@ -103,6 +100,7 @@ get_major_version()
 }
 
 # Default values
+PRETTY_NAME=""
 DISTRIB_ID="Generic"
 DISTRIB_RELEASE=""
 DISTRIB_CODENAME=""
@@ -112,6 +110,7 @@ if distro lsb-release ; then
 	DISTRIB_ID=$(cat $DISTROFILE | get_var DISTRIB_ID)
 	DISTRIB_RELEASE=$(cat $DISTROFILE | get_var DISTRIB_RELEASE)
 	DISTRIB_CODENAME=$(cat $DISTROFILE | get_var DISTRIB_CODENAME)
+	PRETTY_NAME=$(cat $DISTROFILE | get_var DISTRIB_DESCRIPTION)
 fi
 
 # ALT Linux based
@@ -124,7 +123,9 @@ if distro altlinux-release ; then
 	elif has "ALT Linux 8." ; then DISTRIB_RELEASE="p8"
 	elif has "ALT .*8.[0-9]" ; then DISTRIB_RELEASE="p8"
 	elif has "ALT .*9.[0-9]" ; then DISTRIB_RELEASE="p9"
-	elif has "ALT p9 p9" ; then DISTRIB_RELEASE="p9"
+	elif has "ALT p9 " ; then DISTRIB_RELEASE="p9"
+	elif has "ALT 8 SP " ; then DISTRIB_RELEASE="c8"
+	elif has "ALT 9 SP " ; then DISTRIB_RELEASE="c9"
 	elif has "Simply Linux 6." ; then DISTRIB_RELEASE="p6"
 	elif has "Simply Linux 7." ; then DISTRIB_RELEASE="p7"
 	elif has "Simply Linux 8." ; then DISTRIB_RELEASE="p8"
@@ -138,14 +139,10 @@ if distro altlinux-release ; then
 	elif has "ALT Linux 5.0" ; then DISTRIB_RELEASE="5.0"
 	elif has "ALT Linux 4.1" ; then DISTRIB_RELEASE="4.1"
 	elif has "ALT Linux 4.0" ; then DISTRIB_RELEASE="4.0"
-	elif has Walnut          ; then DISTRIB_RELEASE="4.0"
-	elif has Hypericum       ; then DISTRIB_RELEASE="p8"
 	elif has "starter kit"   ; then DISTRIB_RELEASE="p8"
-	elif has 20070810 ; then DISTRIB_RELEASE="4.0"
-	elif has Ajuga    ; then DISTRIB_RELEASE="4.0"
-	elif has 20050723 ; then DISTRIB_RELEASE="3.0"
 	elif has Citron   ; then DISTRIB_RELEASE="2.4"
 	fi
+	PRETTY_NAME="$(cat /etc/altlinux-release)"
 
 elif distro gentoo-release ; then
 	DISTRIB_ID="Gentoo"
@@ -185,7 +182,7 @@ elif distro arch-release ; then
 # Elbrus
 elif distro mcst_version ; then
 	DISTRIB_ID="MCST"
-	DISTRIB_RELEASE=$(cat "$DISTROFILE" | grep "release" | sed -e "s|.*release \([0-9]*\).*|\1|g")
+	DISTRIB_RELEASE=$(cat "$DISTROFILE" | grep "release" | sed -e "s|.*release \([0-9]*\).*|\1|g") #"
 
 # OpenWrt
 elif distro openwrt_release ; then
@@ -413,6 +410,9 @@ case "$DIST_BIT" in
     'aarch64')
         DIST_BIT="64"
         ;;
+    'e2k')
+        DIST_BIT="64"
+        ;;
 #    'pa_risc' | 'pa-risc') # Are some of these 64bit? Least not all...
 #       BIT="64"
 #        ;;
@@ -449,30 +449,103 @@ get_memory_size() {
     echo $detected
 }
 
+print_name_version()
+{
+    [ -n "$DISTRIB_RELEASE" ] && echo $DISTRIB_ID/$DISTRIB_RELEASE || echo $DISTRIB_ID
+}
+
+get_virt()
+{
+    local VIRT
+    local SDCMD
+    SDCMD=$(which systemd-detect-virt 2>/dev/null)
+    if [ -n "$SDCMD" ] ; then
+        VIRT="$($SDCMD)"
+        [ "$VIRT" = "none" ] && echo "(host system)" && return
+        [ -z "$VIRT" ] && echo "(unknown)" && return
+        echo "$VIRT" && return
+    fi
+
+    # TODO: use virt-what under root
+
+    # inspired by virt_what
+    if [ -d "/proc/vz" -a ! -d "/proc/bc" ]; then
+        echo "openvz" && return
+    fi
+
+    if [ -r "/sys/bus/xen" ] ; then
+        echo "xen" && return
+    fi
+
+    echo "(unknown)"
+    # TODO: check for openvz
+}
+
+# https://unix.stackexchange.com/questions/196166/how-to-find-out-if-a-system-uses-sysv-upstart-or-systemd-initsystem
+get_service_manager()
+{
+    [ -d /run/systemd/system ] && echo "systemd" && return
+    # TODO
+    #[ -d /usr/share/upstart ] && echo "upstart" && return
+    [ -d /etc/init.d ] && echo "sysvinit" && return
+    echo "(unknown)"
+}
+
+print_pretty_name()
+{
+    echo "$PRETTY_NAME"
+}
+
+print_total_info()
+{
+cat <<EOF
+distro_info total information (run with -h to get help):
+Pretty distro name (--pretty): $(print_pretty_name)
+ Distro name and version (-e): $(print_name_version)
+        Packaging system (-p): $(pkgtype)
+ Running service manager (-y): $(get_service_manager)
+          Virtualization (-i): $(get_virt)
+        CPU Architecture (-a): $(get_arch)
+ CPU norm register size  (-b): $(get_bit_size)
+ System memory size (MB) (-m): $(get_memory_size)
+            Base OS name (-o): $(get_base_os_name)
+Build system distro name (-s): $(pkgvendor)
+Build system vendor name (-n): $(rpmvendor)
+EOF
+}
+
 
 case $1 in
+	-h)
+		echo "distro_info - distro name and version detection"
+		echo "Usage: distro_info [options] [args]"
+		echo "Options:"
+		echo " -a - print hardware architecture"
+		echo " -b - print size of arch bit (32/64)"
+		echo " -d - print distro name"
+		echo " -e - print full name of distro with version"
+		echo " -i - print virtualization type"
+		echo " -h - this help"
+		echo " -m - print system memory size (in MB)"
+		echo " -n [SystemName] - print vendor name (as _vendor macros in rpm)"
+		echo " -o - print base OS name"
+		echo " -p [SystemName] - print type of the packaging system"
+		echo " -s [SystemName] - print name of distro for build system (like in the package release name)"
+		echo " -y - print running service manager"
+		echo " --pretty - print pretty distro name"
+		echo " -v - print version of distro"
+		echo " -V - print the utility version"
+		echo "Run without args to print all information."
+		exit 0
+		;;
 	-p)
 		# override DISTRIB_ID
 		test -n "$2" && DISTRIB_ID="$2"
 		pkgtype
 		exit 0
 		;;
-	-h)
-		echo "distr_vendor - system name and version detection"
-		echo "Usage: distr_vendor [options] [args]"
-		echo "-p [SystemName] - print type of packaging system"
-		echo "-d - print distro name"
-		echo "-a - print hardware architecture"
-		echo "-b - print size of arch bit (32/64)"
-		echo "-m - print system memory size (in MB)"
-		echo "-o - print base os name"
-		echo "-v - print version of distro"
-		echo "-e - print full name of distro with version (by default)"
-		echo "-s [SystemName] - print name of distro for build system (like in the package release name)"
-		echo "-n [SystemName] - print vendor name (as _vendor macros in rpm)"
-		echo "-V - print the version of $0"
-		echo "-h - this help"
-		exit 0
+	--pretty)
+		print_pretty_name
 		;;
 	-d)
 		echo $DISTRIB_ID
@@ -482,6 +555,9 @@ case $1 in
 		;;
 	-b)
 		get_bit_size
+		;;
+	-i)
+		get_virt
 		;;
 	-m)
 		get_memory_size
@@ -504,13 +580,18 @@ case $1 in
 		rpmvendor
 		exit 0
 		;;
+	-y)
+		get_service_manager
+		;;
 	-V)
-		echo "20171010"
+		echo "20191121"
 		exit 0
 		;;
+	-e)
+		print_name_version
+		;;
 	*)
-		# if run without args, just printout Name/Version of the current system
-		[ -n "$DISTRIB_RELEASE" ] && echo $DISTRIB_ID/$DISTRIB_RELEASE || echo $DISTRIB_ID
+		print_total_info
 		;;
 esac
 
