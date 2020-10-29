@@ -126,6 +126,10 @@ BuildRequires: %(%{expand: %%__python3_package_deps_internal %{*}}) \
 Requires: %(%{expand: %%__python3_package_deps_internal %{*}}) \
 %nil
 
+%py3_buildrequires() \
+BuildRequires: %(%{expand: %%__python3_package_deps_internal %{*}}) \
+%nil
+
 %__lib_devel_use_internal() \
 args="%{*}"; \
 set $args ''; \
