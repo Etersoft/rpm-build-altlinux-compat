@@ -166,7 +166,7 @@ BuildRequires: %(%{expand: %%__lib_devel_use_internal %{*}}) \
 Requires: %(%{expand: %%__lib_use_internal %{*}}) \
 %nil
 
-# TODO: need to be add
+# OBSOLETED since python2 is away
 %python3_dirsetup \
 %if_with python3 \
 rm -rf ../python3 \
@@ -176,6 +176,7 @@ cp -a . ../python3 \
 
 #find ../python3 -name "*.py" | xargs %__subst "s|^#!/usr/bin/env python$|#!/usr/bin/python3|g"
 
+# OBSOLETED since python2 is away
 %python3_dirbuild() \
 %if_with python3 \
 cd ../python3 \
@@ -184,6 +185,7 @@ cd - >/dev/null \
 %endif \
 %nil
 
+# OBSOLETED since python2 is away
 %python3_dirbuild_debug() \
 %if_with python3 \
 cd ../python3 \
@@ -192,6 +194,7 @@ cd - >/dev/null \
 %endif \
 %nil
 
+# OBSOLETED since python2 is away
 %python3_dirinstall() \
 %if_with python3 \
 cd ../python3 \
@@ -200,6 +203,7 @@ cd - >/dev/null \
 %endif \
 %nil
 
+# OBSOLETED since python2 is away
 %python3_dircheck() \
 %if_with python3 \
 cd ../python3 \
@@ -208,6 +212,7 @@ cd - >/dev/null \
 %endif \
 %nil
 
+# OBSOLETED since python2 is away
 %python3_dirtest() \
 %if_with python3 \
 cd ../python3 \
