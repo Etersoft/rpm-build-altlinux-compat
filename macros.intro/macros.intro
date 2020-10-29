@@ -130,7 +130,7 @@ Requires: %(%{expand: %%__python3_package_deps_internal %{*}}) \
 BuildRequires: %(%{expand: %%__python3_package_deps_internal %{*}}) \
 %nil
 
-%py3_prune() \
+%python3_prune() \
 for i in %buildroot%python3_sitelibdir/ %buildroot%python3_sitelibdir_noarch/ ; do \
     find $i -name "tests" -type d -print0 | xargs -0 rm -rfv \
 done \
