@@ -71,6 +71,9 @@ LDFLAGS="-L%_lib32dir" ; export LDFLAGS; \
 %python_test %__python setup.py test
 %python3_test %__python3 setup.py test
 
+# will need python3-module-sphinx
+%python3_build_doc %make -C doc html SPHINXBUILD=sphinx-build-3
+
 %__python_package_prefix python-module
 %__python3_package_prefix python3-module
 
