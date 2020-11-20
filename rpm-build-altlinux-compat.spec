@@ -2,7 +2,7 @@
 
 Name: rpm-build-altlinux-compat
 Version: 2.2.6
-Release: alt1
+Release: alt2
 
 Summary: ALT Linux compatibility and extensions in rpm build
 
@@ -130,6 +130,9 @@ Command rpmbph from etersoft-build-utils will do it automatically.
 %endif
 
 %changelog
+* Sat Nov 21 2020 Vitaly Lipatov <lav@altlinux.ru> 2.2.6-alt2
+- restore rpm-macros-intro and rpm-macros-compat provides
+
 * Thu Nov 12 2020 Vitaly Lipatov <lav@altlinux.ru> 2.2.6-alt1
 - introduce python3_build_doc
 - drop duplicate self-provides
