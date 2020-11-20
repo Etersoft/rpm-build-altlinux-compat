@@ -61,6 +61,7 @@ Group: Development/Other
 Requires: %_rpmmacrosdir
 # we will use distr_vendor from it
 Requires: rpm-build-compat = %version-%release
+Provides: rpm-macros-intro = %version-%release
 
 %description -n rpm-build-intro
 This package contains new macros introduced for
@@ -86,6 +87,7 @@ package to build requires.
 Summary: ALT Linux compatibility macros for backport purposes
 Group: Development/Other
 Requires: %_rpmmacrosdir
+Provides: rpm-macros-compat = %version-%release
 
 %description -n rpm-build-compat
 This package contains ALT Linux compatibility layer
