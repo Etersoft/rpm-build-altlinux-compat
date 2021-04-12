@@ -1,12 +1,12 @@
 #!/bin/sh
-# 2007-2020 (c) Vitaly Lipatov <lav@etersoft.ru>
-# 2007-2020 (c) Etersoft
-# 2007-2020 Public domain
+# 2007-2021 (c) Vitaly Lipatov <lav@etersoft.ru>
+# 2007-2021 (c) Etersoft
+# 2007-2021 Public domain
 
 # You can set ROOTDIR to root system dir
 #ROOTDIR=
 
-PROGVERSION="20201010"
+PROGVERSION="20210106"
 
 # TODO: check /etc/system-release
 
@@ -53,6 +53,7 @@ rpmvendor()
 	[ "$DISTRIB_ID" = "TinyCoreLinux" ] && echo "tcl" && return
 	[ "$DISTRIB_ID" = "VoidLinux" ] && echo "void" && return
 	[ "$DISTRIB_ID" = "OpenSUSE" ] && echo "suse" && return
+	[ -n "$VENDOR_ID" ] && echo "$VENDOR_ID" && return
 	tolower "$DISTRIB_ID"
 }
 
@@ -80,13 +81,97 @@ pkgtype()
 		voidlinux) echo "xbps" ;;
 		openwrt) echo "ipk" ;;
 		cygwin) echo "tar.xz" ;;
-		debian|ubuntu|mint|runtu|mcst|astra) echo "deb" ;;
+		debian|ubuntu|mint|runtu|mcst|astra|kali) echo "deb" ;;
 		alt|asplinux|suse|mandriva|rosa|mandrake|pclinux|sled|sles)
 			echo "rpm" ;;
-		fedora|redhat|scientific|centos|rhel|goslinux|amzn)
+		fedora|redhat|redos|scientific|centos|rhel|goslinux|amzn)
 			echo "rpm" ;;
 		*)  echo "rpm" ;;
 	esac
+}
+
+# TODO: in more appropriate way
+#which pkcon 2>/dev/null >/dev/null && info "You can run $ PMTYPE=packagekit epm to use packagekit backend"
+
+# Print package manager (need DISTRIB_ID var)
+pkgmanager()
+{
+local CMD
+# FIXME: some problems with multibased distros (Server Edition on CentOS and Desktop Edition on Ubuntu)
+case $DISTRIB_ID in
+	ALTLinux)
+		CMD="apt-rpm"
+		#which ds-install 2>/dev/null >/dev/null && CMD=deepsolver-rpm
+		#which pkcon 2>/dev/null >/dev/null && CMD=packagekit-rpm
+		;;
+	PCLinux)
+		CMD="apt-rpm"
+		;;
+	Ubuntu|Debian|Mint|AstraLinux|Elbrus)
+		CMD="apt-dpkg"
+		#which aptitude 2>/dev/null >/dev/null && CMD=aptitude-dpkg
+		which snappy 2>/dev/null >/dev/null && CMD=snappy
+		;;
+	Mandriva|ROSA)
+		CMD="urpm-rpm"
+		;;
+	FreeBSD|NetBSD|OpenBSD|Solaris)
+		CMD="pkgsrc"
+		which pkg 2>/dev/null >/dev/null && CMD=pkgng
+		;;
+	Gentoo)
+		CMD="emerge"
+		;;
+	ArchLinux)
+		CMD="pacman"
+		;;
+	Fedora|LinuxXP|ASPLinux|CentOS|RHEL|Scientific|GosLinux|Amzn|RedOS)
+		CMD="dnf-rpm"
+		which dnf 2>/dev/null >/dev/null || CMD=yum-rpm
+		;;
+	Slackware)
+		CMD="slackpkg"
+		;;
+	SUSE|SLED|SLES)
+		CMD="zypper-rpm"
+		;;
+	ForesightLinux|rPathLinux)
+		CMD="conary"
+		;;
+	Windows)
+		CMD="appget"
+		which $CMD 2>/dev/null >/dev/null || CMD="chocolatey"
+		which $CMD 2>/dev/null >/dev/null || CMD="winget"
+		;;
+	MacOS)
+		CMD="homebrew"
+		;;
+	OpenWrt)
+		CMD="opkg"
+		;;
+	GNU/Linux/Guix)
+		CMD="guix"
+		;;
+	Android)
+		CMD="android"
+		;;
+	Cygwin)
+		CMD="aptcyg"
+		;;
+	alpine)
+		CMD="apk"
+		;;
+	TinyCoreLinux)
+		CMD="tce"
+		;;
+	VoidLinux)
+		CMD="xbps"
+		;;
+	*)
+		fatal "Have no suitable DISTRIB_ID $DISTRIB_ID"
+		;;
+esac
+echo "$CMD"
 }
 
 get_var()
@@ -99,6 +184,14 @@ get_var()
 get_major_version()
 {
 	echo "$1" | sed -e "s/\..*//g"
+}
+
+normalize_name()
+{
+	[ "$1" = "RED OS" ] && echo "RedOS" && return
+	[ "$1" = "CentOS Linux" ] && echo "CentOS" && return
+	#echo "${1// /}"
+	echo "$1" | sed -e "s/ //g"
 }
 
 # Default values
@@ -115,6 +208,20 @@ if distro lsb-release ; then
 	PRETTY_NAME=$(cat $DISTROFILE | get_var DISTRIB_DESCRIPTION)
 fi
 
+# Next default by /etc/os-release
+# https://www.freedesktop.org/software/systemd/man/os-release.html
+if distro os-release ; then
+	# shellcheck disable=SC1090
+	. $DISTROFILE
+	DISTRIB_ID="$(normalize_name "$NAME")"
+#	DISTRIB_ID="$(firstupper "$ID")"
+	DISTRIB_RELEASE="$VERSION_ID"
+	[ -n "$DISTRIB_RELEASE" ] || DISTRIB_RELEASE="CUR"
+	# set by os-release:
+	#PRETTY_NAME
+	VENDOR_ID="$ID"
+fi
+
 # ALT Linux based
 if distro altlinux-release ; then
 	# TODO: use os-release firsly
@@ -129,7 +236,7 @@ if distro altlinux-release ; then
 	elif has "ALT c8.1 " ; then DISTRIB_RELEASE="c8.1"
 	elif has "ALT c8.2 " ; then DISTRIB_RELEASE="c8.2"
 	elif has "ALT .*8.[0-9]" ; then DISTRIB_RELEASE="p8"
-	elif has "ALT .*9.[0-9]" ; then DISTRIB_RELEASE="p9"
+	elif has "ALT c9f1" ; then DISTRIB_RELEASE="c9f1"
 	elif has "ALT p9.* p9 " ; then DISTRIB_RELEASE="p9"
 	elif has "Simply Linux 6." ; then DISTRIB_RELEASE="p6"
 	elif has "Simply Linux 7." ; then DISTRIB_RELEASE="p7"
@@ -144,7 +251,7 @@ if distro altlinux-release ; then
 	elif has "ALT Linux 5.0" ; then DISTRIB_RELEASE="5.0"
 	elif has "ALT Linux 4.1" ; then DISTRIB_RELEASE="4.1"
 	elif has "ALT Linux 4.0" ; then DISTRIB_RELEASE="4.0"
-	elif has "starter kit"   ; then DISTRIB_RELEASE="p8"
+	elif has "starter kit"   ; then DISTRIB_RELEASE="Sisyphus"
 	elif has Citron   ; then DISTRIB_RELEASE="2.4"
 	fi
 	PRETTY_NAME="$(cat /etc/altlinux-release)"
@@ -177,12 +284,10 @@ elif distro os-release && hascommand xbps-query ; then
 	DISTRIB_ID="VoidLinux"
 	DISTRIB_RELEASE="Live"
 
+# TODO: use standart /etc/os-release or lsb
 elif distro arch-release ; then
 	DISTRIB_ID="ArchLinux"
-	DISTRIB_RELEASE="2010"
-	if grep 2011 -q $ROOTDIR/etc/pacman.d/mirrorlist ; then
-		DISTRIB_RELEASE="2011"
-	fi
+	DISTRIB_RELEASE="rolling"
 
 # Elbrus
 elif distro mcst_version ; then
@@ -242,11 +347,8 @@ elif distro MCBC-release ; then
 	elif has 3.1 ; then DISTRIB_RELEASE="3.1"
 	fi
 
-elif distro fedora-release ; then
-	DISTRIB_ID="Fedora"
-	DISTRIB_RELEASE=$(cat "$DISTROFILE" | grep "release" | sed -e "s|.*release \([0-9]*\).*|\1|g") #"
-
-elif distro redhat-release ; then
+# TODO: drop in favour of /etc/os-release
+elif distro redhat-release && [ -z "$PRETTY_NAME" ] ; then
 	# FIXME if need
 	# actually in the original RHEL: Red Hat Enterprise Linux .. release N
 	DISTRIB_ID="RHEL"
@@ -275,17 +377,6 @@ elif distro SuSe-release || distro SuSE-release ; then
 		DISTRIB_ID="SLED"
 	elif has "SUSE Linux Enterprise Server" ; then
 		DISTRIB_ID="SLES"
-	fi
-
-# https://www.freedesktop.org/software/systemd/man/os-release.html
-elif distro os-release ; then
-	# shellcheck disable=SC1090
-	. $ROOTDIR/etc/os-release
-	DISTRIB_ID="$(firstupper "$ID")"
-	DISTRIB_RELEASE="$VERSION_ID"
-	[ -n "$DISTRIB_RELEASE" ] || DISTRIB_RELEASE="CUR"
-	if [ "$ID" = "opensuse-leap" ] ; then
-		DISTRIB_ID="SUSE"
 	fi
 
 # fixme: can we detect by some file?
@@ -317,19 +408,12 @@ elif [ "$(uname)" = "Linux" ] && [ -x $ROOTDIR/system/bin/getprop ] ; then
 elif [ "$(uname -o 2>/dev/null)" = "Cygwin" ] ; then
         DISTRIB_ID="Cygwin"
         DISTRIB_RELEASE="all"
-
-# try use standart LSB info by default
-elif distro lsb-release && [ -n "$DISTRIB_RELEASE" ]; then
-	# use LSB
-
-	# fix distro name
-	case "$DISTRIB_ID" in
-		"openSUSE Tumbleweed")
-			DISTRIB_ID="SUSE"
-			DISTRIB_RELEASE="Tumbleweed"
-			;;
-	esac
 fi
+
+if [ -z "$PRETTY_NAME" ] ; then
+	PRETTY_NAME="$DISTRIB_ID $DISTRIB_RELEASE"
+fi
+
 
 get_uname()
 {
@@ -392,8 +476,13 @@ case "$DIST_ARCH" in
     '9000/800')
         DIST_ARCH="parisc"
         ;;
-    armv*)
-        if [ -z "$(readelf -A /proc/self/exe | grep Tag_ABI_VFP_args)" ] ; then
+    'arm64' | 'aarch64')
+        DIST_ARCH='aarch64'
+        ;;
+    armv7*)
+        # TODO: use uname only
+        # uses binutils package
+        if which readelf >/dev/null 2>/dev/null && [ -z "$(readelf -A /proc/self/exe | grep Tag_ABI_VFP_args)" ] ; then
             DIST_ARCH="armel"
         else
             DIST_ARCH="armhf"
@@ -407,7 +496,7 @@ get_debian_arch()
 {
     local arch="$(get_arch)"
     case $arch in
-    'i586')
+    'x86')
         arch='i386' ;;
     'x86_64')
         arch='amd64' ;;
@@ -420,7 +509,10 @@ get_distro_arch()
     local arch="$(get_arch)"
     case "$(pkgtype)" in
         rpm)
-            :
+            case $arch in
+            'x86')
+                arch='i586' ;;
+            esac
             ;;
         deb)
             get_debian_arch
@@ -433,9 +525,15 @@ get_distro_arch()
 get_bit_size()
 {
 local DIST_BIT
-# Check if we are running on 64bit platform, seems like a workaround for now...
-DIST_BIT="$(get_uname -m)"
-case "$DIST_BIT" in
+
+DIST_BIT="$(getconf LONG_BIT 2>/dev/null)"
+if [ -n "$DIST_BIT" ] ; then
+    echo "$DIST_BIT"
+    exit
+fi
+
+# Try detect arch size by arch name
+case "$(get_uname -m)" in
     'amd64' | 'ia64' | 'x86_64' | 'ppc64')
         DIST_BIT="64"
         ;;
@@ -517,6 +615,11 @@ get_core_count()
     echo $detected
 }
 
+get_core_mhz()
+{
+    cat /proc/cpuinfo | grep "cpu MHz" | head -n1 | cut -d':' -f2 | cut -d' ' -f2 | cut -d'.' -f1
+}
+
 
 get_virt()
 {
@@ -563,14 +666,14 @@ print_pretty_name()
 print_total_info()
 {
 cat <<EOF
-distro_info v$PROGVERSION : Copyright © 2007-2020 Etersoft
+distro_info v$PROGVERSION : Copyright © 2007-2021 Etersoft
 ==== Total system information:
 Pretty distro name (--pretty): $(print_pretty_name)
  Distro name and version (-e): $(print_name_version)
-        Packaging system (-p): $(pkgtype)
+ Package manager/type (-g/-p): $(pkgmanager) / $(pkgtype)
  Running service manager (-y): $(get_service_manager)
           Virtualization (-i): $(get_virt)
-               CPU Cores (-c): $(get_core_count)
+        CPU Cores/MHz (-c/-z): $(get_core_count) / $(get_core_mhz) MHz
         CPU Architecture (-a): $(get_arch)
  CPU norm register size  (-b): $(get_bit_size)
  System memory size (MB) (-m): $(get_memory_size)
@@ -584,13 +687,14 @@ EOF
 
 
 case $1 in
-	-h)
+	-h|--help)
 		echo "distro_info v$PROGVERSION - distro information retriever"
 		echo "Usage: distro_info [options] [args]"
 		echo "Options:"
 		echo " -a - print hardware architecture (--distro-arch for distro depended name)"
 		echo " -b - print size of arch bit (32/64)"
 		echo " -c - print number of CPU cores"
+		echo " -z - print current CPU MHz"
 		echo " -d - print distro name"
 		echo " -e - print full name of distro with version"
 		echo " -i - print virtualization type"
@@ -599,6 +703,7 @@ case $1 in
 		echo " -n [SystemName] - print vendor name (as _vendor macros in rpm)"
 		echo " -o - print base OS name"
 		echo " -p [SystemName] - print type of the packaging system"
+		echo " -g [SystemName] - print name of the packaging system"
 		echo " -s [SystemName] - print name of distro for build system (like in the package release name)"
 		echo " -y - print running service manager"
 		echo " --pretty - print pretty distro name"
@@ -611,6 +716,12 @@ case $1 in
 		# override DISTRIB_ID
 		test -n "$2" && DISTRIB_ID="$2"
 		pkgtype
+		exit 0
+		;;
+	-g)
+		# override DISTRIB_ID
+		test -n "$2" && DISTRIB_ID="$2"
+		pkgmanager
 		exit 0
 		;;
 	--pretty)
@@ -639,6 +750,9 @@ case $1 in
 		;;
 	-c)
 		get_core_count
+		;;
+	-z)
+		get_core_mhz
 		;;
 	-i)
 		get_virt
