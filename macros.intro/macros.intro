@@ -248,3 +248,17 @@ BuildRequires(pre): /proc \
 
 # from Fedora
 %_pkgdocdir %_docdir/%name-%version
+
+# @zerg's macros for versions comparing
+# https://bugzilla.altlinux.org/6010
+%if_ver_gt() %if "%(rpmvercmp '%1' '%2')" > "0"
+%if_ver_gteq() %if "%(rpmvercmp '%1' '%2')" >= "0"
+%if_ver_lt() %if "%(rpmvercmp '%2' '%1')" > "0"
+%if_ver_lteq() %if "%(rpmvercmp '%2' '%1')" >= "0"
+%if_ver_eq() %if "%(rpmvercmp '%1' '%2')" == "0"
+%if_ver_not_gt() %if "%(rpmvercmp '%1' '%2')" <= "0"
+%if_ver_not_gteq() %if "%(rpmvercmp '%1' '%2')" < "0"
+%if_ver_not_lt() %if "%(rpmvercmp '%2' '%1')" <= "0"
+%if_ver_not_lteq() %if "%(rpmvercmp '%2' '%1')" < "0"
+%if_ver_not_eq() %if "%(rpmvercmp '%1' '%2')" != "0"
+
