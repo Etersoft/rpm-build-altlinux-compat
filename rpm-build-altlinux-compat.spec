@@ -2,7 +2,7 @@
 
 Name: rpm-build-altlinux-compat
 Version: 2.2.9
-Release: alt1
+Release: alt2
 
 Summary: ALT Linux compatibility and extensions in rpm build
 
@@ -17,7 +17,7 @@ Source: ftp://updates.etersoft.ru/pub/Etersoft/Sisyphus/sources/tarball/%name-%v
 BuildArchitectures: noarch
 
 # Tune additional rpm macros file placement
-%if %_vendor == "alt"
+%if "%_vendor" == "alt"
 %define macrofilename macros
 #ifndef _rpmmacrosdir
 %if %{expand:%%{?_rpmmacrosdir:0}%%{!?_rpmmacrosdir:1}}
@@ -29,7 +29,7 @@ BuildArchitectures: noarch
 # Provide included macros (see macros.rpm-build dir)
 Provides: rpm-build-python rpm-build-perl rpm-macros-ttf rpm-build-licenses rpm-macros-cmake
 # FreeBSD
-%if %_vendor == "portbld" || %_vendor == "any"
+%if "%_vendor" == "portbld" || "%_vendor" == "any"
 %define _rpmmacrosdir /usr/local/etc/rpm
 %define macrofilename macros
 %else
@@ -102,7 +102,7 @@ Command rpmbph from etersoft-build-utils will do it automatically.
 %install
 ./install.sh %buildroot %_bindir %_rpmmacrosdir %macrofilename
 
-%if %_vendor == "alt"
+%if "%_vendor" == "alt"
 
 %files -n rpm-build-intro
 %doc AUTHORS TODO
@@ -130,6 +130,9 @@ Command rpmbph from etersoft-build-utils will do it automatically.
 %endif
 
 %changelog
+* Thu Dec 16 2021 Vitaly Lipatov <lav@altlinux.ru> 2.2.9-alt2
+- fix for bare words are no longer supported
+
 * Thu Sep 30 2021 Vitaly Lipatov <lav@altlinux.ru> 2.2.9-alt1
 - add @zerg's version comparing macros (see altbug 6010)
 
