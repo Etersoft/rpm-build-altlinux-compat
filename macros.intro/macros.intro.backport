@@ -9,9 +9,8 @@
 %_locksubsysdir %_var/lock/subsys
 
 
-# introduced 23.12.2008 in rpm 4.0.4-alt96.13 as
-# %_rpmmacrosdir    %_rpmlibdir/macros.d
-%_rpmmacrosdir %_sysconfdir/rpm/macros.d
+# introduced 23.12.2008 in rpm 4.0.4-alt96.13
+%_rpmmacrosdir    %_rpmlibdir/macros.d
 
 # introduced in rpm 4.0.4-alt83
 # https://bugzilla.altlinux.org/show_bug.cgi?id=13925
