@@ -37,7 +37,9 @@ Provides: rpm-build-python rpm-build-perl rpm-macros-ttf rpm-build-licenses rpm-
 %if %{expand:%%{?_sys_macros_dir:1}%%{!?_sys_macros_dir:0}}
 %define _rpmmacrosdir %_sys_macros_dir
 %define macrofilename 99-altlinux-compat.macros
-%else
+%elif %{expand:%%{?rpmmacrodir:1}%%{!?rpmmacrodir:0}} && %{expand:%%{?_rpmmacrosdir:0}%%{!?_rpmmacrosdir:1}}
+%define _rpmmacrosdir %rpmmacrodir
+%define macrofilename 99-altlinux-compat.macros
 %define _rpmmacrosdir /etc/rpm
 %define macrofilename macros
 %endif
