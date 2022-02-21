@@ -1,8 +1,8 @@
 # NOTE: do not use clean_spec or rpmcs for this spec
 
 Name: rpm-build-altlinux-compat
-Version: 2.2.9
-Release: alt2
+Version: 2.2.10
+Release: alt1
 
 Summary: ALT Linux compatibility and extensions in rpm build
 
@@ -132,6 +132,12 @@ Command rpmbph from etersoft-build-utils will do it automatically.
 %endif
 
 %changelog
+* Mon Feb 21 2022 Vitaly Lipatov <lav@altlinux.ru> 2.2.10-alt1
+- fix libdir for AstraLinux
+- macros.intro.backport: set correct rpmmacrosdir for ALT
+- install.sh: set platform specific _rpmmacrosdir
+- spec: override _rpmmacrosdir only if empty
+
 * Thu Dec 16 2021 Vitaly Lipatov <lav@altlinux.ru> 2.2.9-alt2
 - fix for bare words are no longer supported
 
