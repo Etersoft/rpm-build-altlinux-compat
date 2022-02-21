@@ -1,4 +1,4 @@
 # ALT compatibility on other platforms
 
 %_libdir %_prefix/lib/x86_64-linux-gnu
-%_lib32dir %_prefix/lib32/i386-linux-gnu/
+%_lib32dir %_prefix/lib32/i386-linux-gnu
