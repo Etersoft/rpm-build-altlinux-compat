@@ -12,6 +12,7 @@
 
 buildroot=$1
 bindir=$buildroot/$2
+o_rpmmacrosdir=$3
 rpmmacrosdir=$buildroot/$3
 macroname=$4
 
@@ -151,6 +152,10 @@ if [ $distr = "alt" ] ; then
 	fi
 else
 	DESTFILE=$rpmmacrosdir/$macroname
+
+	# hack to set platform dependent macros dir
+	bin/subst "s|^%_rpmmacrosdir.*|%_rpmmacrosdir $o_rpmmacrosdir" macros.intro/macros.intro.backport
+
 	# Add macros copied from ALT's rpm-build-* packages
 	copy_macros macros.rpm-build/[0-9a-z]*
 
