@@ -153,3 +153,12 @@
 # logrotate configs.
 %_logrotatedir %{_sysconfdir}/logrotate.d
 
+
+# usage: if_feature FEATURE [version]
+# examples:
+#    if_feature sip5
+#    if_feature icu 6.5
+# details: mix if_with and if_ver_gteq
+%if_feature() %if (%{expand:%%{?feature_%{1}:1}%%{!?feature_%{1}:0}}) && ( 0%{!?2:1} || "%(rpmvercmp '%{expand:%%{feature_%{1}}}' '%{?2:%2}')" >= "0")
+
+%brp_strip_none()		%global _brp_strip_none %{?_brp_strip_none} %*

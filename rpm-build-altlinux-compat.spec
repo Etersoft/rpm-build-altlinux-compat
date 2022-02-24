@@ -1,7 +1,7 @@
 # NOTE: do not use clean_spec or rpmcs for this spec
 
 Name: rpm-build-altlinux-compat
-Version: 2.2.10
+Version: 2.2.11
 Release: alt1
 
 Summary: ALT Linux compatibility and extensions in rpm build
@@ -36,10 +36,12 @@ Provides: rpm-build-python rpm-build-perl rpm-macros-ttf rpm-build-licenses rpm-
 # in Mandriva for example
 %if %{expand:%%{?_sys_macros_dir:1}%%{!?_sys_macros_dir:0}}
 %define _rpmmacrosdir %_sys_macros_dir
-%define macrofilename 99-altlinux-compat.macros
+%define macrofilename altlinux-compat.macros
 %elif %{expand:%%{?rpmmacrodir:1}%%{!?rpmmacrodir:0}} && %{expand:%%{?_rpmmacrosdir:0}%%{!?_rpmmacrosdir:1}}
 %define _rpmmacrosdir %rpmmacrodir
-%define macrofilename 99-altlinux-compat.macros
+%define macrofilename altlinux-compat.macros
+%else
+# all scanned dirs listed in /usr/lib/rpm/macrofiles
 %define _rpmmacrosdir /etc/rpm
 %define macrofilename macros
 %endif
@@ -132,6 +134,9 @@ Command rpmbph from etersoft-build-utils will do it automatically.
 %endif
 
 %changelog
+* Thu Feb 24 2022 Vitaly Lipatov <lav@altlinux.ru> 2.2.11-alt1
+- add features for Astra and RedOS
+
 * Mon Feb 21 2022 Vitaly Lipatov <lav@altlinux.ru> 2.2.10-alt1
 - fix libdir for AstraLinux
 - macros.intro.backport: set correct rpmmacrosdir for ALT

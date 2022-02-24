@@ -154,7 +154,8 @@ else
 	DESTFILE=$rpmmacrosdir/$macroname
 
 	# hack to set platform dependent macros dir
-	bin/subst "s|^%_rpmmacrosdir.*|%_rpmmacrosdir $o_rpmmacrosdir" macros.intro/macros.intro.backport
+	# check if it is supported
+	#bin/subst "s|^%_rpmmacrosdir.*|%_rpmmacrosdir $o_rpmmacrosdir|" macros.intro/macros.intro.backport
 
 	# Add macros copied from ALT's rpm-build-* packages
 	copy_macros macros.rpm-build/[0-9a-z]*
