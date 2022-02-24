@@ -7,3 +7,10 @@
 %_lib32dir %_prefix/lib32
 
 %_target_python_libdir %_prefix/lib
+
+# from rpm-macros-features
+%feature_vulkan 1
+%feature_vkd3d 0
+%feature_faudio 0
+%feature_pcap 1.8.1
+%feature_llvm 9
