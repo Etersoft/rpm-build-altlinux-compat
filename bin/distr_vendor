@@ -1,12 +1,12 @@
 #!/bin/sh
-# 2007-2021 (c) Vitaly Lipatov <lav@etersoft.ru>
-# 2007-2021 (c) Etersoft
-# 2007-2021 Public domain
+# 2007-2022 (c) Vitaly Lipatov <lav@etersoft.ru>
+# 2007-2022 (c) Etersoft
+# 2007-2022 Public domain
 
 # You can set ROOTDIR to root system dir
 #ROOTDIR=
 
-PROGVERSION="20210806"
+PROGVERSION="20220318"
 
 # TODO: check /etc/system-release
 
@@ -29,7 +29,7 @@ has()
 # Has a system the specified command?
 hascommand()
 {
-	which $1 2>/dev/null >/dev/null
+	which "$1" 2>/dev/null >/dev/null
 }
 
 firstupper()
@@ -44,15 +44,26 @@ tolower()
 	echo "$*" | awk '{print tolower($0)}'
 }
 
-# Translate DISTRIB_ID to vendor name (like %_vendor does)
+override_distrib()
+{
+	[ -n "$1" ] || return
+	VENDOR_ID=''
+	DISTRIB_ID="$(echo "$1" | sed -e 's|/.*||')"
+	DISTRIB_RELEASE="$(echo "$1" | sed -e 's|.*/||')"
+}
+
+# Translate DISTRIB_ID to vendor name (like %_vendor does), uses VENDOR_ID by default
 rpmvendor()
 {
 	[ "$DISTRIB_ID" = "ALTLinux" ] && echo "alt" && return
+	[ "$DISTRIB_ID" = "ALTServer" ] && echo "alt" && return
 	[ "$DISTRIB_ID" = "AstraLinux" ] && echo "astra" && return
 	[ "$DISTRIB_ID" = "LinuxXP" ] && echo "lxp" && return
 	[ "$DISTRIB_ID" = "TinyCoreLinux" ] && echo "tcl" && return
 	[ "$DISTRIB_ID" = "VoidLinux" ] && echo "void" && return
 	[ "$DISTRIB_ID" = "OpenSUSE" ] && echo "suse" && return
+	[ "$DISTRIB_ID" = "openSUSETumbleweed" ] && echo "suse" && return
+	[ "$DISTRIB_ID" = "openSUSELeap" ] && echo "suse" && return
 	[ -n "$VENDOR_ID" ] && echo "$VENDOR_ID" && return
 	tolower "$DISTRIB_ID"
 }
@@ -62,32 +73,6 @@ pkgvendor()
 {
 	[ "$DISTRIB_ID" = "Mandriva" ] && echo "mdv" && return
 	rpmvendor
-}
-
-# Print pkgtype (need DISTRIB_ID var)
-pkgtype()
-{
-# TODO: try use generic names
-    case $(pkgvendor) in
-		freebsd) echo "tbz" ;;
-		sunos) echo "pkg.gz" ;;
-		slackware|mopslinux) echo "tgz" ;;
-		archlinux|manjaro) echo "pkg.tar.xz" ;;
-		gentoo) echo "tbz2" ;;
-		windows) echo "exe" ;;
-		android) echo "apk" ;;
-		alpine) echo "apk" ;;
-		tinycorelinux) echo "tcz" ;;
-		voidlinux) echo "xbps" ;;
-		openwrt) echo "ipk" ;;
-		cygwin) echo "tar.xz" ;;
-		debian|ubuntu|mint|runtu|mcst|astra|kali) echo "deb" ;;
-		alt|asplinux|suse|mandriva|rosa|mandrake|pclinux|sled|sles)
-			echo "rpm" ;;
-		fedora|redhat|redos|scientific|centos|rhel|goslinux|amzn)
-			echo "rpm" ;;
-		*)  echo "rpm" ;;
-	esac
 }
 
 # TODO: in more appropriate way
@@ -100,9 +85,12 @@ local CMD
 # FIXME: some problems with multibased distros (Server Edition on CentOS and Desktop Edition on Ubuntu)
 case $DISTRIB_ID in
 	ALTLinux)
-		CMD="apt-rpm"
 		#which ds-install 2>/dev/null >/dev/null && CMD=deepsolver-rpm
 		#which pkcon 2>/dev/null >/dev/null && CMD=packagekit-rpm
+		CMD="apt-rpm"
+		;;
+	ALTServer)
+		CMD="apt-rpm"
 		;;
 	PCLinux)
 		CMD="apt-rpm"
@@ -110,7 +98,7 @@ case $DISTRIB_ID in
 	Ubuntu|Debian|Mint|AstraLinux|Elbrus)
 		CMD="apt-dpkg"
 		#which aptitude 2>/dev/null >/dev/null && CMD=aptitude-dpkg
-		which snappy 2>/dev/null >/dev/null && CMD=snappy
+		hascommand snappy && CMD=snappy
 		;;
 	Mandriva|ROSA)
 		CMD="urpm-rpm"
@@ -125,14 +113,15 @@ case $DISTRIB_ID in
 	ArchLinux)
 		CMD="pacman"
 		;;
-	Fedora|LinuxXP|ASPLinux|CentOS|RHEL|Scientific|GosLinux|Amzn|RedOS)
+	Fedora|FedoraLinux|LinuxXP|ASPLinux|CentOS|OracleLinux|RockyLinux|AlmaLinux|RHEL|Scientific|GosLinux|Amzn|RedOS)
 		CMD="dnf-rpm"
-		which dnf 2>/dev/null >/dev/null || CMD=yum-rpm
+		hascommand dnf || CMD=yum-rpm
+		[ "$DISTRIB_ID/$DISTRIB_RELEASE" = "CentOS/7" ] && CMD=yum-rpm
 		;;
 	Slackware)
 		CMD="slackpkg"
 		;;
-	SUSE|SLED|SLES)
+	SUSE|SLED|SLES|openSUSETumbleweed|openSUSELeap)
 		CMD="zypper-rpm"
 		;;
 	ForesightLinux|rPathLinux)
@@ -140,8 +129,8 @@ case $DISTRIB_ID in
 		;;
 	Windows)
 		CMD="appget"
-		which $CMD 2>/dev/null >/dev/null || CMD="chocolatey"
-		which $CMD 2>/dev/null >/dev/null || CMD="winget"
+		hascommand $CMD || CMD="chocolatey"
+		hascommand $CMD || CMD="winget"
 		;;
 	MacOS)
 		CMD="homebrew"
@@ -168,11 +157,52 @@ case $DISTRIB_ID in
 		CMD="xbps"
 		;;
 	*)
-		fatal "Have no suitable DISTRIB_ID $DISTRIB_ID"
+		# try detect firstly
+		if hascommand "rpm" ; then
+			hascommand "urpmi" && echo "urpmi-rpm" && return
+			hascommand "zypper" && echo "zypper-rpm" && return
+			hascommand "apt-get" && echo "apt-rpm" && return
+			hascommand "dnf" && echo "dnf-rpm" && return
+		fi
+		if hascommand "dpkg" ; then
+			hascommand "apt" && echo "apt-dpkg" && return
+			hascommand "apt-get" && echo "apt-dpkg" && return
+		fi
+		echo "We don't support yet DISTRIB_ID $DISTRIB_ID" >&2
 		;;
 esac
 echo "$CMD"
 }
+
+# Print pkgtype (need DISTRIB_ID var)
+pkgtype()
+{
+# TODO: try use generic names
+    case $(pkgvendor) in
+		freebsd) echo "tbz" ;;
+		sunos) echo "pkg.gz" ;;
+		slackware|mopslinux) echo "tgz" ;;
+		archlinux|manjaro) echo "pkg.tar.xz" ;;
+		gentoo) echo "tbz2" ;;
+		windows) echo "exe" ;;
+		android) echo "apk" ;;
+		alpine) echo "apk" ;;
+		tinycorelinux) echo "tcz" ;;
+		voidlinux) echo "xbps" ;;
+		openwrt) echo "ipk" ;;
+		cygwin) echo "tar.xz" ;;
+		*)
+			case $(pkgmanager) in
+				*-dpkg)
+					echo "dpkg" ;;
+				*-rpm)
+					echo "rpm" ;;
+				*)
+					echo "rpm" ;;
+			esac
+	esac
+}
+
 
 get_var()
 {
@@ -190,6 +220,9 @@ normalize_name()
 {
 	[ "$1" = "RED OS" ] && echo "RedOS" && return
 	[ "$1" = "CentOS Linux" ] && echo "CentOS" && return
+	[ "$1" = "Rocky Linux" ] && echo "RockyLinux" && return
+	[ "$1" = "Oracle Linux" ] && echo "OracleLinux" && return
+	[ "$1" = "Alma Linux" ] && echo "AlmaLinux" && return
 	#echo "${1// /}"
 	echo "$1" | sed -e "s/ //g"
 }
@@ -226,9 +259,11 @@ fi
 if distro altlinux-release ; then
 	DISTRIB_ID="ALTLinux"
 	# FIXME: fast hack for fallback: 10 -> p10 for /etc/os-release
-	DISTRIB_RELEASE="p$DISTRIB_RELEASE"
+	DISTRIB_RELEASE="$(echo p$DISTRIB_RELEASE | sed -e 's|\..*||')"
 	if has Sisyphus ; then DISTRIB_RELEASE="Sisyphus"
 	elif has "ALT p10.* p10 " ; then DISTRIB_RELEASE="p10"
+	elif has "ALTServer 10." ; then DISTRIB_RELEASE="p10"
+	elif has "ALTServer 9." ; then DISTRIB_RELEASE="p9"
 	elif has "ALT c10.* c10 " ; then DISTRIB_RELEASE="c10"
 	elif has "ALT p9.* p9 " ; then DISTRIB_RELEASE="p9"
 	elif has "ALT 9 SP " ; then DISTRIB_RELEASE="c9"
@@ -672,7 +707,7 @@ print_pretty_name()
 print_total_info()
 {
 cat <<EOF
-distro_info v$PROGVERSION : Copyright © 2007-2021 Etersoft
+distro_info v$PROGVERSION : Copyright © 2007-2022 Etersoft
 ==== Total system information:
 Pretty distro name (--pretty): $(print_pretty_name)
  Distro name and version (-e): $(print_name_version)
@@ -719,14 +754,12 @@ case $1 in
 		exit 0
 		;;
 	-p)
-		# override DISTRIB_ID
-		test -n "$2" && DISTRIB_ID="$2"
+		override_distrib "$2"
 		pkgtype
 		exit 0
 		;;
 	-g)
-		# override DISTRIB_ID
-		test -n "$2" && DISTRIB_ID="$2"
+		override_distrib "$2"
 		pkgmanager
 		exit 0
 		;;
@@ -734,14 +767,12 @@ case $1 in
 		print_pretty_name
 		;;
 	--distro-arch)
-		# override DISTRIB_ID
-		test -n "$2" && DISTRIB_ID="$2"
+		override_distrib "$2"
 		get_distro_arch
 		exit 0
 		;;
 	--debian-arch)
-		# override DISTRIB_ID
-		test -n "$2" && DISTRIB_ID="$2"
+		override_distrib "$2"
 		get_debian_arch
 		exit 0
 		;;
@@ -773,14 +804,12 @@ case $1 in
 		echo $DISTRIB_RELEASE
 		;;
 	-s)
-		# override DISTRIB_ID
-		test -n "$2" && DISTRIB_ID="$2"
+		override_distrib "$2"
 		pkgvendor
 		exit 0
 		;;
 	-n)
-		# override DISTRIB_ID
-		test -n "$2" && DISTRIB_ID="$2"
+		override_distrib "$2"
 		rpmvendor
 		exit 0
 		;;
