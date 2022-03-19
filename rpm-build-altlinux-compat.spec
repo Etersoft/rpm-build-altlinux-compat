@@ -1,7 +1,7 @@
 # NOTE: do not use clean_spec or rpmcs for this spec
 
 Name: rpm-build-altlinux-compat
-Version: 2.2.11
+Version: 2.2.12
 Release: alt1
 
 Summary: ALT Linux compatibility and extensions in rpm build
@@ -134,6 +134,9 @@ Command rpmbph from etersoft-build-utils will do it automatically.
 %endif
 
 %changelog
+* Sun Mar 20 2022 Vitaly Lipatov <lav@altlinux.ru> 2.2.12-alt1
+- distr_vendor: update to 2.7 version
+
 * Thu Feb 24 2022 Vitaly Lipatov <lav@altlinux.ru> 2.2.11-alt1
 - add features for Astra and RedOS
 
