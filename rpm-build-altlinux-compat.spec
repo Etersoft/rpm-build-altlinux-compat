@@ -36,10 +36,10 @@ Provides: rpm-build-python rpm-build-python3 rpm-build-perl rpm-macros-ttf rpm-b
 # in Mandriva for example
 %if %{expand:%%{?_sys_macros_dir:1}%%{!?_sys_macros_dir:0}}
 %define _rpmmacrosdir %_sys_macros_dir
-%define macrofilename altlinux-compat.macros
+%define macrofilename macros.alt-compat
 %elif %{expand:%%{?rpmmacrodir:1}%%{!?rpmmacrodir:0}} && %{expand:%%{?_rpmmacrosdir:0}%%{!?_rpmmacrosdir:1}}
 %define _rpmmacrosdir %rpmmacrodir
-%define macrofilename altlinux-compat.macros
+%define macrofilename macros.alt-compat
 %else
 # all scanned dirs listed in /usr/lib/rpm/macrofiles
 %define _rpmmacrosdir /etc/rpm
