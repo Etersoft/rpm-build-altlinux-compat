@@ -2,10 +2,6 @@
 
 %_qt4dir %_datadir/qt4
 
-%_lib lib
-%_libdir %_prefix/lib
-%_lib32dir %_prefix/lib32
-
 %_target_python_libdir %_prefix/lib
 
 # from rpm-macros-features

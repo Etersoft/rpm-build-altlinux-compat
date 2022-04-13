@@ -55,14 +55,6 @@ find ./ \\( -name '*.DS_Store' -o -name '*.DS_Store.gz' \\) -print -delete \
 
 %_metainfodir %_datadir/metainfo
 
-%configure32 \
-%global optflags32 %(echo "%optflags" | sed -e "s/-m64//g") \
-CFLAGS="%optflags32"; export CFLAGS; \
-CXXFLAGS="%optflags32"; export CXXFLAGS; \
-FFLAGS="%optflags32"; export FFLAGS; \
-LDFLAGS="-L%_lib32dir" ; export LDFLAGS; \
-%configure --libdir=%_lib32dir
-
 # TODO: need to be add (ALT bug #31808)
 %python_check %__python setup.py check
 %python3_check %__python3 setup.py check

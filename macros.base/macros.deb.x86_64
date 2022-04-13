@@ -1,9 +1,2 @@
 # ALT compatibility on other platforms (Debian based)
 
-# Due RPM incompatibility on Debian/Ubuntu x86_64
-# See https://bugs.etersoft.ru/show_bug.cgi?id=7871
-# Really 64bit Debian/Ubuntu used /usr/lib not /usr/lib64 (depricated, forbidden and unused)
-# TODO: fix this back in Debian packages
-%_lib lib
-%_libdir %_prefix/lib
-%_lib32dir %_prefix/lib32
