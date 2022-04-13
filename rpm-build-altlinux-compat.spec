@@ -1,7 +1,7 @@
 # NOTE: do not use clean_spec or rpmcs for this spec
 
 Name: rpm-build-altlinux-compat
-Version: 2.2.12
+Version: 2.2.13
 Release: alt1
 
 Summary: ALT Linux compatibility and extensions in rpm build
@@ -27,7 +27,7 @@ BuildArchitectures: noarch
 #BuildPreReq: altlinux-release
 %else
 # Provide included macros (see macros.rpm-build dir)
-Provides: rpm-build-python rpm-build-perl rpm-macros-ttf rpm-build-licenses rpm-macros-cmake
+Provides: rpm-build-python rpm-build-python3 rpm-build-perl rpm-macros-ttf rpm-build-licenses rpm-macros-cmake
 # FreeBSD
 %if "%_vendor" == "portbld" || "%_vendor" == "any"
 %define _rpmmacrosdir /usr/local/etc/rpm
@@ -134,6 +134,9 @@ Command rpmbph from etersoft-build-utils will do it automatically.
 %endif
 
 %changelog
+* Wed Apr 13 2022 Vitaly Lipatov <lav@altlinux.ru> 2.2.13-alt1
+- remove macros python*.env make errors
+
 * Sun Mar 20 2022 Vitaly Lipatov <lav@altlinux.ru> 2.2.12-alt1
 - distr_vendor: update to 2.7 version
 
