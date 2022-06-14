@@ -6,7 +6,7 @@
 # You can set ROOTDIR to root system dir
 #ROOTDIR=
 
-PROGVERSION="20220318"
+PROGVERSION="20220323"
 
 # TODO: check /etc/system-release
 
@@ -52,8 +52,8 @@ override_distrib()
 	DISTRIB_RELEASE="$(echo "$1" | sed -e 's|.*/||')"
 }
 
-# Translate DISTRIB_ID to vendor name (like %_vendor does), uses VENDOR_ID by default
-rpmvendor()
+# Translate DISTRIB_ID to vendor name (like %_vendor does or package release name uses), uses VENDOR_ID by default
+pkgvendor()
 {
 	[ "$DISTRIB_ID" = "ALTLinux" ] && echo "alt" && return
 	[ "$DISTRIB_ID" = "ALTServer" ] && echo "alt" && return
@@ -64,15 +64,12 @@ rpmvendor()
 	[ "$DISTRIB_ID" = "OpenSUSE" ] && echo "suse" && return
 	[ "$DISTRIB_ID" = "openSUSETumbleweed" ] && echo "suse" && return
 	[ "$DISTRIB_ID" = "openSUSELeap" ] && echo "suse" && return
-	[ -n "$VENDOR_ID" ] && echo "$VENDOR_ID" && return
+	if [ -n "$VENDOR_ID" ] ; then
+		[ "$VENDOR_ID" = "altlinux" ] && echo "alt" && return
+		echo "$VENDOR_ID"
+		return
+	fi
 	tolower "$DISTRIB_ID"
-}
-
-# Translate DISTRIB_ID name to package manner (like in the package release name)
-pkgvendor()
-{
-	[ "$DISTRIB_ID" = "Mandriva" ] && echo "mdv" && return
-	rpmvendor
 }
 
 # TODO: in more appropriate way
@@ -84,7 +81,7 @@ pkgmanager()
 local CMD
 # FIXME: some problems with multibased distros (Server Edition on CentOS and Desktop Edition on Ubuntu)
 case $DISTRIB_ID in
-	ALTLinux)
+	ALTLinux|ALTServer)
 		#which ds-install 2>/dev/null >/dev/null && CMD=deepsolver-rpm
 		#which pkcon 2>/dev/null >/dev/null && CMD=packagekit-rpm
 		CMD="apt-rpm"
@@ -113,7 +110,7 @@ case $DISTRIB_ID in
 	ArchLinux)
 		CMD="pacman"
 		;;
-	Fedora|FedoraLinux|LinuxXP|ASPLinux|CentOS|OracleLinux|RockyLinux|AlmaLinux|RHEL|Scientific|GosLinux|Amzn|RedOS)
+	Fedora|CentOS|OracleLinux|RockyLinux|AlmaLinux|RHEL|Scientific|GosLinux|Amzn|RedOS)
 		CMD="dnf-rpm"
 		hascommand dnf || CMD=yum-rpm
 		[ "$DISTRIB_ID/$DISTRIB_RELEASE" = "CentOS/7" ] && CMD=yum-rpm
@@ -194,7 +191,7 @@ pkgtype()
 		*)
 			case $(pkgmanager) in
 				*-dpkg)
-					echo "dpkg" ;;
+					echo "deb" ;;
 				*-rpm)
 					echo "rpm" ;;
 				*)
@@ -218,13 +215,24 @@ get_major_version()
 
 normalize_name()
 {
-	[ "$1" = "RED OS" ] && echo "RedOS" && return
-	[ "$1" = "CentOS Linux" ] && echo "CentOS" && return
-	[ "$1" = "Rocky Linux" ] && echo "RockyLinux" && return
-	[ "$1" = "Oracle Linux" ] && echo "OracleLinux" && return
-	[ "$1" = "Alma Linux" ] && echo "AlmaLinux" && return
-	#echo "${1// /}"
-	echo "$1" | sed -e "s/ //g"
+	case "$1" in
+		"RED OS")
+			echo "RedOS"
+			;;
+		"CentOS Linux")
+			echo "CentOS"
+			;;
+		"Fedora Linux")
+			echo "Fedora"
+			;;
+		"RedHatEnterpriseLinuxServer")
+			echo "RHEL"
+			;;
+		*)
+			#echo "${1// /}"
+			echo "$1" | sed -e "s/ //g"
+			;;
+	esac
 }
 
 # Default values
@@ -232,14 +240,6 @@ PRETTY_NAME=""
 DISTRIB_ID=""
 DISTRIB_RELEASE=""
 DISTRIB_CODENAME=""
-
-# Default with LSB
-if distro lsb-release ; then
-	DISTRIB_ID=$(cat $DISTROFILE | get_var DISTRIB_ID)
-	DISTRIB_RELEASE=$(cat $DISTROFILE | get_var DISTRIB_RELEASE)
-	DISTRIB_CODENAME=$(cat $DISTROFILE | get_var DISTRIB_CODENAME)
-	PRETTY_NAME=$(cat $DISTROFILE | get_var DISTRIB_DESCRIPTION)
-fi
 
 # Next default by /etc/os-release
 # https://www.freedesktop.org/software/systemd/man/os-release.html
@@ -253,13 +253,20 @@ if distro os-release ; then
 	# set by os-release:
 	#PRETTY_NAME
 	VENDOR_ID="$ID"
+	DISTRIB_FULL_RELEASE=$DISTRIB_RELEASE
+	DISTRIB_RELEASE=$(echo $DISTRIB_RELEASE | sed -e "s/\.[0-9]$//g")
+elif distro lsb-release ; then
+	DISTRIB_ID=$(cat $DISTROFILE | get_var DISTRIB_ID)
+	DISTRIB_RELEASE=$(cat $DISTROFILE | get_var DISTRIB_RELEASE)
+	DISTRIB_CODENAME=$(cat $DISTROFILE | get_var DISTRIB_CODENAME)
+	PRETTY_NAME=$(cat $DISTROFILE | get_var DISTRIB_DESCRIPTION)
 fi
 
 # ALT Linux based
 if distro altlinux-release ; then
 	DISTRIB_ID="ALTLinux"
 	# FIXME: fast hack for fallback: 10 -> p10 for /etc/os-release
-	DISTRIB_RELEASE="$(echo p$DISTRIB_RELEASE | sed -e 's|\..*||')"
+	DISTRIB_RELEASE="$(echo p$DISTRIB_RELEASE | sed -e 's|\..*||' -e 's|^pp|p|')"
 	if has Sisyphus ; then DISTRIB_RELEASE="Sisyphus"
 	elif has "ALT p10.* p10 " ; then DISTRIB_RELEASE="p10"
 	elif has "ALTServer 10." ; then DISTRIB_RELEASE="p10"
@@ -268,6 +275,7 @@ if distro altlinux-release ; then
 	elif has "ALT p9.* p9 " ; then DISTRIB_RELEASE="p9"
 	elif has "ALT 9 SP " ; then DISTRIB_RELEASE="c9"
 	elif has "ALT c9f1" ; then DISTRIB_RELEASE="c9f1"
+	elif has "ALT MED72 " ; then DISTRIB_RELEASE="p8"
 	elif has "ALT 8 SP " ; then DISTRIB_RELEASE="c8"
 	elif has "ALT c8.2 " ; then DISTRIB_RELEASE="c8.2"
 	elif has "ALT c8.1 " ; then DISTRIB_RELEASE="c8.1"
@@ -300,6 +308,20 @@ elif distro gentoo-release ; then
 	MAKEPROFILE=$(readlink $ROOTDIR/etc/portage/make.profile 2>/dev/null) || MAKEPROFILE=$(readlink $ROOTDIR/etc/make.profile)
 	DISTRIB_RELEASE=$(basename $MAKEPROFILE)
 	echo $DISTRIB_RELEASE | grep -q "[0-9]" || DISTRIB_RELEASE=$(basename "$(dirname $MAKEPROFILE)") #"
+
+elif [ "$DISTRIB_ID" = "ALTServer" ] ; then
+	DISTRIB_RELEASE=$(echo $DISTRIB_RELEASE | sed -e "s/\..*//g")
+
+elif [ "$DISTRIB_ID" = "ALTSPWorkstation" ] ; then
+	DISTRIB_ID="ALTLinux"
+	case "$DISTRIB_RELEASE" in
+		8.0|8.1)
+			;;
+		8.*)
+			DISTRIB_RELEASE="c9"
+			;;
+	esac
+	DISTRIB_RELEASE=$(echo $DISTRIB_RELEASE | sed -e "s/\..*//g")
 
 elif distro slackware-version ; then
 	DISTRIB_ID="Slackware"
@@ -338,15 +360,15 @@ elif distro openwrt_release ; then
 	. $DISTROFILE
 	DISTRIB_RELEASE=$(cat $ROOTDIR/etc/openwrt_version)
 
-elif distro astra_version ; then
-	#DISTRIB_ID=`cat $DISTROFILE | get_var DISTRIB_ID`
-	DISTRIB_ID="AstraLinux"
-	#DISTRIB_RELEASE=$(cat "$DISTROFILE" | head -n1 | sed -e "s|.* \([a-z]*\).*|\1|g")
-	DISTRIB_RELEASE=$DISTRIB_CODENAME
-
 # for Ubuntu use standard LSB info
 elif [ "$DISTRIB_ID" = "Ubuntu" ] && [ -n "$DISTRIB_RELEASE" ]; then
 	# use LSB version
+	true
+
+elif distro astra_version ; then
+	# use OS release
+	DISTRIB_ID="$(echo "$DISTRIB_ID" | sed -e 's|(.*||')"
+	DISTRIB_RELEASE="$VERSION_CODENAME"
 	true
 
 # Debian based
@@ -541,6 +563,8 @@ get_debian_arch()
         arch='i386' ;;
     'x86_64')
         arch='amd64' ;;
+    'aarch64')
+        arch='arm64' ;;
     esac
     echo "$arch"
 }
@@ -685,6 +709,10 @@ get_virt()
         echo "xen" && return
     fi
 
+    if lscpu | grep "Hypervisor vendor:" | grep -q "KVM" ; then
+        echo "kvm" && return
+    fi
+
     echo "(unknown)"
     # TODO: check for openvz
 }
@@ -708,19 +736,18 @@ print_total_info()
 {
 cat <<EOF
 distro_info v$PROGVERSION : Copyright © 2007-2022 Etersoft
-==== Total system information:
-Pretty distro name (--pretty): $(print_pretty_name)
- Distro name and version (-e): $(print_name_version)
- Package manager/type (-g/-p): $(pkgmanager) / $(pkgtype)
- Running service manager (-y): $(get_service_manager)
-          Virtualization (-i): $(get_virt)
-        CPU Cores/MHz (-c/-z): $(get_core_count) / $(get_core_mhz) MHz
-        CPU Architecture (-a): $(get_arch)
- CPU norm register size  (-b): $(get_bit_size)
- System memory size (MB) (-m): $(get_memory_size)
-            Base OS name (-o): $(get_base_os_name)
-Build system distro name (-s): $(pkgvendor)
-Build system vendor name (-n): $(rpmvendor)
+Total system information:
+    Pretty distro name (--pretty): $(print_pretty_name)
+     Distro name and version (-e): $(print_name_version)
+     Package manager/type (-g/-p): $(pkgmanager) / $(pkgtype)
+     Running service manager (-y): $(get_service_manager)
+              Virtualization (-i): $(get_virt)
+            CPU Cores/MHz (-c/-z): $(get_core_count) / $(get_core_mhz) MHz
+            CPU Architecture (-a): $(get_arch)
+     CPU norm register size  (-b): $(get_bit_size)
+     System memory size (MB) (-m): $(get_memory_size)
+                Base OS name (-o): $(get_base_os_name)
+Base distro (vendor) name (-s|-n): $(pkgvendor)
 
 (run with -h to get help)
 EOF
@@ -741,11 +768,10 @@ case $1 in
 		echo " -i - print virtualization type"
 		echo " -h - this help"
 		echo " -m - print system memory size (in MB)"
-		echo " -n [SystemName] - print vendor name (as _vendor macros in rpm)"
 		echo " -o - print base OS name"
 		echo " -p [SystemName] - print type of the packaging system"
 		echo " -g [SystemName] - print name of the packaging system"
-		echo " -s [SystemName] - print name of distro for build system (like in the package release name)"
+		echo " -s|-n [SystemName] - print base name of the distro (vendor name) (ubuntu for all Ubuntu family, alt for all ALT family) (as _vendor macros in rpm)"
 		echo " -y - print running service manager"
 		echo " --pretty - print pretty distro name"
 		echo " -v - print version of distro"
@@ -803,14 +829,9 @@ case $1 in
 	-v)
 		echo $DISTRIB_RELEASE
 		;;
-	-s)
+	-s|-n)
 		override_distrib "$2"
 		pkgvendor
-		exit 0
-		;;
-	-n)
-		override_distrib "$2"
-		rpmvendor
 		exit 0
 		;;
 	-y)
