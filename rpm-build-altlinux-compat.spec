@@ -1,7 +1,7 @@
 # NOTE: do not use clean_spec or rpmcs for this spec
 
 Name: rpm-build-altlinux-compat
-Version: 2.3.0
+Version: 2.3.1
 Release: alt1
 
 Summary: ALT Linux compatibility and extensions in rpm build
@@ -134,6 +134,10 @@ Command rpmbph from etersoft-build-utils will do it automatically.
 %endif
 
 %changelog
+* Sat Jul 30 2022 Vitaly Lipatov <lav@altlinux.ru> 2.3.1-alt1
+- macros.compat: comment out make* macros (they already in upstream)
+- update macros
+
 * Tue Jun 14 2022 Vitaly Lipatov <lav@altlinux.ru> 2.3.0-alt1
 - distr_vendor: update to 3.0 version
 
