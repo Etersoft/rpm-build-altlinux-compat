@@ -28,7 +28,7 @@
 
 # TODO: see #13937
 #%make_install	%_make_bin INSTALL="install -p" DESTDIR=%buildroot install
-%makeinstall_std %_make_bin INSTALL="install -p" DESTDIR=%buildroot install
+%makeinstall_std make INSTALL="install -p" DESTDIR=%buildroot install
 #make_install	%_make_bin INSTALL="install -p"
 
 #__make %_make_bin
