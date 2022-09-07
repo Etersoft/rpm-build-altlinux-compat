@@ -2,6 +2,7 @@
 # systemd
 %_presetdir	/usr/lib/systemd/system-preset
 %_unitdir	/usr/lib/systemd/system
+%systemd_unitdir	/usr/lib/systemd/system
 
 %__python_package_prefix python26
 %__python3_package_prefix python34

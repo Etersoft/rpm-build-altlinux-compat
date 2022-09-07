@@ -6,7 +6,7 @@
 # from /usr/lib/rpm/*/macros
 # systemd
 %_presetdir	/usr/lib/systemd/system-preset
-%_unitdir	/usr/lib/systemd/system
+%systemd_unitdir	/usr/lib/systemd/system
 
 # it is better to install rpm-build-fonts instead
 %_fontsdir %_datadir/default

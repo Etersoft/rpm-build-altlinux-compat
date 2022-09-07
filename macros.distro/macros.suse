@@ -78,6 +78,7 @@ fi \
 # systemd
 %_presetdir	/lib/systemd/system-preset
 %_unitdir	/lib/systemd/system
+%systemd_unitdir	/lib/systemd/system
 
 %_udevhwdbdir	/lib/udev/hwdb.d
 %_udevrulesdir	/lib/udev/rules.d
