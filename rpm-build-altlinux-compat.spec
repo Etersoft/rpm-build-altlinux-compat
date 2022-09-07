@@ -1,7 +1,7 @@
 # NOTE: do not use clean_spec or rpmcs for this spec
 
 Name: rpm-build-altlinux-compat
-Version: 2.3.2
+Version: 2.3.3
 Release: alt1
 
 Summary: ALT Linux compatibility and extensions in rpm build
@@ -134,6 +134,10 @@ Command rpmbph from etersoft-build-utils will do it automatically.
 %endif
 
 %changelog
+* Wed Sep 07 2022 Vitaly Lipatov <lav@altlinux.ru> 2.3.3-alt1
+- add systemd_unitdir macro
+- add macros.rocky.*
+
 * Tue Aug 16 2022 Vitaly Lipatov <lav@altlinux.ru> 2.3.2-alt1
 - don't use _make_bin in makeinstall_std
 
