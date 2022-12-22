@@ -1,4 +1,3 @@
-# ALT compatibility on other platforms
 
 %_target_python_libdir %_prefix/lib
 
