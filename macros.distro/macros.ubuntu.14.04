@@ -1,4 +1,6 @@
 
 %_target_python_libdir %_prefix/lib
 
+%_make_bin %(N=`which gmake 2>/dev/null` ; [ -x "$N" ] && echo "$N" || echo make)
+
 %make_build	[ -n "$NPROCS" ] || NPROCS=%__nprocs; %_make_bin -j$NPROCS
