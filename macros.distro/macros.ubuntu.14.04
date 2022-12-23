@@ -1,6 +1,9 @@
 
 %_target_python_libdir %_prefix/lib
 
+# Check numproc for Linux and for FreeBSD
+%__nprocs	%(N=`egrep -cs ^cpu[0-9]+ /proc/stat`; [ "$N" -gt 0 ] 2>/dev/null || N=`sysctl -a | egrep -i hw.ncpu | sed -e "s|.*: ||g"` ; [ "$N" -gt 0 ] 2>/dev/null && echo "$N" || echo 1)
+
 %_make_bin %(N=`which gmake 2>/dev/null` ; [ -x "$N" ] && echo "$N" || echo make)
 
 %make_build	[ -n "$NPROCS" ] || NPROCS=%__nprocs; %_make_bin -j$NPROCS
