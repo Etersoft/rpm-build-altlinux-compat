@@ -8,3 +8,6 @@
 %_make_bin %(N=`which gmake 2>/dev/null` ; [ -x "$N" ] && echo "$N" || echo make)
 
 %make_build	[ -n "$NPROCS" ] || NPROCS=%__nprocs; %_make_bin -j$NPROCS
+
+%__make %_make_bin
+%make %_make_bin
