@@ -1,59 +1,37 @@
 # Macros for cmake
 #
+%__cmake cmake
+%_cmake__builddir %_target_platform
 %_cmake_skip_rpath -DCMAKE_SKIP_RPATH:BOOL=ON
 
 %cmake \
-    __cmake() \
-    { \
-	pushd BUILD \
-	cmake .. \\\
-	    %{?_cmake_skip_rpath} \\\
-	    -DCMAKE_SKIP_INSTALL_RPATH:BOOL=yes \\\
-	    -DCMAKE_C_FLAGS:STRING='%optflags' \\\
-	    -DCMAKE_CXX_FLAGS:STRING='%optflags' \\\
-	    -DCMAKE_Fortran_FLAGS:STRING='%optflags' \\\
-	    -DCMAKE_INSTALL_PREFIX=%prefix \\\
-	    -DINCLUDE_INSTALL_DIR:PATH=%_includedir \\\
-	    -DLIB_INSTALL_DIR:PATH=%_libdir \\\
-	    -DSYSCONF_INSTALL_DIR:PATH=%_sysconfdir \\\
-	    -DSHARE_INSTALL_PREFIX:PATH=%_datadir \\\
-	    -DLIB_DESTINATION=%_lib \\\
-	    %if "%_lib" == "lib64" \
-	    -DLIB_SUFFIX="64" \\\
-	    %else \
-	    -DLIB_SUFFIX="" \\\
-	    %endif \
-	    \\\
-	    "$@" \
-	popd \
-    } \
-    mkdir -p BUILD; \
-    __cmake
+    mkdir -p %_cmake__builddir; \
+    %__cmake \\\
+        -DCMAKE_SKIP_INSTALL_RPATH:BOOL=yes \\\
+        -DCMAKE_C_FLAGS:STRING='%optflags' \\\
+        -DCMAKE_CXX_FLAGS:STRING='%optflags' \\\
+        -DCMAKE_Fortran_FLAGS:STRING='%optflags' \\\
+        -DCMAKE_INSTALL_PREFIX=%prefix \\\
+        -DINCLUDE_INSTALL_DIR:PATH=%_includedir \\\
+        -DLIB_INSTALL_DIR:PATH=%_libdir \\\
+        -DSYSCONF_INSTALL_DIR:PATH=%_sysconfdir \\\
+        -DSHARE_INSTALL_PREFIX:PATH=%_datadir \\\
+        -DLIB_DESTINATION=%_lib \\\
+        -DLIB_SUFFIX="%_libsuff" \\\
+    -S . -B "%_cmake__builddir"
 
+# Notice: this macro affects _cmake__builddir, effectively preventing further
+# out-of-source builds. Maintainers opting to build in-source are not
+# interested in those, though.
 %cmake_insource \
-    cmake . \\\
-	%{?_cmake_skip_rpath} \\\
-	-DCMAKE_SKIP_INSTALL_RPATH:BOOL=yes \\\
-	-DCMAKE_C_FLAGS:STRING='%optflags' \\\
-	-DCMAKE_CXX_FLAGS:STRING='%optflags' \\\
-	-DCMAKE_Fortran_FLAGS:STRING='%optflags' \\\
-	-DCMAKE_INSTALL_PREFIX=%prefix \\\
-	-DINCLUDE_INSTALL_DIR:PATH=%_includedir \\\
-	-DLIB_INSTALL_DIR:PATH=%_libdir \\\
-	-DSYSCONF_INSTALL_DIR:PATH=%_sysconfdir \\\
-	-DSHARE_INSTALL_PREFIX:PATH=%_datadir \\\
-	%if "%_lib" == "lib64" \
-	-DLIB_SUFFIX="64" \\\
-	%else \
-	-DLIB_SUFFIX="" \\\
-	%endif \
-	-DLIB_DESTINATION=%_lib
+    %define _cmake__builddir . \
+    %cmake
 
-%cmake_build \
-    %make_build -C BUILD
+%cmake_build %__cmake --build "%_cmake__builddir" --verbose --parallel %_smp_build_ncpus
 
-%cmake_install \
-    %make_install -C BUILD
+%cmake_install DESTDIR="%buildroot" %__cmake --install "%_cmake__builddir" --verbose
 
+# Deprecated macro; do not use in new packages.
+# This macro only works with -G'Unix Makefiles', when cmake uses make(1).
 %cmakeinstall_std \
-    %makeinstall_std -C BUILD
+    %makeinstall_std -C "%_cmake__builddir"
