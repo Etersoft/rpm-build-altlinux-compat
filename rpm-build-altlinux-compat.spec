@@ -1,7 +1,7 @@
 # NOTE: do not use clean_spec or rpmcs for this spec
 
 Name: rpm-build-altlinux-compat
-Version: 2.3.5
+Version: 2.4.0
 Release: alt1
 
 Summary: ALT Linux compatibility and extensions in rpm build
@@ -134,6 +134,12 @@ Command rpmbph from etersoft-build-utils will do it automatically.
 %endif
 
 %changelog
+* Wed Apr 19 2023 Vitaly Lipatov <lav@altlinux.ru> 2.4.0-alt1
+- macros.intro.backport: update systemd macro
+- remove unneeded duplicates in x86_64 part
+- return __nprocs implemented via epm print info
+- macros.distro: cleanup
+
 * Tue Apr 04 2023 Vitaly Lipatov <lav@altlinux.ru> 2.3.5-alt1
 - macros.distro: restore make/make_build for AstraLinux
 - macros.distro: restore make/__make for Debian/Ubuntu
