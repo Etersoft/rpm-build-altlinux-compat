@@ -60,3 +60,39 @@
 
 # introduced in 4.0.4-alt100.62
 %EVR	%{?epoch:%epoch:}%{version}-%{release}
+
+# updated in 4.0.4-alt176
+# systemd.
+%_binfmtdir            /lib/binfmt.d
+%_env_dir              /lib/environment.d
+%_journal_catalogdir   /usr/lib/systemd/catalog
+%_modprobedir          /lib/modprobe.d
+%_modules_loaddir      /lib/modules-load.d
+%_presetdir            /lib/systemd/system-preset
+%_user_presetdir       /usr/lib/systemd/user-preset
+%_sysctldir            /lib/sysctl.d
+%_sysusersdir          /lib/sysusers.d
+%_systemd_dir          /lib/systemd
+%_tmpfilesdir          /lib/tmpfiles.d
+%_user_unitdir         /usr/lib/systemd/user
+%_udev_hwdbdir         /lib/udev/hwdb.d
+%_udev_rulesdir                /lib/udev/rules.d
+%_gen_dir              /lib/systemd/system-generators
+%_user_gen_dir         /usr/lib/systemd/user-generators
+%_env_gen_dir          /lib/systemd/system-environment-generators
+%_user_env_gen_dir     /usr/lib/systemd/user-environment-generators
+
+# compat with systemd upstream.
+%_environmentdir       %_env_dir
+%_journalcatalogdir    %_journal_catalogdir
+%_modulesloaddir       %_modules_loaddir
+%_userunitdir          %_user_unitdir
+%_userpresetdir                %_user_presetdir
+%_udevhwdbdir          %_udev_hwdbdir
+%_udevrulesdir         %_udev_rulesdir
+%_systemd_util_dir     %_systemd_dir
+%_systemdgeneratordir                  %_gen_dir
+%_systemdusergeneratordir              %_user_gen_dir
+%_systemd_system_env_generator_dir     %_env_gen_dir
+%_systemd_user_env_generator_dir       %_user_env_gen_dir
+
