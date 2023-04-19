@@ -1,2 +1,0 @@
-# path to /etc/sudoers extension dir
-%_sudoersdir %_sysconfdir/sudo.d

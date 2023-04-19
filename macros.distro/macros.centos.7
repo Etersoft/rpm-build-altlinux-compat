@@ -1,3 +1,11 @@
+
+# path to /etc/sudoers extension dir
+%_sudoersdir %_sysconfdir/sudo.d
+
+# udev dirs exists since CentOS 6, but we need this macro in CentOS 5 too
+%_udevhwdbdir /usr/lib/udev/hwdb.d
+%_udevrulesdir /usr/lib/udev/rules.d
+
 %__python_package_prefix python27
 %__python3_package_prefix python36
 
