@@ -17,22 +17,14 @@
 # Use own subst macros. Works everywhere
 %__subst %_bindir/subst
 
-# Make
-# use gmake if possible
-#_make_bin %(N=`which gmake 2>/dev/null` ; [ -x "$N" ] && echo "$N" || echo make)
+# not all rpm have getncpus
+%__nprocs	%(N=`epm print info -c 2>/dev/null` && echo "$N" || echo 1)
 
-# Check numproc for Linux and for FreeBSD
-#__nprocs	%(N=`egrep -cs ^cpu[0-9]+ /proc/stat`; [ "$N" -gt 0 ] 2>/dev/null || N=`sysctl -a | egrep -i hw.ncpu | sed -e "s|.*: ||g"` ; [ "$N" -gt 0 ] 2>/dev/null && echo "$N" || echo 1)
-
-#make_build	[ -n "$NPROCS" ] || NPROCS=%__nprocs; %_make_bin -j$NPROCS
+%_smp_build_ncpus	${NPROCS:-%__nprocs}
+%_smp_mflags	-j%_smp_build_ncpus
 
 # TODO: see #13937
-#%make_install	%_make_bin INSTALL="install -p" DESTDIR=%buildroot install
 %makeinstall_std make INSTALL="install -p" DESTDIR=%buildroot install
-#make_install	%_make_bin INSTALL="install -p"
-
-#__make %_make_bin
-#make %_make_bin
 
 # due buggy on some systems (Debian)
 %_sysconfdir /etc
