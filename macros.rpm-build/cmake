@@ -27,9 +27,9 @@
     %define _cmake__builddir . \
     %cmake
 
-%cmake_build %__cmake --build "%_cmake__builddir" --verbose --parallel %_smp_build_ncpus
+%cmake_build %__cmake --build "%_cmake__builddir" --parallel %_smp_build_ncpus
 
-%cmake_install DESTDIR="%buildroot" %__cmake --install "%_cmake__builddir" --verbose
+%cmake_install DESTDIR="%buildroot" %__cmake --install "%_cmake__builddir"
 
 # Deprecated macro; do not use in new packages.
 # This macro only works with -G'Unix Makefiles', when cmake uses make(1).
