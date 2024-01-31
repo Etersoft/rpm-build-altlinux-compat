@@ -114,7 +114,7 @@ for spec in "$@"; do
 	fi
 	if [ -z "$NOCHECK" ]; then
 		oldver=`$RPM -q --qf '%{CHANGELOGNAME}\n' --specfile "$spec" |sed -ne '/^(none)$/q;s/[^<]\+<[^>]\+> *\(.\+\)$/\1/pg'`
-		newver=`$RPM -q --qf '%|SERIAL?{%{SERIAL}:}|%{VERSION}-%{RELEASE}\n' --specfile "$spec" |head -1`
+		newver=`$RPM -q --qf '%|EPOCH?{%{EPOCH}:}|%{VERSION}-%{RELEASE}\n' --specfile "$spec" |head -1`
 		if [ "$oldver" = "$newver" ]; then
 			echo "$PROG: $spec: version \"$oldver\" unchanged, skipping"
 			exitcode=1

@@ -83,7 +83,7 @@ if [ "$p" = '%packager' ]; then
 	exit 1
 fi
 d=`LC_TIME=C date '+%a %b %d %Y'`
-n='%|SERIAL?{%{SERIAL}:}|%{VERSION}-%{RELEASE}'
+n='%|EPOCH?{%{EPOCH}:}|%{VERSION}-%{RELEASE}'
 if [ -n "$FORMAT" ]; then
 	qf="$(echo -n "$FORMAT" |sed -e "s/\$d/$d/g;s/\$p/$p/g;s/\$n/$n/g")"
 else
