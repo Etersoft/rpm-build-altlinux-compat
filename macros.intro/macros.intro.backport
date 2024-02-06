@@ -8,6 +8,7 @@
 # Subsys dir placed in various dirs
 %_locksubsysdir %_var/lock/subsys
 
+%_rpmlibdir %_prefix/lib/rpm
 
 # introduced 23.12.2008 in rpm 4.0.4-alt96.13
 %_rpmmacrosdir    %_rpmlibdir/macros.d
