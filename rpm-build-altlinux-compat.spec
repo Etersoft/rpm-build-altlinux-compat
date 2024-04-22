@@ -1,7 +1,7 @@
 # NOTE: do not use clean_spec or rpmcs for this spec
 
 Name: rpm-build-altlinux-compat
-Version: 2.4.2
+Version: 2.4.3
 Release: alt1
 
 Summary: ALT Linux compatibility and extensions in rpm build
@@ -134,6 +134,10 @@ Command rpmbph from etersoft-build-utils will do it automatically.
 %endif
 
 %changelog
+* Tue Apr 23 2024 Vitaly Lipatov <lav@altlinux.ru> 2.4.3-alt1
+- distr_vendor: update from eepm 3.62.5
+- use sudoers.d for CentOS/RedOS 7 and newer (eterbug #17252)
+
 * Tue Feb 06 2024 Vitaly Lipatov <lav@altlinux.ru> 2.4.2-alt1
 - macros.intro.backport: add _cachedir
 - macros.intro.backport: add _rpmlibdir

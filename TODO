@@ -24,3 +24,5 @@ xorg-x11-proto-devel - X proto header files
 %define rhel4	%(if [ -e %_sysconfdir/redhat-release ] && grep -q "release 4" %_sysconfdir/redhat-release; then echo 1; else echo 0; fi; )
 %define rhel3	%(if [ -e %_sysconfdir/redhat-release ] && grep -q "release 3" %_sysconfdir/redhat-release; then echo 1; else echo 0; fi; )
 %define fc5	%(if [ -e %_sysconfdir/fedora-release ] && grep -q "release 5" %_sysconfdir/fedora-release; then echo 1; else echo 0; fi; )
+
+#clang --version | head -n1 | grep "clang version" | sed -e 's|clang version ||'
