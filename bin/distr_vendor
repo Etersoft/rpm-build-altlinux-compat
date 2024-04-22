@@ -1,172 +1,239 @@
 #!/bin/sh
-# 2007-2022 (c) Vitaly Lipatov <lav@etersoft.ru>
-# 2007-2022 (c) Etersoft
-# 2007-2022 Public domain
+# 2007-2023 (c) Vitaly Lipatov <lav@etersoft.ru>
+# 2007-2023 (c) Etersoft
+# 2007-2023 Public domain
 
 # You can set ROOTDIR to root system dir
 #ROOTDIR=
 
-PROGVERSION="20220323"
+PROGVERSION="20230406"
 
 # TODO: check /etc/system-release
 
 # Check for DISTRO specific file in /etc
 distro()
 {
-	#[ -n "$ROOTDIR" ] || return
-	# fill global DISTROFILE
-	DISTROFILE="$ROOTDIR/etc/$1"
-	[ -f "$DISTROFILE" ]
+    #[ -n "$ROOTDIR" ] || return
+    # fill global DISTROFILE
+    DISTROFILE="$ROOTDIR/etc/$1"
+    [ -f "$DISTROFILE" ]
 }
 
 # Has a distro file the specified word?
 has()
 {
-	[ -n "$DISTROFILE" ] || exit 1
-	grep "$*" "$DISTROFILE" >/dev/null 2>&1
+    [ -n "$DISTROFILE" ] || exit 1
+    grep "$*" "$DISTROFILE" >/dev/null 2>&1
 }
 
-# Has a system the specified command?
-hascommand()
+# copied from epm-sh-functions
+# print a path to the command if exists in $PATH
+if a='' which which 2>/dev/null >/dev/null ; then
+    # the best case if we have which command (other ways needs checking)
+    # TODO: don't use which at all, it is binary, not builtin shell command
+print_command_path()
 {
-	which "$1" 2>/dev/null >/dev/null
+    a='' which -- "$1" 2>/dev/null
 }
+elif a='' type -a type 2>/dev/null >/dev/null ; then
+print_command_path()
+{
+    a='' type -fpP -- "$1" 2>/dev/null
+}
+else
+print_command_path()
+{
+    a='' type "$1" 2>/dev/null | sed -e 's|.* /|/|'
+}
+fi
+
+# check if <arg> is a real command
+is_command()
+{
+    print_command_path "$1" >/dev/null
+}
+##########################3
+
 
 firstupper()
 {
-	echo "$*" | sed 's/.*/\u&/'
+    # FIXME: works with GNU sed only
+    echo "$*" | sed 's/.*/\u&/'
 }
 
 tolower()
 {
-	# tr is broken in busybox (checked with OpenWrt)
-	#echo "$*" | tr "[:upper:]" "[:lower:]"
-	echo "$*" | awk '{print tolower($0)}'
+    # tr is broken in busybox (checked with OpenWrt)
+    #echo "$*" | tr "[:upper:]" "[:lower:]"
+    echo "$*" | awk '{print tolower($0)}'
 }
 
+print_bug_report_url()
+{
+    echo "$BUG_REPORT_URL"
+}
+
+# allows x86_64/Distro/Version
 override_distrib()
 {
-	[ -n "$1" ] || return
-	VENDOR_ID=''
-	DISTRIB_ID="$(echo "$1" | sed -e 's|/.*||')"
-	DISTRIB_RELEASE="$(echo "$1" | sed -e 's|.*/||')"
+    [ -n "$DISTRNAMEOVERRIDE" ] || DISTRNAMEOVERRIDE="$1"
+    [ -n "$DISTRNAMEOVERRIDE" ] || return
+
+    local name="$(echo "$DISTRNAMEOVERRIDE" | sed -e 's|x86_64/||')"
+    [ "$name" = "$DISTRNAMEOVERRIDE" ] && DIST_ARCH="x86" || DIST_ARCH="x86_64"
+    DISTRIB_ID="$(echo "$name" | sed -e 's|/.*||')"
+    DISTRIB_RELEASE="$(echo "$name" | sed -e 's|.*/||')"
+    [ "$DISTRIB_ID" = "$DISTRIB_RELEASE" ] && DISTRIB_RELEASE=''
+
+    VENDOR_ID=''
+    PRETTY_NAME="$DISTRIB_ID"
+    DISTRO_NAME="$DISTRIB_ID"
+    DISTRIB_CODENAME="$DISTRIB_RELEASE"
+    DISTRIB_FULL_RELEASE="$DISTRIB_RELEASE"
+
 }
 
 # Translate DISTRIB_ID to vendor name (like %_vendor does or package release name uses), uses VENDOR_ID by default
 pkgvendor()
 {
-	[ "$DISTRIB_ID" = "ALTLinux" ] && echo "alt" && return
-	[ "$DISTRIB_ID" = "ALTServer" ] && echo "alt" && return
-	[ "$DISTRIB_ID" = "AstraLinux" ] && echo "astra" && return
-	[ "$DISTRIB_ID" = "LinuxXP" ] && echo "lxp" && return
-	[ "$DISTRIB_ID" = "TinyCoreLinux" ] && echo "tcl" && return
-	[ "$DISTRIB_ID" = "VoidLinux" ] && echo "void" && return
-	[ "$DISTRIB_ID" = "OpenSUSE" ] && echo "suse" && return
-	[ "$DISTRIB_ID" = "openSUSETumbleweed" ] && echo "suse" && return
-	[ "$DISTRIB_ID" = "openSUSELeap" ] && echo "suse" && return
-	if [ -n "$VENDOR_ID" ] ; then
-		[ "$VENDOR_ID" = "altlinux" ] && echo "alt" && return
-		echo "$VENDOR_ID"
-		return
-	fi
-	tolower "$DISTRIB_ID"
+    [ "$DISTRIB_ID" = "ALTLinux" ] && echo "alt" && return
+    [ "$DISTRIB_ID" = "ALTServer" ] && echo "alt" && return
+    [ "$DISTRIB_ID" = "MOC" ] && echo "alt" && return
+    [ "$DISTRIB_ID" = "MESh" ] && echo "alt" && return
+    [ "$DISTRIB_ID" = "AstraLinuxSE" ] && echo "astra" && return
+    [ "$DISTRIB_ID" = "AstraLinuxCE" ] && echo "astra" && return
+    [ "$DISTRIB_ID" = "LinuxXP" ] && echo "lxp" && return
+    [ "$DISTRIB_ID" = "TinyCoreLinux" ] && echo "tcl" && return
+    [ "$DISTRIB_ID" = "VoidLinux" ] && echo "void" && return
+    [ "$DISTRIB_ID" = "ManjaroLinux" ] && echo "manjaro" && return
+    [ "$DISTRIB_ID" = "OpenSUSE" ] && echo "suse" && return
+    [ "$DISTRIB_ID" = "openSUSETumbleweed" ] && echo "suse" && return
+    [ "$DISTRIB_ID" = "openSUSELeap" ] && echo "suse" && return
+    if [ -n "$VENDOR_ID" ] ; then
+        [ "$VENDOR_ID" = "altlinux" ] && echo "alt" && return
+        echo "$VENDOR_ID"
+        return
+    fi
+    tolower "$DISTRIB_ID"
 }
 
 # TODO: in more appropriate way
 #which pkcon 2>/dev/null >/dev/null && info "You can run $ PMTYPE=packagekit epm to use packagekit backend"
 
-# Print package manager (need DISTRIB_ID var)
+# Print package manager (need DISTRIB_ID, DISTRIB_RELEASE vars)
 pkgmanager()
 {
 local CMD
+
+case $VENDOR_ID in
+    alt)
+        echo "apt-rpm" && return
+        ;;
+    arch|manjaro)
+        echo "pacman" && return
+        ;;
+    debian)
+        echo "apt-dpkg" && return
+        ;;
+esac
+
 # FIXME: some problems with multibased distros (Server Edition on CentOS and Desktop Edition on Ubuntu)
 case $DISTRIB_ID in
-	ALTLinux|ALTServer)
-		#which ds-install 2>/dev/null >/dev/null && CMD=deepsolver-rpm
-		#which pkcon 2>/dev/null >/dev/null && CMD=packagekit-rpm
-		CMD="apt-rpm"
-		;;
-	ALTServer)
-		CMD="apt-rpm"
-		;;
-	PCLinux)
-		CMD="apt-rpm"
-		;;
-	Ubuntu|Debian|Mint|AstraLinux|Elbrus)
-		CMD="apt-dpkg"
-		#which aptitude 2>/dev/null >/dev/null && CMD=aptitude-dpkg
-		hascommand snappy && CMD=snappy
-		;;
-	Mandriva|ROSA)
-		CMD="urpm-rpm"
-		;;
-	FreeBSD|NetBSD|OpenBSD|Solaris)
-		CMD="pkgsrc"
-		which pkg 2>/dev/null >/dev/null && CMD=pkgng
-		;;
-	Gentoo)
-		CMD="emerge"
-		;;
-	ArchLinux)
-		CMD="pacman"
-		;;
-	Fedora|CentOS|OracleLinux|RockyLinux|AlmaLinux|RHEL|Scientific|GosLinux|Amzn|RedOS)
-		CMD="dnf-rpm"
-		hascommand dnf || CMD=yum-rpm
-		[ "$DISTRIB_ID/$DISTRIB_RELEASE" = "CentOS/7" ] && CMD=yum-rpm
-		;;
-	Slackware)
-		CMD="slackpkg"
-		;;
-	SUSE|SLED|SLES|openSUSETumbleweed|openSUSELeap)
-		CMD="zypper-rpm"
-		;;
-	ForesightLinux|rPathLinux)
-		CMD="conary"
-		;;
-	Windows)
-		CMD="appget"
-		hascommand $CMD || CMD="chocolatey"
-		hascommand $CMD || CMD="winget"
-		;;
-	MacOS)
-		CMD="homebrew"
-		;;
-	OpenWrt)
-		CMD="opkg"
-		;;
-	GNU/Linux/Guix)
-		CMD="guix"
-		;;
-	Android)
-		CMD="android"
-		;;
-	Cygwin)
-		CMD="aptcyg"
-		;;
-	alpine)
-		CMD="apk"
-		;;
-	TinyCoreLinux)
-		CMD="tce"
-		;;
-	VoidLinux)
-		CMD="xbps"
-		;;
-	*)
-		# try detect firstly
-		if hascommand "rpm" ; then
-			hascommand "urpmi" && echo "urpmi-rpm" && return
-			hascommand "zypper" && echo "zypper-rpm" && return
-			hascommand "apt-get" && echo "apt-rpm" && return
-			hascommand "dnf" && echo "dnf-rpm" && return
-		fi
-		if hascommand "dpkg" ; then
-			hascommand "apt" && echo "apt-dpkg" && return
-			hascommand "apt-get" && echo "apt-dpkg" && return
-		fi
-		echo "We don't support yet DISTRIB_ID $DISTRIB_ID" >&2
-		;;
+    PCLinux)
+        CMD="apt-rpm"
+        ;;
+    Ubuntu|Debian|Mint|OSNovaLinux|AstraLinux*|Elbrus)
+        CMD="apt-dpkg"
+        #which aptitude 2>/dev/null >/dev/null && CMD=aptitude-dpkg
+        #is_command snappy && CMD=snappy
+        ;;
+    Solus)
+        CMD="eopkg"
+        ;;
+    Mandriva)
+        CMD="urpm-rpm"
+        ;;
+    ROSA|NAME="OpenMandrivaLx")
+        CMD="urpm-rpm"
+        is_command yum && CMD="yum-rpm"
+        is_command dnf && CMD="dnf-rpm"
+        # use dnf since 2020
+        #[ "$DISTRIB_ID/$DISTRIB_RELEASE" = "ROSA/2020" ] && CMD="urpm-rpm"
+        ;;
+    FreeBSD|NetBSD|OpenBSD|Solaris)
+        CMD="pkgsrc"
+        is_command pkg && CMD=pkgng
+        ;;
+    Gentoo)
+        CMD="emerge"
+        ;;
+    ArchLinux|ManjaroLinux)
+        CMD="pacman"
+        ;;
+    Fedora|CentOS|OracleLinux|RockyLinux|AlmaLinux|RHEL|RELS|Scientific|GosLinux|Amzn|RedOS)
+        CMD="dnf-rpm"
+        is_command dnf || CMD="yum-rpm"
+        [ "$DISTRIB_ID/$DISTRIB_RELEASE" = "CentOS/7" ] && CMD="yum-rpm"
+        ;;
+    Slackware)
+        CMD="slackpkg"
+        ;;
+    SUSE|SLED|SLES|openSUSETumbleweed|openSUSELeap)
+        CMD="zypper-rpm"
+        ;;
+    ForesightLinux|rPathLinux)
+        CMD="conary"
+        ;;
+    Windows)
+        is_command winget && echo "winget" && return
+        is_command appget && CMD="appget"
+        is_command choco && CMD="choco"
+        is_command npackdcl && CMD="npackd"
+        ;;
+    MacOS)
+        CMD="homebrew"
+        ;;
+    OpenWrt)
+        CMD="opkg"
+        ;;
+    GNU/Linux/Guix)
+        CMD="guix"
+        ;;
+    NixOS)
+        CMD="nix"
+        ;;
+    Android)
+        CMD="android"
+        # TODO: CMD="termux-pkg"
+        ;;
+    Cygwin)
+        CMD="aptcyg"
+        ;;
+    AlpineLinux)
+        CMD="apk"
+        ;;
+    TinyCoreLinux)
+        CMD="tce"
+        ;;
+    VoidLinux)
+        CMD="xbps"
+        ;;
+    *)
+        if is_command "rpm" && [ -s /var/lib/rpm/Name ] || [ -s /var/lib/rpm/rpmdb.sqlite ] ; then
+            is_command "apt-get" && [ -d /var/lib/apt ] && echo "apt-rpm" && return
+            is_command "zypper" && echo "zypper-rpm" && return
+            is_command "dnf" && echo "dnf-rpm" && return
+            is_command "yum" && echo "yum-rpm" && return
+            is_command "urpmi" && echo "urpm-rpm" && return
+        fi
+
+        if is_command "dpkg" && [ -s /var/lib/dpkg/status ] ; then
+            is_command "apt" && echo "apt-dpkg" && return
+            is_command "apt-get" && echo "apt-dpkg" && return
+        fi
+
+        echo "pkgmanager(): We don't support yet DISTRIB_ID $DISTRIB_ID (VENDOR_ID $VENDOR_ID)" >&2
+        ;;
 esac
 echo "$CMD"
 }
@@ -174,313 +241,413 @@ echo "$CMD"
 # Print pkgtype (need DISTRIB_ID var)
 pkgtype()
 {
+
+    case $VENDOR_ID in
+        arch|manjaro)
+            echo "pkg.tar.xz" && return
+            ;;
+    esac
+
 # TODO: try use generic names
     case $(pkgvendor) in
-		freebsd) echo "tbz" ;;
-		sunos) echo "pkg.gz" ;;
-		slackware|mopslinux) echo "tgz" ;;
-		archlinux|manjaro) echo "pkg.tar.xz" ;;
-		gentoo) echo "tbz2" ;;
-		windows) echo "exe" ;;
-		android) echo "apk" ;;
-		alpine) echo "apk" ;;
-		tinycorelinux) echo "tcz" ;;
-		voidlinux) echo "xbps" ;;
-		openwrt) echo "ipk" ;;
-		cygwin) echo "tar.xz" ;;
-		*)
-			case $(pkgmanager) in
-				*-dpkg)
-					echo "deb" ;;
-				*-rpm)
-					echo "rpm" ;;
-				*)
-					echo "rpm" ;;
-			esac
-	esac
+        freebsd) echo "tbz" ;;
+        sunos) echo "pkg.gz" ;;
+        slackware|mopslinux) echo "tgz" ;;
+        archlinux|manjaro) echo "pkg.tar.xz" ;;
+        gentoo) echo "tbz2" ;;
+        windows) echo "exe" ;;
+        android) echo "apk" ;;
+        alpine) echo "apk" ;;
+        tinycorelinux) echo "tcz" ;;
+        voidlinux) echo "xbps" ;;
+        openwrt) echo "ipk" ;;
+        cygwin) echo "tar.xz" ;;
+        solus) echo "eopkg" ;;
+        *)
+            case $(pkgmanager) in
+                *-dpkg)
+                    echo "deb" ;;
+                *-rpm)
+                    echo "rpm" ;;
+                *)
+                    echo "" ;;
+            esac
+    esac
 }
 
+print_codename()
+{
+    echo "$DISTRIB_CODENAME"
+}
+
+print_repo_name()
+{
+    echo "$DISTRIB_CODENAME"
+}
 
 get_var()
 {
-	# get first variable and print it out, drop quotes if exists
-	grep -i "^$1 *=" | head -n 1 | sed -e "s/^[^=]*[ \t]*=[ \t]*//" | sed -e "s/^[\'\"]\(.*\)[\'\"]/\1/"
+    # get first variable and print it out, drop quotes if exists
+    grep -i "^$1 *=" | head -n 1 | sed -e "s/^[^=]*[ \t]*=[ \t]*//" | sed -e "s/^[\'\"]\(.*\)[\'\"]/\1/"
 }
 
 # 2010.1 -> 2010
 get_major_version()
 {
-	echo "$1" | sed -e "s/\..*//g"
+    echo "$1" | sed -e "s/\..*//g"
 }
 
 normalize_name()
 {
-	case "$1" in
-		"RED OS")
-			echo "RedOS"
-			;;
-		"CentOS Linux")
-			echo "CentOS"
-			;;
-		"Fedora Linux")
-			echo "Fedora"
-			;;
-		"RedHatEnterpriseLinuxServer")
-			echo "RHEL"
-			;;
-		*)
-			#echo "${1// /}"
-			echo "$1" | sed -e "s/ //g"
-			;;
-	esac
+    case "$1" in
+        "RED OS")
+            echo "RedOS"
+            ;;
+        "Debian GNU/Linux")
+            echo "Debian"
+            ;;
+        "Liya GNU/Linux")
+            echo "LiyaLinux"
+            ;;
+        "CentOS Linux")
+            echo "CentOS"
+            ;;
+        "Fedora Linux")
+            echo "Fedora"
+            ;;
+        "Red Hat Enterprise Linux Server")
+            echo "RHEL"
+            ;;
+        "ROSA Fresh"*|"ROSA Desktop Fresh"*)
+            echo "ROSA"
+            ;;
+        "ROSA Chrome Desktop")
+            echo "ROSA"
+            ;;
+        "MOS Desktop"|"MOS Panel")
+            echo "ROSA"
+            ;;
+        "ROSA Enterprise Linux Desktop")
+            echo "RELS"
+            ;;
+        "ROSA Enterprise Linux Server")
+            echo "RELS"
+            ;;
+        "uos")
+            echo "UOS"
+            ;;
+        *)
+            #echo "${1// /}"
+            #firstupper "$1" | sed -e "s/ //g" -e 's|(.*||'
+            echo "$1" | sed -e "s/ //g" -e 's|(.*||'
+            ;;
+    esac
 }
 
+# 1.2.3.4.5 -> 1
+normalize_version1()
+{
+    echo "$1" | sed -e "s|\..*||"
+}
+
+# 1.2.3.4.5 -> 1.2
+normalize_version2()
+{
+    echo "$1" | sed -e "s|^\([^.][^.]*\.[^.][^.]*\)\..*|\1|"
+}
+
+# 1.2.3.4.5 -> 1.2.3
+normalize_version3()
+{
+    echo "$1" | sed -e "s|^\([^.][^.]*\.[^.][^.]*\.[^.][^.]*\)\..*|\1|"
+}
+
+
+fill_distr_info()
+{
 # Default values
 PRETTY_NAME=""
 DISTRIB_ID=""
 DISTRIB_RELEASE=""
+DISTRIB_FULL_RELEASE=""
+DISTRIB_RELEASE_ORIG=""
 DISTRIB_CODENAME=""
+BUG_REPORT_URL=""
+BUILD_ID=""
 
-# Next default by /etc/os-release
+# Default detection by /etc/os-release
 # https://www.freedesktop.org/software/systemd/man/os-release.html
 if distro os-release ; then
-	# shellcheck disable=SC1090
-	. $DISTROFILE
-	DISTRIB_ID="$(normalize_name "$NAME")"
-#	DISTRIB_ID="$(firstupper "$ID")"
-	DISTRIB_RELEASE="$VERSION_ID"
-	[ -n "$DISTRIB_RELEASE" ] || DISTRIB_RELEASE="CUR"
-	# set by os-release:
-	#PRETTY_NAME
-	VENDOR_ID="$ID"
-	DISTRIB_FULL_RELEASE=$DISTRIB_RELEASE
-	DISTRIB_RELEASE=$(echo $DISTRIB_RELEASE | sed -e "s/\.[0-9]$//g")
+    # shellcheck disable=SC1090
+    . $DISTROFILE
+    DISTRO_NAME="$NAME"
+    DISTRIB_ID="$(normalize_name "$NAME")"
+    DISTRIB_RELEASE_ORIG="$VERSION_ID"
+    DISTRIB_RELEASE="$VERSION_ID"
+    [ -n "$DISTRIB_RELEASE" ] || DISTRIB_RELEASE="CUR"
+    [ "$BUILD_ID" = "rolling" ] && DISTRIB_RELEASE="rolling"
+    [ -n "$BUG_REPORT_URL" ] || BUG_REPORT_URL="$HOME_URL"
+    # set by os-release:
+    #PRETTY_NAME
+    VENDOR_ID="$ID"
+    case "$VENDOR_ID" in
+        ubuntu|reld|rhel|astra|manjaro|redos)
+            ;;
+        *)
+            # ID_LIKE can be 'rhel centos fedora', use latest word
+            [ -n "$ID_LIKE" ] && VENDOR_ID="$(echo "$ID_LIKE" | xargs -n1 | tail -n1)"
+            ;;
+    esac
+    DISTRIB_FULL_RELEASE="$DISTRIB_RELEASE"
+    DISTRIB_CODENAME="$VERSION_CODENAME"
+
 elif distro lsb-release ; then
-	DISTRIB_ID=$(cat $DISTROFILE | get_var DISTRIB_ID)
-	DISTRIB_RELEASE=$(cat $DISTROFILE | get_var DISTRIB_RELEASE)
-	DISTRIB_CODENAME=$(cat $DISTROFILE | get_var DISTRIB_CODENAME)
-	PRETTY_NAME=$(cat $DISTROFILE | get_var DISTRIB_DESCRIPTION)
+    DISTRIB_ID=$(cat $DISTROFILE | get_var DISTRIB_ID)
+    DISTRO_NAME=$(cat $DISTROFILE | get_var DISTRIB_ID)
+    DISTRIB_RELEASE="$(cat $DISTROFILE | get_var DISTRIB_RELEASE)"
+    DISTRIB_RELEASE_ORIG="$DISTRIB_RELEASE"
+    DISTRIB_FULL_RELEASE="$DISTRIB_RELEASE"
+    DISTRIB_CODENAME=$(cat $DISTROFILE | get_var DISTRIB_CODENAME)
+    PRETTY_NAME=$(cat $DISTROFILE | get_var DISTRIB_DESCRIPTION)
 fi
+
+DISTRIB_RELEASE=$(normalize_version2 "$DISTRIB_RELEASE")
+[ -n "$DISTRIB_CODENAME" ] || DISTRIB_CODENAME=$DISTRIB_RELEASE
+
+case "$VENDOR_ID" in
+    "alt"|"altlinux")
+        # 2.4.5.99 -> 2
+        DISTRIB_RELEASE=$(normalize_version1 "$DISTRIB_RELEASE_ORIG")
+        case "$DISTRIB_ID" in
+            "ALTServer"|"ALTSPWorkstation"|"Sisyphus")
+                ;;
+            *)
+                DISTRIB_ID="ALTLinux"
+                ;;
+        esac
+        ;;
+    "astra")
+        DISTRIB_RELEASE=$(normalize_version2 "$DISTRIB_RELEASE_ORIG" | sed -e 's|_.*||')
+        DISTRIB_FULL_RELEASE=$(normalize_version3 "$DISTRIB_RELEASE_ORIG" | sed -e 's|_.*||')
+        if [ "$VARIANT" = "orel" ] || [ "$VARIANT" = "Orel" ] ; then
+            DISTRIB_ID="AstraLinuxCE"
+        else
+            DISTRIB_ID="AstraLinuxSE"
+        fi
+        if [ "$DISTRIB_ID" = "AstraLinuxSE" ] ; then
+            local fr="$(cat /etc/astra_version 2>/dev/null)"
+            [ -n "$fr" ] && echo "$fr" | grep -q "$DISTRIB_RELEASE" && DISTRIB_FULL_RELEASE="$fr"
+        fi
+        ;;
+    "fedora")
+        DISTRIB_ID="Fedora"
+        ;;
+esac
+
+case "$DISTRIB_ID" in
+    "ALTLinux")
+        echo "$VERSION" | grep -q "c9.* branch" && DISTRIB_RELEASE="c9"
+        echo "$VERSION" | grep -q "c9f1 branch" && DISTRIB_RELEASE="c9f1"
+        echo "$VERSION" | grep -q "c9f2 branch" && DISTRIB_RELEASE="c9f2"
+        echo "$VERSION" | grep -q "c9f3 branch" && DISTRIB_RELEASE="c9f3"
+        DISTRIB_CODENAME="$DISTRIB_RELEASE"
+        # FIXME: fast hack for fallback: 10.1 -> p10 for /etc/os-release
+        if echo "$DISTRIB_RELEASE" | grep -q "^0" ; then
+            DISTRIB_RELEASE="Sisyphus"
+            DISTRIB_CODENAME="$DISTRIB_RELEASE"
+        elif echo "$DISTRIB_RELEASE" | grep -q "^[0-9]" && echo "$DISTRIB_RELEASE" | grep -q -v "[0-9][0-9][0-9]"  ; then
+            DISTRIB_CODENAME="$(echo p$DISTRIB_RELEASE | sed -e 's|\..*||')"
+            # TODO: change p10 to 10
+            DISTRIB_RELEASE="$DISTRIB_CODENAME"
+        fi
+        ;;
+    "ALTServer")
+        DISTRIB_ID="ALTLinux"
+        DISTRIB_CODENAME="$(echo p$DISTRIB_RELEASE | sed -e 's|\..*||')"
+        # TODO: change p10 to 10
+        DISTRIB_RELEASE="$DISTRIB_CODENAME"
+        ;;
+    "ALTSPWorkstation")
+        DISTRIB_ID="ALTLinux"
+        case "$DISTRIB_RELEASE_ORIG" in
+            8.0|8.1)
+                ;;
+            8.2|8.3)
+                DISTRIB_RELEASE="c9f1"
+            ;;
+            8.4)
+                DISTRIB_RELEASE="c9f2"
+            ;;
+            8.*)
+                DISTRIB_RELEASE="c9f3"
+            ;;
+        esac
+        [ -n "$ALT_BRANCH_ID" ] && DISTRIB_RELEASE="$ALT_BRANCH_ID"
+        DISTRIB_CODENAME="$DISTRIB_RELEASE"
+#        DISTRIB_RELEASE=$(echo $DISTRIB_RELEASE | sed -e "s/\..*//g")
+        ;;
+    "Sisyphus")
+        DISTRIB_ID="ALTLinux"
+        DISTRIB_RELEASE="Sisyphus"
+        DISTRIB_CODENAME="$DISTRIB_RELEASE"
+        ;;
+    "ROSA"|"MOSDesktop"|"MOSPanel")
+        DISTRIB_FULL_RELEASE="$DISTRIB_CODENAME"
+        DISTRIB_CODENAME="$DISTRIB_RELEASE"
+        ;;
+    "OpenMandrivaLx")
+        echo "$PRETTY_NAME" | grep -q "Cooker" && DISTRIB_RELEASE="Cooker"
+        echo "$PRETTY_NAME" | grep -q "Rolling" && DISTRIB_RELEASE="Rolling"
+        ;;
+esac
+
+
+[ -n "$DISTRIB_ID" ] && [ -n "$DISTRIB_RELEASE" ] && return
+
+
+# check via obsoleted ways
 
 # ALT Linux based
 if distro altlinux-release ; then
-	DISTRIB_ID="ALTLinux"
-	# FIXME: fast hack for fallback: 10 -> p10 for /etc/os-release
-	DISTRIB_RELEASE="$(echo p$DISTRIB_RELEASE | sed -e 's|\..*||' -e 's|^pp|p|')"
-	if has Sisyphus ; then DISTRIB_RELEASE="Sisyphus"
-	elif has "ALT p10.* p10 " ; then DISTRIB_RELEASE="p10"
-	elif has "ALTServer 10." ; then DISTRIB_RELEASE="p10"
-	elif has "ALTServer 9." ; then DISTRIB_RELEASE="p9"
-	elif has "ALT c10.* c10 " ; then DISTRIB_RELEASE="c10"
-	elif has "ALT p9.* p9 " ; then DISTRIB_RELEASE="p9"
-	elif has "ALT 9 SP " ; then DISTRIB_RELEASE="c9"
-	elif has "ALT c9f1" ; then DISTRIB_RELEASE="c9f1"
-	elif has "ALT MED72 " ; then DISTRIB_RELEASE="p8"
-	elif has "ALT 8 SP " ; then DISTRIB_RELEASE="c8"
-	elif has "ALT c8.2 " ; then DISTRIB_RELEASE="c8.2"
-	elif has "ALT c8.1 " ; then DISTRIB_RELEASE="c8.1"
-	elif has "ALT c8 " ; then DISTRIB_RELEASE="c8"
-	elif has "ALT .*8.[0-9]" ; then DISTRIB_RELEASE="p8"
-	elif has "Simply Linux 10." ; then DISTRIB_RELEASE="p10"
-	elif has "Simply Linux 9." ; then DISTRIB_RELEASE="p9"
-	elif has "Simply Linux 8." ; then DISTRIB_RELEASE="p8"
-	elif has "Simply Linux 7." ; then DISTRIB_RELEASE="p7"
-	elif has "Simply Linux 6." ; then DISTRIB_RELEASE="p6"
-	elif has "ALT Linux p8"  ; then DISTRIB_RELEASE="p8"
-	elif has "ALT Linux 8." ; then DISTRIB_RELEASE="p8"
-	elif has "ALT Linux p7"  ; then DISTRIB_RELEASE="p7"
-	elif has "ALT Linux 7." ; then DISTRIB_RELEASE="p7"
-	elif has "ALT Linux t7." ; then DISTRIB_RELEASE="t7"
-	elif has "ALT Linux 6." ; then DISTRIB_RELEASE="p6"
-	elif has "ALT Linux p6"  ; then DISTRIB_RELEASE="p6"
-	elif has "ALT Linux p5"  ; then DISTRIB_RELEASE="p5"
-	elif has "ALT Linux 5.1" ; then DISTRIB_RELEASE="5.1"
-	elif has "ALT Linux 5.0" ; then DISTRIB_RELEASE="5.0"
-	elif has "ALT Linux 4.1" ; then DISTRIB_RELEASE="4.1"
-	elif has "ALT Linux 4.0" ; then DISTRIB_RELEASE="4.0"
-	elif has "starter kit"   ; then DISTRIB_RELEASE="Sisyphus"
-	elif has Citron   ; then DISTRIB_RELEASE="2.4"
-	fi
-	PRETTY_NAME="$(cat /etc/altlinux-release)"
+    DISTRIB_ID="ALTLinux"
+    # FIXME: fast hack for fallback: 10 -> p10 for /etc/os-release
+    DISTRIB_RELEASE="$(echo p$DISTRIB_RELEASE | sed -e 's|\..*||' -e 's|^pp|p|')"
+    if has Sisyphus ; then DISTRIB_RELEASE="Sisyphus"
+    elif has "ALT p10.* p10 " ; then DISTRIB_RELEASE="p10"
+    elif has "ALTServer 10." ; then DISTRIB_RELEASE="p10"
+    elif has "ALTServer 9." ; then DISTRIB_RELEASE="p9"
+    elif has "ALT c10.* c10 " ; then DISTRIB_RELEASE="c10"
+    elif has "ALT p9.* p9 " ; then DISTRIB_RELEASE="p9"
+    elif has "ALT 9 SP " ; then DISTRIB_RELEASE="c9"
+    elif has "ALT c9f1" ; then DISTRIB_RELEASE="c9f1"
+    elif has "ALT MED72 " ; then DISTRIB_RELEASE="p8"
+    elif has "ALT 8 SP " ; then DISTRIB_RELEASE="c8"
+    elif has "ALT c8.2 " ; then DISTRIB_RELEASE="c8.2"
+    elif has "ALT c8.1 " ; then DISTRIB_RELEASE="c8.1"
+    elif has "ALT c8 " ; then DISTRIB_RELEASE="c8"
+    elif has "ALT .*8.[0-9]" ; then DISTRIB_RELEASE="p8"
+    elif has "Simply Linux 10." ; then DISTRIB_RELEASE="p10"
+    elif has "Simply Linux 9." ; then DISTRIB_RELEASE="p9"
+    elif has "Simply Linux 8." ; then DISTRIB_RELEASE="p8"
+    elif has "Simply Linux 7." ; then DISTRIB_RELEASE="p7"
+    elif has "Simply Linux 6." ; then DISTRIB_RELEASE="p6"
+    elif has "ALT Linux p8"  ; then DISTRIB_RELEASE="p8"
+    elif has "ALT Linux 8." ; then DISTRIB_RELEASE="p8"
+    elif has "ALT Linux p7"  ; then DISTRIB_RELEASE="p7"
+    elif has "ALT Linux 7." ; then DISTRIB_RELEASE="p7"
+    elif has "ALT Linux t7." ; then DISTRIB_RELEASE="t7"
+    elif has "ALT Linux 6." ; then DISTRIB_RELEASE="p6"
+    elif has "ALT Linux p6"  ; then DISTRIB_RELEASE="p6"
+    elif has "ALT Linux p5"  ; then DISTRIB_RELEASE="p5"
+    elif has "ALT Linux 5.1" ; then DISTRIB_RELEASE="5.1"
+    elif has "ALT Linux 5.0" ; then DISTRIB_RELEASE="5.0"
+    elif has "ALT Linux 4.1" ; then DISTRIB_RELEASE="4.1"
+    elif has "ALT Linux 4.0" ; then DISTRIB_RELEASE="4.0"
+    elif has "starter kit"   ; then DISTRIB_RELEASE="Sisyphus"
+    elif has Citron   ; then DISTRIB_RELEASE="2.4"
+    fi
+    PRETTY_NAME="$(cat /etc/altlinux-release)"
+    DISTRIB_CODENAME="$DISTRIB_RELEASE"
+    DISTRO_NAME="$DISTRIB_ID"
+    DISTRIB_FULL_RELEASE="$DISTRIB_RELEASE"
 
 elif distro gentoo-release ; then
-	DISTRIB_ID="Gentoo"
-	MAKEPROFILE=$(readlink $ROOTDIR/etc/portage/make.profile 2>/dev/null) || MAKEPROFILE=$(readlink $ROOTDIR/etc/make.profile)
-	DISTRIB_RELEASE=$(basename $MAKEPROFILE)
-	echo $DISTRIB_RELEASE | grep -q "[0-9]" || DISTRIB_RELEASE=$(basename "$(dirname $MAKEPROFILE)") #"
-
-elif [ "$DISTRIB_ID" = "ALTServer" ] ; then
-	DISTRIB_RELEASE=$(echo $DISTRIB_RELEASE | sed -e "s/\..*//g")
-
-elif [ "$DISTRIB_ID" = "ALTSPWorkstation" ] ; then
-	DISTRIB_ID="ALTLinux"
-	case "$DISTRIB_RELEASE" in
-		8.0|8.1)
-			;;
-		8.*)
-			DISTRIB_RELEASE="c9"
-			;;
-	esac
-	DISTRIB_RELEASE=$(echo $DISTRIB_RELEASE | sed -e "s/\..*//g")
+    DISTRIB_ID="Gentoo"
+    MAKEPROFILE=$(readlink $ROOTDIR/etc/portage/make.profile 2>/dev/null) || MAKEPROFILE=$(readlink $ROOTDIR/etc/make.profile)
+    DISTRIB_RELEASE=$(basename $MAKEPROFILE)
+    echo $DISTRIB_RELEASE | grep -q "[0-9]" || DISTRIB_RELEASE=$(basename "$(dirname $MAKEPROFILE)") #"
 
 elif distro slackware-version ; then
-	DISTRIB_ID="Slackware"
-	DISTRIB_RELEASE="$(grep -Eo '[0-9]+\.[0-9]+' $DISTROFILE)"
+    DISTRIB_ID="Slackware"
+    DISTRIB_RELEASE="$(grep -Eo '[0-9]+\.[0-9]+' $DISTROFILE)"
 
-elif distro os-release && hascommand apk ; then
-	# shellcheck disable=SC1090
-	. $ROOTDIR/etc/os-release
-	DISTRIB_ID="$(firstupper "$ID")"
-	DISTRIB_RELEASE="$VERSION_ID"
+elif distro os-release && is_command tce-ab ; then
+    # shellcheck disable=SC1090
+    . $ROOTDIR/etc/os-release
+    DISTRIB_ID="TinyCoreLinux"
+    DISTRIB_RELEASE="$VERSION_ID"
 
-elif distro os-release && hascommand tce-ab ; then
-	# shellcheck disable=SC1090
-	. $ROOTDIR/etc/os-release
-	DISTRIB_ID="TinyCoreLinux"
-	DISTRIB_RELEASE="$VERSION_ID"
-
-elif distro os-release && hascommand xbps-query ; then
-	# shellcheck disable=SC1090
-	. $ROOTDIR/etc/os-release
-	DISTRIB_ID="VoidLinux"
-	DISTRIB_RELEASE="Live"
+elif distro os-release && is_command xbps-query ; then
+    # shellcheck disable=SC1090
+    . $ROOTDIR/etc/os-release
+    DISTRIB_ID="VoidLinux"
+    DISTRIB_RELEASE="Live"
 
 # TODO: use standart /etc/os-release or lsb
 elif distro arch-release ; then
-	DISTRIB_ID="ArchLinux"
-	DISTRIB_RELEASE="rolling"
+    DISTRIB_ID="ArchLinux"
+    DISTRIB_RELEASE="rolling"
 
 # Elbrus
 elif distro mcst_version ; then
-	DISTRIB_ID="MCST"
-	DISTRIB_RELEASE=$(cat "$DISTROFILE" | grep "release" | sed -e "s|.*release \([0-9]*\).*|\1|g") #"
+    DISTRIB_ID="MCST"
+    DISTRIB_RELEASE=$(cat "$DISTROFILE" | grep "release" | sed -e "s|.*release \([0-9]*\).*|\1|g") #"
 
 # OpenWrt
 elif distro openwrt_release ; then
-	. $DISTROFILE
-	DISTRIB_RELEASE=$(cat $ROOTDIR/etc/openwrt_version)
-
-# for Ubuntu use standard LSB info
-elif [ "$DISTRIB_ID" = "Ubuntu" ] && [ -n "$DISTRIB_RELEASE" ]; then
-	# use LSB version
-	true
-
-elif distro astra_version ; then
-	# use OS release
-	DISTRIB_ID="$(echo "$DISTRIB_ID" | sed -e 's|(.*||')"
-	DISTRIB_RELEASE="$VERSION_CODENAME"
-	true
+    . $DISTROFILE
+    DISTRIB_RELEASE=$(cat $ROOTDIR/etc/openwrt_version)
 
 # Debian based
 elif distro debian_version ; then
-	DISTRIB_ID="Debian"
-	DISTRIB_RELEASE=$(cat $DISTROFILE | sed -e "s/\..*//g")
+    DISTRIB_ID="Debian"
+    DISTRIB_RELEASE=$(cat $DISTROFILE | sed -e "s/\..*//g")
 
-
-# Mandriva based
-elif distro pclinuxos-release ; then
-	DISTRIB_ID="PCLinux"
-	if   has "2007" ; then DISTRIB_RELEASE="2007"
-	elif has "2008" ; then DISTRIB_RELEASE="2008"
-	elif has "2010" ; then DISTRIB_RELEASE="2010"
-	fi
-
-elif distro mandriva-release || distro mandrake-release ; then
-	DISTRIB_ID="Mandriva"
-	if   has 2005 ; then DISTRIB_RELEASE="2005"
-	elif has 2006 ; then DISTRIB_RELEASE="2006"
-	elif has 2007 ; then DISTRIB_RELEASE="2007"
-	elif has 2008 ; then DISTRIB_RELEASE="2008"
-	elif has 2009.0 ; then DISTRIB_RELEASE="2009.0"
-	elif has 2009.1 ; then DISTRIB_RELEASE="2009.1"
-	else
-		# use /etc/lsb-release info by default
-		if has ROSA ; then
-			DISTRIB_ID="ROSA"
-		fi
-	fi
-
-# Fedora based
-
-elif distro MCBC-release ; then
-	DISTRIB_ID="MCBC"
-	if   has 3.0 ; then DISTRIB_RELEASE="3.0"
-	elif has 3.1 ; then DISTRIB_RELEASE="3.1"
-	fi
-
-# TODO: drop in favour of /etc/os-release
-elif distro redhat-release && [ -z "$PRETTY_NAME" ] ; then
-	# FIXME if need
-	# actually in the original RHEL: Red Hat Enterprise Linux .. release N
-	DISTRIB_ID="RHEL"
-	if has CentOS ; then
-		DISTRIB_ID="CentOS"
-	elif has Scientific ; then
-		DISTRIB_ID="Scientific"
-	elif has GosLinux ; then
-		DISTRIB_ID="GosLinux"
-	fi
-	if has Beryllium ; then
-		DISTRIB_ID="Scientific"
-		DISTRIB_RELEASE="4.1"
-	elif has "release 4" ; then DISTRIB_RELEASE="4"
-	elif has "release 5" ; then DISTRIB_RELEASE="5"
-	elif has "release 6" ; then DISTRIB_RELEASE="6"
-	elif has "release 7" ; then DISTRIB_RELEASE="7"
-	elif has "release 8" ; then DISTRIB_RELEASE="8"
-	fi
 
 # SUSE based
 elif distro SuSe-release || distro SuSE-release ; then
-	DISTRIB_ID="SUSE"
-	DISTRIB_RELEASE=$(cat "$DISTROFILE" | grep "VERSION" | sed -e "s|^VERSION = ||g")
-	if   has "SUSE Linux Enterprise Desktop" ; then
-		DISTRIB_ID="SLED"
-	elif has "SUSE Linux Enterprise Server" ; then
-		DISTRIB_ID="SLES"
-	fi
+    DISTRIB_ID="SUSE"
+    DISTRIB_RELEASE=$(cat "$DISTROFILE" | grep "VERSION" | sed -e "s|^VERSION = ||g")
+    if   has "SUSE Linux Enterprise Desktop" ; then
+        DISTRIB_ID="SLED"
+    elif has "SUSE Linux Enterprise Server" ; then
+        DISTRIB_ID="SLES"
+    fi
 
 # fixme: can we detect by some file?
 elif [ "$(uname)" = "FreeBSD" ] ; then
-	DISTRIB_ID="FreeBSD"
-	UNAME=$(uname -r)
-	DISTRIB_RELEASE=$(echo "$UNAME" | grep RELEASE | sed -e "s|\([0-9]\.[0-9]\)-RELEASE|\1|g") #"
+    DISTRIB_ID="FreeBSD"
+    UNAME=$(uname -r)
+    DISTRIB_RELEASE=$(echo "$UNAME" | grep RELEASE | sed -e "s|\([0-9]\.[0-9]\)-RELEASE|\1|g") #"
 
 # fixme: can we detect by some file?
 elif [ "$(uname)" = "SunOS" ] ; then
-	DISTRIB_ID="SunOS"
-	DISTRIB_RELEASE=$(uname -r)
+    DISTRIB_ID="SunOS"
+    DISTRIB_RELEASE=$(uname -r)
 
 # fixme: can we detect by some file?
 elif [ "$(uname -s 2>/dev/null)" = "Darwin" ] ; then
-	DISTRIB_ID="MacOS"
-	DISTRIB_RELEASE=$(uname -r)
+    DISTRIB_ID="MacOS"
+    DISTRIB_RELEASE=$(uname -r)
 
 # fixme: move to up
-elif [ "$(uname)" = "Linux" ] && hascommand guix ; then
-	DISTRIB_ID="GNU/Linux/Guix"
-	DISTRIB_RELEASE=$(uname -r)
+elif [ "$(uname)" = "Linux" ] && is_command guix ; then
+    DISTRIB_ID="GNU/Linux/Guix"
+    DISTRIB_RELEASE=$(uname -r)
 
 # fixme: move to up
 elif [ "$(uname)" = "Linux" ] && [ -x $ROOTDIR/system/bin/getprop ] ; then
-	DISTRIB_ID="Android"
-	DISTRIB_RELEASE=$(getprop | awk -F": " '/build.version.release/ { print $2 }' | tr -d '[]')
+    DISTRIB_ID="Android"
+    DISTRIB_RELEASE=$(getprop | awk -F": " '/system.build.version.release\]/ { print $2 }' | tr -d '[]' | head -n1)
+    [ -n "$DISTRIB_RELEASE" ] || DISTRIB_RELEASE=$(getprop | awk -F": " '/build.version.release/ { print $2 }' | tr -d '[]' | head -n1)
 
 elif [ "$(uname -o 2>/dev/null)" = "Cygwin" ] ; then
         DISTRIB_ID="Cygwin"
         DISTRIB_RELEASE="all"
 fi
 
-[ -n "$DISTRIB_ID" ] || DISTRIB_ID="Generic"
-
-if [ -z "$PRETTY_NAME" ] ; then
-	PRETTY_NAME="$DISTRIB_ID $DISTRIB_RELEASE"
-fi
-
+}
 
 get_uname()
 {
-    tolower $(uname $1) | tr -d " \t\r\n"
+    tolower "$(uname $1)" | tr -d " \t\r\n"
+}
+
+get_glibc_version()
+{
+    for i in /lib/x86_64-linux-gnu /lib64 /lib/i386-linux-gnu /lib ; do
+        [ -x "$ROOTDIR$i/libc.so.6" ] && $ROOTDIR$i/libc.so.6 | head -n1 | grep "version" | sed -e 's|.*version ||' -e 's|\.$||' && return
+    done
 }
 
 get_base_os_name()
@@ -511,7 +678,7 @@ echo "$DIST_OS"
 
 get_arch()
 {
-local DIST_ARCH
+[ -n "$DIST_ARCH" ] && return 0
 # Resolve the architecture
 DIST_ARCH="$(get_uname -m)"
 case "$DIST_ARCH" in
@@ -545,7 +712,7 @@ case "$DIST_ARCH" in
     armv7*)
         # TODO: use uname only
         # uses binutils package
-        if which readelf >/dev/null 2>/dev/null && [ -z "$(readelf -A /proc/self/exe | grep Tag_ABI_VFP_args)" ] ; then
+        if is_command readelf && [ -z "$(readelf -A /proc/self/exe | grep Tag_ABI_VFP_args)" ] ; then
             DIST_ARCH="armel"
         else
             DIST_ARCH="armhf"
@@ -594,7 +761,7 @@ local DIST_BIT
 DIST_BIT="$(getconf LONG_BIT 2>/dev/null)"
 if [ -n "$DIST_BIT" ] ; then
     echo "$DIST_BIT"
-    exit
+    return
 fi
 
 # Try detect arch size by arch name
@@ -640,7 +807,7 @@ get_memory_size()
             [ -r /proc/meminfo ] && detected=$((`cat /proc/meminfo | grep MemTotal | awk '{print $2}'`/1024))
             ;;
         solaris)
-            detected=$(prtconf | grep Memory | sed -e "s|Memory size: \([0-9][0-9]*\) Megabyte.*|\1|")
+            detected=$(prtconf | grep Memory | sed -e "s|Memory size: \([0-9][0-9]*\) Megabyte.*|\1|") #"
             ;;
 #        *)
 #            fatal "Unsupported OS $DIST_OS"
@@ -661,16 +828,16 @@ get_core_count()
     local DIST_OS="$(get_base_os_name)"
     case "$DIST_OS" in
         macos|freebsd)
-            detected=$(sysctl hw.ncpu | awk '{print $2}')
+            detected=$(a= sysctl hw.ncpu | awk '{print $2}')
             ;;
         linux)
             detected=$(grep -c "^processor" /proc/cpuinfo)
             ;;
         solaris)
-            detected=$(prtconf | grep -c 'cpu[^s]')
+            detected=$(a= prtconf | grep -c 'cpu[^s]')
             ;;
         aix)
-            detected=$(lsdev -Cc processor -S A | wc -l)
+            detected=$(a= lsdev -Cc processor -S A | wc -l)
             ;;
 #        *)
 #            fatal "Unsupported OS $DIST_OS"
@@ -689,10 +856,8 @@ get_core_mhz()
 get_virt()
 {
     local VIRT
-    local SDCMD
-    SDCMD=$(which systemd-detect-virt 2>/dev/null)
-    if [ -n "$SDCMD" ] ; then
-        VIRT="$($SDCMD)"
+    if is_command systemd-detect-virt ; then
+        VIRT="$(systemd-detect-virt)"
         [ "$VIRT" = "none" ] && echo "(host system)" && return
         [ -z "$VIRT" ] && echo "(unknown)" && return
         echo "$VIRT" && return
@@ -709,12 +874,20 @@ get_virt()
         echo "xen" && return
     fi
 
-    if lscpu | grep "Hypervisor vendor:" | grep -q "KVM" ; then
+    # use util-linux
+    if LC_ALL=C a= lscpu 2>/dev/null | grep "Hypervisor vendor:" | grep -q "KVM" ; then
         echo "kvm" && return
     fi
 
     echo "(unknown)"
     # TODO: check for openvz
+}
+
+get_init_process_name()
+{
+    [ ! -f /proc/1/comm ] && echo "(unknown)" && return 1
+    cat /proc/1/comm | head -n1
+    #ps --no-headers -o comm 1
 }
 
 # https://unix.stackexchange.com/questions/196166/how-to-find-out-if-a-system-uses-sysv-upstart-or-systemd-initsystem
@@ -723,129 +896,247 @@ get_service_manager()
     [ -d /run/systemd/system ] && echo "systemd" && return
     # TODO
     #[ -d /usr/share/upstart ] && echo "upstart" && return
+    is_command systemctl && [ "$(get_init_process_name)" = 'systemd' ] && echo "systemd" && return
     [ -d /etc/init.d ] && echo "sysvinit" && return
-    echo "(unknown)"
+    get_init_process_name
+}
+
+filter_duplicated_words()
+{
+    echo "$*" | xargs -n1 echo | uniq | xargs -n100 echo
 }
 
 print_pretty_name()
 {
-    echo "$PRETTY_NAME"
+    if [ -z "$PRETTY_NAME" ] ; then
+        PRETTY_NAME="$DISTRIB_ID $DISTRIB_RELEASE"
+    fi
+
+    if ! echo "$PRETTY_NAME" | grep -q "$DISTRIB_FULL_RELEASE" ; then
+        PRETTY_NAME="$PRETTY_NAME ($DISTRIB_FULL_RELEASE)"
+    fi
+
+    if ! echo "$PRETTY_NAME" | grep -q "$DISTRIB_RELEASE" ; then
+        PRETTY_NAME="$PRETTY_NAME ($DISTRIB_RELEASE)"
+    fi
+
+    echo "$(filter_duplicated_words "$PRETTY_NAME")"
 }
 
 print_total_info()
 {
+local orig=''
+[ -n "$BUILD_ID" ] && [ "$DISTRIB_FULL_RELEASE" != "$BUILD_ID" ] && orig=" (orig. $BUILD_ID)"
+local EV=''
+[ -n "$EPMVERSION" ] && EV="(EPM version $EPMVERSION) "
 cat <<EOF
-distro_info v$PROGVERSION : Copyright © 2007-2022 Etersoft
-Total system information:
-    Pretty distro name (--pretty): $(print_pretty_name)
-     Distro name and version (-e): $(print_name_version)
-     Package manager/type (-g/-p): $(pkgmanager) / $(pkgtype)
-     Running service manager (-y): $(get_service_manager)
-              Virtualization (-i): $(get_virt)
-            CPU Cores/MHz (-c/-z): $(get_core_count) / $(get_core_mhz) MHz
-            CPU Architecture (-a): $(get_arch)
-     CPU norm register size  (-b): $(get_bit_size)
-     System memory size (MB) (-m): $(get_memory_size)
-                Base OS name (-o): $(get_base_os_name)
-Base distro (vendor) name (-s|-n): $(pkgvendor)
+distro_info v$PROGVERSION $EV: Copyright © 2007-2024 Etersoft
+
+                       Pretty name (--pretty): $(print_pretty_name)
+           (--distro-name / --distro-version): $DISTRO_NAME / $DISTRIB_FULL_RELEASE$orig
+         Base distro name (-d) / version (-v): $(print_name_version)
+     Vendor distro name (-s) / Repo name (-r): $(pkgvendor) / $(print_repo_name)
+                 Package manager/type (-g/-p): $(pkgmanager) / $(pkgtype)
+            Base OS name (-o) / CPU arch (-a): $(get_base_os_name) $(get_arch)
+                 CPU norm register size  (-b): $(get_bit_size) bit
+                          Virtualization (-i): $(get_virt)
+                        CPU Cores/MHz (-c/-z): $(get_core_count) / $(get_core_mhz) MHz
+                      System memory size (-m): $(get_memory_size) MiB
+                 Running service manager (-y): $(get_service_manager)
+            Bug report URL (--bug-report-url): $(print_bug_report_url)
 
 (run with -h to get help)
 EOF
 }
 
+print_help()
+{
+    echo "distro_info v$PROGVERSION - distro information retriever"
+    echo "Usage: distro_info [options] [SystemName/Version]"
+    echo "Options:"
+    echo " -h | --help            - this help"
+    echo " -a                     - print hardware architecture (use --distro-arch for distro depended arch name)"
+    echo " -b                     - print size of arch bit (32/64)"
+    echo " -c                     - print number of CPU cores"
+    echo " -i                     - print virtualization type"
+    echo " -m                     - print system memory size (in MB)"
+    echo " -y|--service-manager   - print running service manager"
+    echo " -z                     - print current CPU MHz"
+    echo " --glibc-version        - print system glibc version"
+    echo
+    echo " -d|--base-distro-name  - print distro id (short distro name)"
+    echo " -e                     - print full name of distro with version"
+    echo " -o | --os-name         - print base OS name"
+    echo " -p | --package-type    - print type of the packaging system (f.i., apt-dpkg)"
+    echo " -g                     - print name of the packaging system (f.i., deb)"
+    echo " -s|-n|--vendor-name    - print name of the distro family (vendor name) (ubuntu for all Ubuntu family, alt for all ALT family) (see _vendor macros in rpm)"
+    echo " --pretty|--pretty-name - print pretty distro name"
+    echo " -v | --base-version    - print version of the distro"
+    echo " --distro-name          - print distro name"
+    echo " --distro-version       - print full version of the distro"
+    echo " --full-version         - print full version of the distro"
+    echo " --codename (obsoleted) - print distro codename (focal for Ubuntu 20.04)"
+    echo " -r|--repo-name         - print repository name (focal for Ubuntu 20.04)"
+    echo " --build-id             - print a string uniquely identifying the system image originally used as the installation base"
+    echo " -V                     - print the utility version"
+    echo "Run without args to print all information."
+}
 
-case $1 in
-	-h|--help)
-		echo "distro_info v$PROGVERSION - distro information retriever"
-		echo "Usage: distro_info [options] [args]"
-		echo "Options:"
-		echo " -a - print hardware architecture (--distro-arch for distro depended name)"
-		echo " -b - print size of arch bit (32/64)"
-		echo " -c - print number of CPU cores"
-		echo " -z - print current CPU MHz"
-		echo " -d - print distro name"
-		echo " -e - print full name of distro with version"
-		echo " -i - print virtualization type"
-		echo " -h - this help"
-		echo " -m - print system memory size (in MB)"
-		echo " -o - print base OS name"
-		echo " -p [SystemName] - print type of the packaging system"
-		echo " -g [SystemName] - print name of the packaging system"
-		echo " -s|-n [SystemName] - print base name of the distro (vendor name) (ubuntu for all Ubuntu family, alt for all ALT family) (as _vendor macros in rpm)"
-		echo " -y - print running service manager"
-		echo " --pretty - print pretty distro name"
-		echo " -v - print version of distro"
-		echo " -V - print the utility version"
-		echo "Run without args to print all information."
-		exit 0
-		;;
-	-p)
-		override_distrib "$2"
-		pkgtype
-		exit 0
-		;;
-	-g)
-		override_distrib "$2"
-		pkgmanager
-		exit 0
-		;;
-	--pretty)
-		print_pretty_name
-		;;
-	--distro-arch)
-		override_distrib "$2"
-		get_distro_arch
-		exit 0
-		;;
-	--debian-arch)
-		override_distrib "$2"
-		get_debian_arch
-		exit 0
-		;;
-	-d)
-		echo $DISTRIB_ID
-		;;
-	-a)
-		get_arch
-		;;
-	-b)
-		get_bit_size
-		;;
-	-c)
-		get_core_count
-		;;
-	-z)
-		get_core_mhz
-		;;
-	-i)
-		get_virt
-		;;
-	-m)
-		get_memory_size
-		;;
-	-o)
-		get_base_os_name
-		;;
-	-v)
-		echo $DISTRIB_RELEASE
-		;;
-	-s|-n)
-		override_distrib "$2"
-		pkgvendor
-		exit 0
-		;;
-	-y)
-		get_service_manager
-		;;
-	-V)
-		echo "$PROGVERSION"
-		exit 0
-		;;
-	-e)
-		print_name_version
-		;;
-	*)
-		print_total_info
-		;;
+# print code for eval with names for eepm
+print_eepm_env()
+{
+cat <<EOF
+# -d | --base-distro-name
+DISTRNAME="$(echo $DISTRIB_ID)"
+# -v | --base-version
+DISTRVERSION="$(echo "$DISTRIB_RELEASE")"
+# distro dependent arch
+DISTRARCH="$(get_distro_arch)"
+# -s | --vendor-name
+BASEDISTRNAME=$(pkgvendor)
+# --repo-name
+DISTRREPONAME=$(print_repo_name)
+
+# -a
+SYSTEMARCH="$(get_arch)"
+# -y | --service-manager
+DISTRCONTROL="$(get_service_manager)"
+# -g
+PMTYPE="$(pkgmanager)"
+# -p | --package-type
+PKGFORMAT=$(pkgtype)
+# -m
+DISTRMEMORY="$(get_memory_size)"
+
+# TODO: remove?
+PKGVENDOR=$(pkgvendor)
+RPMVENDOR=$(pkgvendor)
+
+EOF
+
+}
+
+override_distrib "$DISTRNAMEOVERRIDE"
+
+if [ -n "$*" ] ; then
+    eval lastarg=\${$#}
+    case "$lastarg" in
+        -*)
+            ;;
+        *)
+            override_distrib "$lastarg"
+            # drop last arg
+            set -- "${@:1:$(($#-1))}"
+            ;;
+    esac
+fi
+
+# if without override
+if [ -z "$DISTRIB_ID" ] ; then
+    fill_distr_info
+    [ -n "$DISTRIB_ID" ] || DISTRIB_ID="Generic"
+fi
+
+if [ -z "$1" ] ; then
+    print_total_info
+    exit
+fi
+
+while [ -n "$1" ] ; do
+case "$1" in
+    -h|--help)
+        print_help
+        exit 0
+        ;;
+    -p|--package-type)
+        pkgtype
+        ;;
+    -g)
+        pkgmanager
+        ;;
+    --pretty|--pretty-name)
+        print_pretty_name
+        ;;
+    --distro-arch)
+        get_distro_arch
+        ;;
+    --debian-arch)
+        get_debian_arch
+        ;;
+    --glibc-version)
+        get_glibc_version
+        ;;
+    -d|--base-distro-name)
+        echo $DISTRIB_ID
+        ;;
+    --distro-name)
+        echo $DISTRO_NAME
+        ;;
+    --codename)
+        print_codename
+        ;;
+    -a)
+        if [ -n "$DIST_ARCH" ] ; then
+            echo "$DIST_ARCH"
+        else
+            get_arch
+        fi
+        ;;
+    -b)
+        get_bit_size
+        ;;
+    -c)
+        get_core_count
+        ;;
+    -z)
+        get_core_mhz
+        ;;
+    -i)
+        get_virt
+        ;;
+    -m)
+        get_memory_size
+        ;;
+    -o|--os-name)
+        get_base_os_name
+        ;;
+    -r|--repo-name)
+        print_repo_name
+        ;;
+    --build-id)
+        echo "$BUILD_ID"
+        ;;
+    -v|--base-version)
+        echo "$DISTRIB_RELEASE"
+        ;;
+    --full-version|--distro-version)
+        echo "$DISTRIB_FULL_RELEASE"
+        ;;
+    --bug-report-url)
+        print_bug_report_url
+        ;;
+    -s|-n|--vendor-name)
+        pkgvendor
+        ;;
+    -y|--service-manager)
+        get_service_manager
+        ;;
+    -V)
+        echo "$PROGVERSION"
+        ;;
+    -e)
+        print_name_version
+        ;;
+    --print-eepm-env)
+        print_eepm_env
+        exit 0
+        ;;
+    -*)
+        echo "Unsupported option $1" >&2
+        # print empty line in any case
+        echo
+        exit 1
+        ;;
 esac
-
+shift
+done
