@@ -1,7 +1,7 @@
 # NOTE: do not use clean_spec or rpmcs for this spec
 
 Name: rpm-build-altlinux-compat
-Version: 2.4.3
+Version: 2.4.4
 Release: alt1
 
 Summary: ALT Linux compatibility and extensions in rpm build
@@ -129,11 +129,18 @@ Command rpmbph from etersoft-build-utils will do it automatically.
 %_bindir/add_changelog
 %_bindir/stamp_spec
 %_bindir/subst
+%_bindir/rpmvercmp
 %_bindir/distr_vendor
 
 %endif
 
 %changelog
+* Wed Dec 04 2024 Vitaly Lipatov <lav@altlinux.ru> 2.4.4-alt1
+- add rpmvercmp for non ALT distro
+- add features_llvm
+- distr_vendor: sync with eepm 3.64.1
+- updated macros.distro
+
 * Tue Apr 23 2024 Vitaly Lipatov <lav@altlinux.ru> 2.4.3-alt1
 - distr_vendor: update from eepm 3.62.5
 - use sudoers.d for CentOS/RedOS 7 and newer (eterbug #17252)
