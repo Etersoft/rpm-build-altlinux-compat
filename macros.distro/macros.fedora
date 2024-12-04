@@ -1,0 +1,17 @@
+
+# path to /etc/sudoers extension dir
+%_sudoersdir %_sysconfdir/sudoers.d
+
+# udev dirs exists since CentOS 6, but we need this macro in CentOS 5 too
+%_udevhwdbdir /usr/lib/udev/hwdb.d
+%_udevrulesdir /usr/lib/udev/rules.d
+
+%__python_package_prefix python27
+%__python3_package_prefix python36
+
+# from rpm-macros-features
+%feature_vulkan 1
+%feature_vkd3d 1
+%feature_faudio 1
+%feature_pcap 1.9.1
+%feature_llvm 15
