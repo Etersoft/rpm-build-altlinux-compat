@@ -1,1 +1,21 @@
-macros.ubuntu.12.04
+# ALT compatibility on other platforms
+
+# path to /etc/sudoers extension dir
+%_sudoersdir %_sysconfdir/sudo.d
+
+%_target_python_libdir %_prefix/lib
+
+%_make_bin %(N=`which gmake 2>/dev/null` ; [ -x "$N" ] && echo "$N" || echo make)
+
+%make_build	[ -n "$NPROCS" ] || NPROCS=%__nprocs; %_make_bin -j$NPROCS
+
+%__make %_make_bin
+%make %_make_bin
+
+# from rpm-macros-features
+%feature_vulkan 0
+%feature_vkd3d 1
+%feature_faudio 1
+%feature_pcap 1
+%feature_llvm 3
+%feature_opencl 0
