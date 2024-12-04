@@ -1,0 +1,9 @@
+#!/bin/sh
+
+is_command()
+{
+    a= which -- "$1" 2>/dev/null >/dev/null
+}
+
+# copied from epm print compare
+a= rpm --eval "%{lua:print(rpm.vercmp('$1', '$2'))}"
