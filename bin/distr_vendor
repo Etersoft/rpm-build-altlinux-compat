@@ -110,7 +110,6 @@ pkgvendor()
     [ "$DISTRIB_ID" = "openSUSETumbleweed" ] && echo "suse" && return
     [ "$DISTRIB_ID" = "openSUSELeap" ] && echo "suse" && return
     if [ -n "$VENDOR_ID" ] ; then
-        [ "$VENDOR_ID" = "altlinux" ] && echo "alt" && return
         echo "$VENDOR_ID"
         return
     fi
@@ -166,6 +165,9 @@ case $DISTRIB_ID in
         ;;
     Gentoo)
         CMD="emerge"
+        ;;
+    Redox)
+        CMD="redox-pkg"
         ;;
     ArchLinux|ManjaroLinux)
         CMD="pacman"
@@ -362,6 +364,11 @@ normalize_version3()
     echo "$1" | sed -e "s|^\([^.][^.]*\.[^.][^.]*\.[^.][^.]*\)\..*|\1|"
 }
 
+is_numeric()
+{
+    echo "$1" | grep -q "^[0-9][0-9]*$"
+}
+
 
 fill_distr_info()
 {
@@ -391,11 +398,22 @@ if distro os-release ; then
     #PRETTY_NAME
     VENDOR_ID="$ID"
     case "$VENDOR_ID" in
-        ubuntu|reld|rhel|astra|manjaro|redos)
+        ubuntu|reld|rhel|astra|manjaro|redos|msvsphere|alteros|rockylinux|almalinux)
             ;;
         *)
-            # ID_LIKE can be 'rhel centos fedora', use latest word
-            [ -n "$ID_LIKE" ] && VENDOR_ID="$(echo "$ID_LIKE" | xargs -n1 | tail -n1)"
+            if [ -n "$ID_LIKE" ] ; then
+                # ID_LIKE can be 'rhel centos fedora', use first word
+                VENDOR_ID="$(echo "$ID_LIKE" | xargs -n1 | head -n1)"
+                # use latest word for versions like Fedora has
+                if is_numeric "$DISTRIB_RELEASE" && [ "$DISTRIB_RELEASE" -ge 20 ] ; then
+                    VENDOR_ID="$(echo "$ID_LIKE" | xargs -n1 | tail -n1)"
+                fi
+            fi
+            ;;
+    esac
+    case "$VENDOR_ID" in
+        reld|rhel|msvsphere|alteros|rockylinux|almalinux)
+            DISTRIB_RELEASE=$(normalize_version1 "$DISTRIB_RELEASE")
             ;;
     esac
     DISTRIB_FULL_RELEASE="$DISTRIB_RELEASE"
@@ -415,7 +433,12 @@ DISTRIB_RELEASE=$(normalize_version2 "$DISTRIB_RELEASE")
 [ -n "$DISTRIB_CODENAME" ] || DISTRIB_CODENAME=$DISTRIB_RELEASE
 
 case "$VENDOR_ID" in
-    "alt"|"altlinux")
+    "altlinux")
+        VENDOR_ID="alt"
+esac
+
+case "$VENDOR_ID" in
+    "alt")
         # 2.4.5.99 -> 2
         DISTRIB_RELEASE=$(normalize_version1 "$DISTRIB_RELEASE_ORIG")
         case "$DISTRIB_ID" in
@@ -604,6 +627,10 @@ elif distro SuSe-release || distro SuSE-release ; then
         DISTRIB_ID="SLES"
     fi
 
+elif distro redox-release ; then
+    DISTRIB_ID="Redox"
+    DISTRIB_RELEASE=$(cat $DISTROFILE)
+
 # fixme: can we detect by some file?
 elif [ "$(uname)" = "FreeBSD" ] ; then
     DISTRIB_ID="FreeBSD"
@@ -628,8 +655,8 @@ elif [ "$(uname)" = "Linux" ] && is_command guix ; then
 # fixme: move to up
 elif [ "$(uname)" = "Linux" ] && [ -x $ROOTDIR/system/bin/getprop ] ; then
     DISTRIB_ID="Android"
-    DISTRIB_RELEASE=$(getprop | awk -F": " '/system.build.version.release\]/ { print $2 }' | tr -d '[]' | head -n1)
-    [ -n "$DISTRIB_RELEASE" ] || DISTRIB_RELEASE=$(getprop | awk -F": " '/build.version.release/ { print $2 }' | tr -d '[]' | head -n1)
+    DISTRIB_RELEASE=$(a='' getprop | awk -F": " '/system.build.version.release\]/ { print $2 }' | tr -d '[]' | head -n1)
+    [ -n "$DISTRIB_RELEASE" ] || DISTRIB_RELEASE=$(a='' getprop | awk -F": " '/build.version.release/ { print $2 }' | tr -d '[]' | head -n1)
 
 elif [ "$(uname -o 2>/dev/null)" = "Cygwin" ] ; then
         DISTRIB_ID="Cygwin"
@@ -670,6 +697,9 @@ case "$DIST_OS" in
         ;;
     'freebsd' | 'openbsd' | 'netbsd')
         DIST_OS="freebsd"
+        ;;
+    'Redox')
+        DIST_OS="redox"
         ;;
 esac
 echo "$DIST_OS"
@@ -758,7 +788,7 @@ get_bit_size()
 {
 local DIST_BIT
 
-DIST_BIT="$(getconf LONG_BIT 2>/dev/null)"
+DIST_BIT="$(a= getconf LONG_BIT 2>/dev/null)"
 if [ -n "$DIST_BIT" ] ; then
     echo "$DIST_BIT"
     return
@@ -807,7 +837,7 @@ get_memory_size()
             [ -r /proc/meminfo ] && detected=$((`cat /proc/meminfo | grep MemTotal | awk '{print $2}'`/1024))
             ;;
         solaris)
-            detected=$(prtconf | grep Memory | sed -e "s|Memory size: \([0-9][0-9]*\) Megabyte.*|\1|") #"
+            detected=$(a='' prtconf | grep Memory | sed -e "s|Memory size: \([0-9][0-9]*\) Megabyte.*|\1|") #"
             ;;
 #        *)
 #            fatal "Unsupported OS $DIST_OS"
