@@ -6,3 +6,4 @@
 %feature_faudio 0
 %feature_pcap 1.8.1
 %feature_llvm 11
+%feature_opencl 1

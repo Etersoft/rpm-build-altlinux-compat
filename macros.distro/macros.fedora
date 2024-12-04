@@ -15,3 +15,4 @@
 %feature_faudio 1
 %feature_pcap 1.9.1
 %feature_llvm 15
+%feature_opencl 1
