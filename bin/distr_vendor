@@ -237,6 +237,9 @@ case $DISTRIB_ID in
         echo "pkgmanager(): We don't support yet DISTRIB_ID $DISTRIB_ID (VENDOR_ID $VENDOR_ID)" >&2
         ;;
 esac
+if [ "$CMD" = "dnf-rpm" ] && [ $(dnf --version | grep -qi "dnf5") ] ; then
+    CMD="dnf5-rpm"
+fi
 echo "$CMD"
 }
 
@@ -403,10 +406,10 @@ if distro os-release ; then
         *)
             if [ -n "$ID_LIKE" ] ; then
                 # ID_LIKE can be 'rhel centos fedora', use first word
-                VENDOR_ID="$(echo "$ID_LIKE" | xargs -n1 | head -n1)"
+                VENDOR_ID="$(echo "$ID_LIKE" | cut -f1 -d' ')"
                 # use latest word for versions like Fedora has
                 if is_numeric "$DISTRIB_RELEASE" && [ "$DISTRIB_RELEASE" -ge 20 ] ; then
-                    VENDOR_ID="$(echo "$ID_LIKE" | xargs -n1 | tail -n1)"
+                    VENDOR_ID="$(echo "$ID_LIKE" | xargs -n1 echo | tail -n1)"
                 fi
             fi
             ;;
@@ -494,6 +497,7 @@ case "$DISTRIB_ID" in
         DISTRIB_ID="ALTLinux"
         case "$DISTRIB_RELEASE_ORIG" in
             8.0|8.1)
+                DISTRIB_RELEASE="c8"
                 ;;
             8.2|8.3)
                 DISTRIB_RELEASE="c9f1"
