@@ -1,0 +1,3 @@
+# from rpm-macros-features
+%feature_ffmpeg 1
+%feature_wayland 1

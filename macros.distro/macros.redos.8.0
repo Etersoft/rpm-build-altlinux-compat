@@ -13,8 +13,7 @@
 %feature_vulkan 1
 %feature_vkd3d 1
 %feature_faudio 1
-%feature_pcap 1.9.1
-%feature_llvm 15
-%feature_opencl 1
-%feature_ffmpeg 1
+%feature_pcap 1
+%feature_llvm 11
+%feature_ffmpeg 0
 %feature_wayland 1

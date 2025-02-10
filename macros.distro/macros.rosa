@@ -13,3 +13,5 @@
 %feature_pcap 1.9.1
 %feature_llvm 11
 %feature_opencl 1
+%feature_ffmpeg 1
+%feature_wayland 1
