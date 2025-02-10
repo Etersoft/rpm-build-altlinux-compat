@@ -6,7 +6,7 @@
 # You can set ROOTDIR to root system dir
 #ROOTDIR=
 
-PROGVERSION="20230406"
+PROGVERSION="20250206"
 
 # TODO: check /etc/system-release
 
@@ -68,6 +68,19 @@ tolower()
     echo "$*" | awk '{print tolower($0)}'
 }
 
+# copied from estrlist
+firstword()
+{
+        echo "$*" | cut -f1 -d" "
+}
+
+lastword()
+{
+        echo "$*" | xargs -n1 echo 2>/dev/null | tail -n1
+}
+
+
+
 print_bug_report_url()
 {
     echo "$BUG_REPORT_URL"
@@ -120,6 +133,7 @@ pkgvendor()
 #which pkcon 2>/dev/null >/dev/null && info "You can run $ PMTYPE=packagekit epm to use packagekit backend"
 
 # Print package manager (need DISTRIB_ID, DISTRIB_RELEASE vars)
+# used in package manager detection via distro name
 pkgmanager()
 {
 local CMD
@@ -141,13 +155,16 @@ case $DISTRIB_ID in
     PCLinux)
         CMD="apt-rpm"
         ;;
-    Ubuntu|Debian|Mint|OSNovaLinux|AstraLinux*|Elbrus)
+    Ubuntu|Debian|Mint|OSNovaLinux|Uncom|AstraLinux*|Elbrus)
         CMD="apt-dpkg"
         #which aptitude 2>/dev/null >/dev/null && CMD=aptitude-dpkg
         #is_command snappy && CMD=snappy
         ;;
     Solus)
         CMD="eopkg"
+        ;;
+    PisiLinux)
+        CMD="pisi"
         ;;
     Mandriva)
         CMD="urpm-rpm"
@@ -172,7 +189,7 @@ case $DISTRIB_ID in
     ArchLinux|ManjaroLinux)
         CMD="pacman"
         ;;
-    Fedora|CentOS|OracleLinux|RockyLinux|AlmaLinux|RHEL|RELS|Scientific|GosLinux|Amzn|RedOS)
+    Fedora|CentOS|OracleLinux|RockyLinux|AlmaLinux|RHEL|RELS|Scientific|GosLinux|Amzn|RedOS|MSVSphere)
         CMD="dnf-rpm"
         is_command dnf || CMD="yum-rpm"
         [ "$DISTRIB_ID/$DISTRIB_RELEASE" = "CentOS/7" ] && CMD="yum-rpm"
@@ -237,7 +254,7 @@ case $DISTRIB_ID in
         echo "pkgmanager(): We don't support yet DISTRIB_ID $DISTRIB_ID (VENDOR_ID $VENDOR_ID)" >&2
         ;;
 esac
-if [ "$CMD" = "dnf-rpm" ] && [ $(dnf --version | grep -qi "dnf5") ] ; then
+if [ "$CMD" = "dnf-rpm" ] && a= dnf --version | grep -qi "dnf5" ; then
     CMD="dnf5-rpm"
 fi
 echo "$CMD"
@@ -268,6 +285,7 @@ pkgtype()
         openwrt) echo "ipk" ;;
         cygwin) echo "tar.xz" ;;
         solus) echo "eopkg" ;;
+        pisilinux) echo "pisi" ;;
         *)
             case $(pkgmanager) in
                 *-dpkg)
@@ -319,6 +337,9 @@ normalize_name()
             ;;
         "Fedora Linux")
             echo "Fedora"
+            ;;
+        "Pardus GNU/Linux")
+            echo "Pardus"
             ;;
         "Red Hat Enterprise Linux Server")
             echo "RHEL"
@@ -400,16 +421,20 @@ if distro os-release ; then
     # set by os-release:
     #PRETTY_NAME
     VENDOR_ID="$ID"
+    DISTRIB_CODENAME="$VERSION_CODENAME"
     case "$VENDOR_ID" in
         ubuntu|reld|rhel|astra|manjaro|redos|msvsphere|alteros|rockylinux|almalinux)
             ;;
         *)
             if [ -n "$ID_LIKE" ] ; then
                 # ID_LIKE can be 'rhel centos fedora', use first word
-                VENDOR_ID="$(echo "$ID_LIKE" | cut -f1 -d' ')"
+                VENDOR_ID="$(firstword "$ID_LIKE")"
                 # use latest word for versions like Fedora has
                 if is_numeric "$DISTRIB_RELEASE" && [ "$DISTRIB_RELEASE" -ge 20 ] ; then
-                    VENDOR_ID="$(echo "$ID_LIKE" | xargs -n1 echo | tail -n1)"
+                    VENDOR_ID="$(lastword "$ID_LIKE")"
+                fi
+                if [ "$VENDOR_ID" = "debian" ] && [ -n "$DEBIAN_CODENAME" ] ; then
+                    DISTRIB_CODENAME="$DEBIAN_CODENAME"
                 fi
             fi
             ;;
@@ -420,7 +445,6 @@ if distro os-release ; then
             ;;
     esac
     DISTRIB_FULL_RELEASE="$DISTRIB_RELEASE"
-    DISTRIB_CODENAME="$VERSION_CODENAME"
 
 elif distro lsb-release ; then
     DISTRIB_ID=$(cat $DISTROFILE | get_var DISTRIB_ID)
@@ -964,7 +988,7 @@ local orig=''
 local EV=''
 [ -n "$EPMVERSION" ] && EV="(EPM version $EPMVERSION) "
 cat <<EOF
-distro_info v$PROGVERSION $EV: Copyright © 2007-2024 Etersoft
+distro_info v$PROGVERSION $EV: Copyright © 2007-2025 Etersoft
 
                        Pretty name (--pretty): $(print_pretty_name)
            (--distro-name / --distro-version): $DISTRO_NAME / $DISTRIB_FULL_RELEASE$orig
