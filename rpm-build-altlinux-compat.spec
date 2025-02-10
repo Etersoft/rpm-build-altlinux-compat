@@ -1,7 +1,7 @@
 # NOTE: do not use clean_spec or rpmcs for this spec
 
 Name: rpm-build-altlinux-compat
-Version: 2.4.5
+Version: 2.4.6
 Release: alt1
 
 Summary: ALT Linux compatibility and extensions in rpm build
@@ -135,6 +135,13 @@ Command rpmbph from etersoft-build-utils will do it automatically.
 %endif
 
 %changelog
+* Mon Feb 10 2025 Vitaly Lipatov <lav@altlinux.ru> 2.4.6-alt1
+- distr_vendor: sync with eepm 3.64.8
+- add ffmpeg and wayland features
+- macros.compat: don't use rpmvercmp with empty args
+- macros.compat: add if_not_feature
+- macros.compat: improve if_feature/if_notfeature (fix bug with 0 value)
+
 * Fri Dec 20 2024 Vitaly Lipatov <lav@altlinux.ru> 2.4.5-alt1
 - distr_vendor: sync with eepm 3.64.5
 - add macros.uncom
