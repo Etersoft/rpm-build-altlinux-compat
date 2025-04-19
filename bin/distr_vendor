@@ -155,7 +155,7 @@ case $DISTRIB_ID in
     PCLinux)
         CMD="apt-rpm"
         ;;
-    Ubuntu|Debian|Mint|OSNovaLinux|Uncom|AstraLinux*|Elbrus)
+    Ubuntu|Debian|Mint|OSnovaLinux|Uncom|AstraLinux*|Elbrus|SberOS)
         CMD="apt-dpkg"
         #which aptitude 2>/dev/null >/dev/null && CMD=aptitude-dpkg
         #is_command snappy && CMD=snappy
@@ -359,6 +359,9 @@ normalize_name()
         "ROSA Enterprise Linux Server")
             echo "RELS"
             ;;
+        "SberOS GNU/Linux")
+            echo "SberOS"
+            ;;
         "uos")
             echo "UOS"
             ;;
@@ -496,10 +499,10 @@ esac
 
 case "$DISTRIB_ID" in
     "ALTLinux")
-        echo "$VERSION" | grep -q "c9.* branch" && DISTRIB_RELEASE="c9"
-        echo "$VERSION" | grep -q "c9f1 branch" && DISTRIB_RELEASE="c9f1"
-        echo "$VERSION" | grep -q "c9f2 branch" && DISTRIB_RELEASE="c9f2"
-        echo "$VERSION" | grep -q "c9f3 branch" && DISTRIB_RELEASE="c9f3"
+        echo "$VERSION" | grep -q "c9\.* branch" && DISTRIB_RELEASE="c9"
+        if echo "$VERSION" | grep -q -E "c[0-9]+f[1-9] branch" ; then
+            DISTRIB_RELEASE="$(echo "$VERSION" | sed 's| branch||')"
+        fi
         DISTRIB_CODENAME="$DISTRIB_RELEASE"
         # FIXME: fast hack for fallback: 10.1 -> p10 for /etc/os-release
         if echo "$DISTRIB_RELEASE" | grep -q "^0" ; then
@@ -541,6 +544,10 @@ case "$DISTRIB_ID" in
         DISTRIB_ID="ALTLinux"
         DISTRIB_RELEASE="Sisyphus"
         DISTRIB_CODENAME="$DISTRIB_RELEASE"
+        ;;
+    "SberOS")
+        DISTRIB_RELEASE="Rolling"
+        DISTRIB_CODENAME="rolling"
         ;;
     "ROSA"|"MOSDesktop"|"MOSPanel")
         DISTRIB_FULL_RELEASE="$DISTRIB_CODENAME"
@@ -770,7 +777,7 @@ case "$DIST_ARCH" in
     armv7*)
         # TODO: use uname only
         # uses binutils package
-        if is_command readelf && [ -z "$(readelf -A /proc/self/exe | grep Tag_ABI_VFP_args)" ] ; then
+        if is_command readelf && [ -z "$(a='' readelf -A /proc/self/exe | grep Tag_ABI_VFP_args)" ] ; then
             DIST_ARCH="armel"
         else
             DIST_ARCH="armhf"
@@ -782,7 +789,8 @@ echo "$DIST_ARCH"
 
 get_debian_arch()
 {
-    local arch="$(get_arch)"
+    local arch="$1"
+    [ -n "$arch" ] || arch="$(get_arch)"
     case $arch in
     'x86')
         arch='i386' ;;
@@ -790,6 +798,20 @@ get_debian_arch()
         arch='amd64' ;;
     'aarch64')
         arch='arm64' ;;
+    'armhf')
+        arch='armv7l' ;;
+    esac
+    echo "$arch"
+}
+
+get_arch_arch()
+{
+    local arch
+    local arch="$1"
+    [ -n "$arch" ] || arch="$(get_arch)"
+    case $arch in
+        'x86_64')
+            arch='x64' ;;
     esac
     echo "$arch"
 }
@@ -806,6 +828,12 @@ get_distro_arch()
             ;;
         deb)
             get_debian_arch
+            return
+            ;;
+    esac
+    case "$(pkgmanager)" in
+        pacman)
+            get_arch_arch
             return
             ;;
     esac
@@ -853,26 +881,31 @@ echo "$DIST_BIT"
 get_memory_size()
 {
     local detected=""
+    local divider="1"
     local DIST_OS="$(get_base_os_name)"
     case "$DIST_OS" in
         macosx)
-            detected=$((`sysctl hw.memsize | sed s/"hw.memsize: "//`/1024/1024))
+            detected="$(a='' sysctl hw.memsize | sed 's/hw.memsize: //')"
+            divider="1024/1024"
             ;;
         freebsd)
-            detected=$((`sysctl hw.physmem | sed s/"hw.physmem: "//`/1024/1024))
+            detected="$(a='' sysctl hw.physmem | sed 's/hw.physmem: //')"
+            divider="1024/1024"
             ;;
         linux)
-            [ -r /proc/meminfo ] && detected=$((`cat /proc/meminfo | grep MemTotal | awk '{print $2}'`/1024))
+            detected="$(cat /proc/meminfo 2>/dev/null | grep 'MemTotal' | awk '{print $2}')"
+            divider="1024"
             ;;
         solaris)
             detected=$(a='' prtconf | grep Memory | sed -e "s|Memory size: \([0-9][0-9]*\) Megabyte.*|\1|") #"
+            divider="1"
             ;;
 #        *)
 #            fatal "Unsupported OS $DIST_OS"
     esac
 
     [ -n "$detected" ] || detected=0
-    echo $detected
+    echo "$(($detected/$divider))"
 }
 
 print_name_version()
@@ -915,10 +948,20 @@ get_virt()
 {
     local VIRT
     if is_command systemd-detect-virt ; then
-        VIRT="$(systemd-detect-virt)"
+        VIRT="$(a='' systemd-detect-virt)"
         [ "$VIRT" = "none" ] && echo "(host system)" && return
         [ -z "$VIRT" ] && echo "(unknown)" && return
         echo "$VIRT" && return
+    fi
+
+    if [ "$UID" = 0 ] ; then
+        if grep -q "docker" /proc/1/environ; then
+            echo "docker" && return
+        elif grep -q "lxc" /proc/1/environ; then
+            echo "lxc" && return
+        elif grep -q "libpod" /proc/1/environ; then
+            echo "podman" && return
+        fi
     fi
 
     # TODO: use virt-what under root
@@ -1013,7 +1056,7 @@ print_help()
     echo "Usage: distro_info [options] [SystemName/Version]"
     echo "Options:"
     echo " -h | --help            - this help"
-    echo " -a                     - print hardware architecture (use --distro-arch for distro depended arch name)"
+    echo " -a                     - print hardware architecture (use --distro-arch for distro depended arch name or --debian-arch for Debian style)"
     echo " -b                     - print size of arch bit (32/64)"
     echo " -c                     - print number of CPU cores"
     echo " -i                     - print virtualization type"
@@ -1120,6 +1163,9 @@ case "$1" in
         ;;
     --debian-arch)
         get_debian_arch
+        ;;
+    --arch-arch)
+        get_arch_arch
         ;;
     --glibc-version)
         get_glibc_version
