@@ -235,7 +235,7 @@ cd - >/dev/null \
 # Note: hack: divided by 4 if memory more than 42G (see https://lists.altlinux.org/pipermail/devel/2018-July/204969.html)
 %_tune_parallel_build_by_procsize() \
 BuildRequires(pre): /proc \
-%global __nprocs %(M=%(epm print info -m) ; N=$(($M/%{1})); [ "$M" -ge 42000 ] && N=$(($N/4)) ; [ "$N" -gt 0 ] || N=1; [ "$N" -lt %__nprocs ] || N=%__nprocs ;  echo "$N") \
+%global __nprocs %(M=%(distr_vendor -m) ; N=$(($M/%{1})); [ "$M" -ge 42000 ] && N=$(($N/4)) ; [ "$N" -gt 0 ] || N=1; [ "$N" -lt %__nprocs ] || N=%__nprocs ;  echo "$N") \
 %nil
 
 # from Fedora

@@ -18,7 +18,7 @@
 %__subst %_bindir/subst
 
 # not all rpm have getncpus
-%__nprocs	%(epm print info -c 2>/dev/null || echo 1)
+%__nprocs	%(distr_vendor -c 2>/dev/null || echo 1)
 
 %_smp_build_ncpus	${NPROCS:-%__nprocs}
 %_smp_mflags	-j%_smp_build_ncpus
